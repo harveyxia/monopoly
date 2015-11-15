@@ -15,8 +15,10 @@ class Player(object):
         self.position = (self.position + num_squares) % 40
 
     def buy_square(self, square):
+        if square.owner:
+            raise Exception("%s cannot buy square because square owned by %s" % (self.name, square.owner.name))
         if self.balance < square.price:
-            raise Exception("%s cannot buy square because insufficient balance")
+            raise Exception("%s cannot buy square because insufficient balance" % self.name)
         self.balance -= square.price
         self.properties.append(square)
         square.owner = self
@@ -28,3 +30,7 @@ class Player(object):
                 # player must mortgage or sell something to raise balance
             else:
                 self.balance -= square.get_rent()
+
+    def go_to_jail(self):
+        self.position = 10
+        self.in_jail = True

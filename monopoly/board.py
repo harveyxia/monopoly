@@ -19,6 +19,5 @@ class Board(object):
         with open(fname, 'rU') as csvfile:
             data = csv.reader(csvfile)
             for row in data:
-                # output.append( dict(zip(keys, row)) )
                 output.append(Square(dict(zip(keys, row))))
         return output
