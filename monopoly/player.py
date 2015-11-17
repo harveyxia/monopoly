@@ -4,10 +4,12 @@ class Player(object):
     """
     def __init__(self, name):
         self.name = name
-        self.balance = 1500
+        self.balance = 1500     # cash balance
+        self.net_value = 1500   # net value, including houses and properties
         self.in_jail = False
         self.position = 0
         self.properties = []
+        self.bankrupt = False
 
     def move(self, num_squares):
         if self.in_jail:
@@ -20,6 +22,7 @@ class Player(object):
         if self.balance < square.price:
             raise Exception("%s cannot buy square because insufficient balance" % self.name)
         self.balance -= square.price
+        # increase net_value, by how much?
         self.properties.append(square)
         square.owner = self
 
@@ -34,3 +37,10 @@ class Player(object):
     def go_to_jail(self):
         self.position = 10
         self.in_jail = True
+
+    # override, insert player strategy in subclass
+    def do_square_strat(self):
+        raise NotImplementedError
+
+    def do_raise_money_strat(self):
+        raise NotImplementedError
