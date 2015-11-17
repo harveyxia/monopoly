@@ -39,8 +39,8 @@ class Player(object):
         self.in_jail = True
 
     # override, insert player strategy in subclass
-    def do_square_strat(self):
+    def do_strat_square(self):
         raise NotImplementedError
 
-    def do_raise_money_strat(self):
+    def do_strat_raise_money(self):
         raise NotImplementedError
