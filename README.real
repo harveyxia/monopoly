@@ -5,7 +5,9 @@ My vote is just to maintain, for each player, a dollar amount, and then a bunch
 of logical flags for properties and cards held.
 
 Monopoly.set_state(state)
-The monopoly game needs to have a way to read in such a transcript file, convert it to its own internal representation, and then be able to start playing from that state.
+The monopoly game needs to have a way to read in such a transcript file, 
+convert it to its own internal representation, and then be able to start 
+playing from that state.
 
 Monopoly.out_state()
 The monopoly game also needs to be able to generate such transcript files at 
