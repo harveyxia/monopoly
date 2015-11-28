@@ -1,0 +1,43 @@
+step 0: interface
+
+We need a compact way to represent the state of the game.
+My vote is just to maintain, for each player, a dollar amount, and then a bunch of logical flags for properties and cards held.
+
+Monopoly.set_state(state)
+The monopoly game needs to have a way to read in such a transcript file, convert it to its own internal representation, and then be able to start playing from that state.
+
+Monopoly.out_state()
+The monopoly game also needs to be able to generate such transcript files at any time.
+
+Monopoly.next(number)
+The monopoly game should be able to take inputs as integers that represent the value of dice rolls at the beginning of every move. For instance, Monopoly.next(6) should start the next move with the player moving 6 spaces. The reason for this is explained in the NPV section below.
+
+Monopoly.decide(decision_function)
+decision_function(state, decision)
+Player made decisions should be implemented in a function that takes a state and the option to flip a bit in the transcript, along with a predetermined cost (or profit). Then the monopoly game can just call the function with its internal representation of the state and get the result.
+
+Sim.freq()
+The freq function will just determine the relative frequencies of landing on a particular space.
+
+Sim.npv()
+The npv function will repeatedly run the game to completion, keeping track of how much each player pays when landing on each space.
+
+Sim.mcmc()
+The mcmc function is defined in step 2.
+
+step 1: NPV
+
+We want to establish the simple NPVs of decisions such as buying a utility or a property. A first pass estimate will treat each decision as independent and calculate the payouts based on the probabiltiy of landing on a space times its payout discounted by the rate at which currency is introduced into the game (200 for passing go).
+
+A second pass estimate will involve building a smarter decision function for each set of properties that takes into account the monopoly aspect of the game - i.e. decisions to buy a property also depend on whether other properties on the same color are available / owed.
+
+The decision function should be a simple lookup function, indexing a decision and a state into a probability. The probability should be a function of the NPVs.
+
+step 2: MCMC
+
+We will repeated refine this lookup function by using the markov chain monte carlo method. Each iteration of the second pass estimate should give a new estimate of the NPVs. By repeating this process, the MCMC method should give a converging solution that is locally optimal.
+
+The hope is that by seeding the method with the first-pass NPVs, we can find the global solution as well.
+
+
+
