@@ -1,0 +1,51 @@
+{
+  "num_players": 4,
+  "player_turn": 1,
+  "is_over": false,
+  "winner": null,
+  "avail_houses": 32,
+  "avail_hotels": 12,
+  "players": [
+    {
+      "name": "Frank",
+      "balance": 1440,
+      "net_value": 1500,
+      "in_jail": false,
+      "position": 1,
+      "bankrupt": false,
+      "properties": [
+        {
+          "name": "Mediterranean Avenue",
+          "num_building": 0
+        }
+      ]
+    },
+    {
+      "name": "Charles",
+      "balance": 1500,
+      "net_value": 1500,
+      "in_jail": false,
+      "position": 0,
+      "bankrupt": false,
+      "properties": []
+    },
+    {
+      "name": "Marvin",
+      "balance": 1500,
+      "net_value": 1500,
+      "in_jail": false,
+      "position": 0,
+      "bankrupt": false,
+      "properties": []
+    },
+    {
+      "name": "Harvey",
+      "balance": 1500,
+      "net_value": 1500,
+      "in_jail": false,
+      "position": 0,
+      "bankrupt": false,
+      "properties": []
+    }
+  ]
+}
