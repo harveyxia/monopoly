@@ -44,7 +44,7 @@ class Monopoly(object):
         while not self.is_over:
             pass
 
-    # Reads in transcript and returns a new Monopoly instance
+    # Reads in a JSON transcript and returns a new Monopoly instance
     @classmethod
     def set_state(self, transcript):
         if transcript:
@@ -73,3 +73,32 @@ class Monopoly(object):
         else:
             raise Exception("Must pass in a transcript JSON file")
 
+    # Takes current Monopoly game and creates a pretty-printed JSON file that
+    # can be loaded using Monopoly.set_state()
+    def save_state(self, transcript="transcript.json"):
+        data = {}
+        data["num_players"] = self.num_players
+        data["player_turn"] = self.player_turn
+        data["is_over"] = self.is_over
+        data["winner"] = self.winner
+        data["board"] = {}
+        data["board"]["avail_houses"] = self.board.avail_houses
+        data["board"]["avail_hotels"] = self.board.avail_hotels
+        data["players"] = []
+        for player in self.players:
+            player_data = {}
+            player_data["name"] = player.name
+            player_data["balance"] = player.balance
+            player_data["net_value"] = player.net_value
+            player_data["in_jail"] = player.in_jail
+            player_data["position"] = player.position
+            player_data["bankrupt"] = player.bankrupt
+            player_data["properties"] = []
+            for property in player.properties:
+                property_data = {}
+                property_data["name"] = property.name
+                property_data["num_building"] = property.num_building
+                player_data["properties"].append(property_data)
+            data["players"].append(player_data)
+        with open(transcript, 'w') as outfile:
+            json.dump(data, outfile, indent = 2)
