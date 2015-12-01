@@ -3,8 +3,10 @@
   "player_turn": 1,
   "is_over": false,
   "winner": null,
-  "avail_houses": 32,
-  "avail_hotels": 12,
+  "board": {
+    "avail_houses": 32,
+    "avail_hotels": 12
+  },
   "players": [
     {
       "name": "Frank",

@@ -17,6 +17,7 @@ class Board(object):
         output = []
         keys = ('name', 'type', 'color', 'position', 'price', 'price_build', 'rent', 'rent_build_1', 'rent_build_2', 'rent_build_3', 'rent_build_4', 'rent_build_5')
         with open(fname, 'rU') as csvfile:
+            next(csvfile, None) # skip first line (header)
             data = csv.reader(csvfile)
             for row in data:
                 output.append(Square(dict(zip(keys, row))))

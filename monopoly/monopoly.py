@@ -1,6 +1,7 @@
 from board import Board
 from player import Player
 from random import randint
+import json
 
 
 class Monopoly(object):
@@ -10,7 +11,8 @@ class Monopoly(object):
 
     def __init__(self, num_players=4):
         self.board = Board()
-        self.players = [Player("player" + i) for i in xrange(num_players)]
+        self.num_players = num_players
+        self.players = [Player("player" + str(i)) for i in xrange(num_players)]
         self.player_turn = 0    # which Player has next move, default first player
 
         self.is_over = False    # true if game is over
@@ -41,3 +43,33 @@ class Monopoly(object):
     def run(self):
         while not self.is_over:
             pass
+
+    # Reads in transcript and returns a new Monopoly instance
+    @classmethod
+    def set_state(self, transcript):
+        if transcript:
+            m = Monopoly()
+            data = open(transcript).read()
+            data = json.loads(data)
+            m.board = Board()
+            m.board.avail_houses = data["board"]["avail_houses"]
+            m.board.avail_hotels = data["board"]["avail_hotels"]
+            m.players = [Player(data["players"][i]["name"]) for i in xrange(data["num_players"])]
+            m.player_turn = data["player_turn"]
+            m.is_over = data["is_over"]
+            m.winner = data["winner"]
+            for i, player in enumerate(m.players):
+                player.balance = data["players"][i]["balance"]
+                player.net_value = data["players"][i]["net_value"]
+                player.in_jail = data["players"][i]["in_jail"]
+                player.position = data["players"][i]["position"]
+                player.bankrupt = data["players"][i]["bankrupt"]
+                for property in data["players"][i]["properties"]:
+                    square = next((x for x in m.board.squares if x.name == property["name"]), None)
+                    if square:
+                        square.num_building = property["num_building"]
+                        player.properties.append(square)
+            return m
+        else:
+            raise Exception("Must pass in a transcript JSON file")
+
