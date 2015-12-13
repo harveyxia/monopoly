@@ -7,6 +7,7 @@ class Player(object):
         self.balance = 1500     # cash balance
         self.net_value = 1500   # net value, including houses and properties
         self.in_jail = False
+        self.jail_duration = 0
         self.position = 0
         self.properties = []
         self.bankrupt = False
@@ -40,7 +41,9 @@ class Player(object):
 
     # override, insert player strategy in subclass
     def do_strat_square(self):
-        raise NotImplementedError
+        # raise NotImplementedError
+        pass
 
     def do_strat_raise_money(self):
-        raise NotImplementedError
+        # raise NotImplementedError
+        pass

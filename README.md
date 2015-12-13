@@ -20,3 +20,9 @@ to perform a mandated square action such as paying rent or tax.
 
 Player strategies are injected into the system by subclassing `Player` and overriding the abstract methods named
 `do_strat_*`. The system calls upon these methods when appropriate.
+
+## Monte Carlo
+
+1. For each square, calculate the expected value of any player landing on such a square (# times player lands on square
+/ total number of years, a year defined as passing Go). Calculate the NPV of the square by taking its rent and
+multiplying by its expected value. Discount rate is due to receiving $200 when passing Go.
