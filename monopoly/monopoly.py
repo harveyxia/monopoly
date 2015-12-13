@@ -13,9 +13,9 @@ class Monopoly(object):
         self.board = Board()
         self.num_players = num_players
         self.players = [Player("player" + str(i)) for i in xrange(num_players)]
-        self.player_turn = 0    # which Player has next move, default first player
+        self.player_turn = 0  # which Player has next move, default first player
 
-        self.is_over = False    # true if game is over
+        self.is_over = False  # true if game is over
         self.winner = None
 
     # game consists of N moves until all but one player is bankrupt
@@ -25,7 +25,7 @@ class Monopoly(object):
             self.attempt_get_out_of_jail(player)
         else:
             self.roll_and_move(player)
-        return player                           # return the player that just moved
+        return player  # return the player that just moved
 
     def attempt_get_out_of_jail(self, player):
         # if in jail for 3 turns, get out automatically and roll to move
@@ -33,12 +33,10 @@ class Monopoly(object):
             player.in_jail = False
             player.jail_duration = 0
             self.roll_and_move(player)
-            print "served time"
         else:
             # if roll doubles, get out of jail but don't move forward
             d = self.roll_dice()
             if d[0] == d[1]:
-                print "escape jail"
                 player.in_jail = False
                 player.jail_duration = 0
             else:
@@ -46,17 +44,17 @@ class Monopoly(object):
 
     def roll_and_move(self, player):
         dice = self.roll_dice()
-        player.move(dice[0]+dice[1])
+        player.move(dice[0] + dice[1])
         player.do_strat_square()
-        if dice[0] == dice[1]:              # doubles, roll again
+        if dice[0] == dice[1]:  # doubles, roll again
             dice = self.roll_dice()
-            player.move(dice[0]+dice[1])
+            player.move(dice[0] + dice[1])
             player.do_strat_square()
-            if dice[0] == dice[1]:          # third double, go to jail
-                print "go to jail"
+            if dice[0] == dice[1]:  # third double, go to jail
                 player.go_to_jail()
 
-    def roll_dice(self):
+    @staticmethod
+    def roll_dice():
         return randint(1, 6), randint(1, 6)
 
     def do_square_action(self):
@@ -128,4 +126,4 @@ class Monopoly(object):
                 player_data["properties"].append(property_data)
             data["players"].append(player_data)
         with open(transcript, 'w') as outfile:
-            json.dump(data, outfile, indent = 2)
+            json.dump(data, outfile, indent=2)
