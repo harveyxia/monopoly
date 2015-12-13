@@ -30,6 +30,7 @@ class Board(object):
                 'rent_build_4',
                 'rent_build_5')
         with open(fname, 'rU') as csvfile:
+            next(csvfile, None) # skip first line (header)
             data = csv.reader(csvfile)
             for row in data:
                 output.append(Square(dict(zip(keys, row))))
