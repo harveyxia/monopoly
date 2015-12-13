@@ -120,10 +120,10 @@ Boardwalk                           |   0.02375
 
 Finally, the expected value of each square is calculated by multiplying its probability of a player landing on it by
 its rent price. This is done for a property with no houses, 1 house, 2 houses, 3 houses, 4 houses, and a hotel (5
- houses). A run with 1000 turns and 4 players typically yields the following result, sorted descending on expected
- value:
+ houses). A run with 1000 turns and 4 players typically yields the following result for squares without houses, sorted 
+ descending on expected value:
 
-Square Name                         | Count
+Square Name                         | Expected Value
 ---------------------------------   | ------
 Boardwalk                                  |   1.05
 Park Place                |   0.7175
