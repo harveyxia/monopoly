@@ -16,7 +16,7 @@ def simulate_square_counts(turns, num_players):
     return square_counts
 
 
-def calculate_square_probs(square_counts):
+def calculate_square_probs(turns, square_counts):
     total = float(sum(square_counts))
     return map(lambda x: x/total, square_counts)
 
