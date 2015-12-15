@@ -44,30 +44,48 @@ class Monopoly(object):
 
     def roll_and_move(self, player):
         dice = self.roll_dice()
+        prev_position = player.position
         player.move(dice[0] + dice[1])
-        player.do_strat_square()
+        self.do_square_action(player, prev_position)
         if dice[0] == dice[1]:  # doubles, roll again
             dice = self.roll_dice()
+            prev_position = player.position
             player.move(dice[0] + dice[1])
-            player.do_strat_square()
+            self.do_square_action(player, prev_position)
             if dice[0] == dice[1]:  # third double, go to jail
                 player.go_to_jail()
 
-    @staticmethod
-    def roll_dice():
-        return randint(1, 6), randint(1, 6)
-
-    def do_square_action(self):
+    def do_square_action(self, player, prev_position):
+        square = self.board.squares[player.position]
         # if pass GO, get $200
-        # if go to jail, go to fail
+        if player.position < prev_position:
+            player.balance += 200
+
+        # do nothing on chance, community, jail, free parking squares
+        if player.position in (0, 2, 7, 10, 17, 20, 22, 33, 36):
+            return
+
+        # if go to jail, go to jail
+        if player.position == 30:
+            player.go_to_jail()
+        # if land on income or luxury tax, pay tax
+        elif player.position == 4 or player.position == 38:
+            player.pay_tax(square)
         # if land on owned property, pay rent
-        # if land on tax, pay tax
+        elif square.owner and square.owner is not player:
+            player.pay_rent(square)
+        # if land on unowned property, do strat
+        else:
+            player.do_strat_unowned_square(square)
         # if land on chance or community, pick card and do card
-        pass
 
     def run(self):
         while not self.is_over:
             pass
+
+    @staticmethod
+    def roll_dice():
+        return randint(1, 6), randint(1, 6)
 
     # Reads in a JSON transcript and returns a new Monopoly instance
     @classmethod

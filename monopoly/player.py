@@ -27,23 +27,37 @@ class Player(object):
         self.properties.append(square)
         square.owner = self
 
-    def _pay_rent(self, square):
+    def pay_rent(self, square):
         if square.owner != self:
-            if self.balance < square.get_rent():
-                pass
+            while self.balance < square.get_rent():
                 # player must mortgage or sell something to raise balance
+                self.do_strat_raise_money()
+            self.balance -= square.get_rent()
+
+    def pay_tax(self, square):
+        tax = 0
+        if square.position == 4:        # income tax
+            # pay either 10% of balance or $200, whichever is smaller
+            if self.balance*0.1 < 200:
+                tax = self.balance*0.1
             else:
-                self.balance -= square.get_rent()
+                tax = 200
+        else:                           # luxury tax
+            tax = 75
+        while self.balance < tax:
+            self.do_strat_raise_money()
+        self.balance -= tax
 
     def go_to_jail(self):
         self.position = 10
         self.in_jail = True
 
-    # override, insert player strategy in subclass
-    def do_strat_square(self):
+    # strategy for unowned properties
+    def do_strat_unowned_square(self, square):
         # raise NotImplementedError
         pass
 
     def do_strat_raise_money(self):
+        # BANKRUPTCY HAPPENS HERE
         # raise NotImplementedError
         pass
