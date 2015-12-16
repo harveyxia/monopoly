@@ -16,6 +16,9 @@ performing an action under the player's choice (buying the square, purchasing ho
 The game ends when all but one player is *bankrupt.* A player becomes bankrupt when they cannot raise sufficient funds
 to perform a mandated square action such as paying rent or tax.
 
+To aid in performing Monte Carlo simulations, we include the optional parameter `max_money` to `Monopoly()`. If this is
+set, the bank will only issue up to `max_money` in $200 for players passing GO.
+
 ### Player Strategy
 
 Player strategies are injected into the system by subclassing `Player` and overriding the abstract methods named
