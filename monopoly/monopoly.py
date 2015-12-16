@@ -50,13 +50,13 @@ class Monopoly(object):
         print "%s wins!" % self.winner.name
 
     # game consists of N moves until all but one player is bankrupt
-    def make_move(self):
+    def make_move(self, move_only=False):
         player = self.active_players[self.player_turn]
         self.player_turn = (self.player_turn + 1) % self.num_active_players
         if player.in_jail:
             self.attempt_get_out_of_jail(player)
         else:
-            self.roll_and_move(player)
+            self.roll_and_move(player, move_only=move_only)
         return player
 
     def attempt_get_out_of_jail(self, player):
@@ -74,16 +74,18 @@ class Monopoly(object):
             else:
                 player.jail_duration += 1
 
-    def roll_and_move(self, player):
+    def roll_and_move(self, player, move_only=False):
         dice = self.roll_dice()
         prev_position = player.position
         player.move(dice[0] + dice[1])
-        self.do_square_action(player, prev_position)
+        if not move_only:
+            self.do_square_action(player, prev_position)
         if dice[0] == dice[1] and not player.in_jail:  # first doubles, roll again if not in jail
             dice = self.roll_dice()
             prev_position = player.position
             player.move(dice[0] + dice[1])
-            self.do_square_action(player, prev_position)
+            if not move_only:
+                self.do_square_action(player, prev_position)
             if dice[0] == dice[1] and not player.in_jail:  # second doubles, roll again if not in jail
                 dice = self.roll_dice()
                 if dice[0] == dice[1]:  # third doubles, go to jail
@@ -91,7 +93,8 @@ class Monopoly(object):
                 else:
                     prev_position = player.position
                     player.move(dice[0] + dice[1])
-                    self.do_square_action(player, prev_position)
+                    if not move_only:
+                        self.do_square_action(player, prev_position)
 
     def do_square_action(self, player, prev_position):
         square = self.board.squares[player.position]

@@ -1,5 +1,6 @@
 from monopoly.board import Board
 from monopoly.monopoly import Monopoly
+from players.basic_player import BasicPlayer
 
 
 def simulate_square_counts(turns, num_players):
@@ -8,7 +9,9 @@ def simulate_square_counts(turns, num_players):
     :param num_players: number of players
     :param turns: number of turns to run (a turn consists of one move for each player)
     """
-    monopoly = Monopoly(num_players=num_players)
+    board = Board()
+    players = [BasicPlayer(color_index=board.color_index, name="BasicPlayer"+str(i)) for i in xrange(num_players)]
+    monopoly = Monopoly(players=players)
     square_counts = [0 for i in xrange(40)]
     for i in xrange(num_players * turns):
         player = monopoly.make_move()
@@ -16,7 +19,7 @@ def simulate_square_counts(turns, num_players):
     return square_counts
 
 
-def calculate_square_probs(turns, square_counts):
+def calculate_square_probs(square_counts):
     total = float(sum(square_counts))
     return map(lambda x: x / total, square_counts)
 
