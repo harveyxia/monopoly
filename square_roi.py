@@ -1,5 +1,5 @@
-from monopoly.monopoly import Monopoly
 from monopoly.board import Board
+from monopoly.monopoly import Monopoly
 
 
 def simulate_square_counts(turns, num_players):
@@ -18,7 +18,7 @@ def simulate_square_counts(turns, num_players):
 
 def calculate_square_probs(turns, square_counts):
     total = float(sum(square_counts))
-    return map(lambda x: x/total, square_counts)
+    return map(lambda x: x / total, square_counts)
 
 
 def calculate_roi(square_probs, num_properties=0):
@@ -30,7 +30,7 @@ def calculate_roi(square_probs, num_properties=0):
         square = squares[i]
         square_prob = square_probs[i]
         # return attributes on the squares for sorting and analysis
-        roi.append((square.name, square.color, square.rent[num_properties]*square_prob))
+        roi.append((square.name, square.color, square.rent[num_properties] * square_prob))
     return roi
 
 

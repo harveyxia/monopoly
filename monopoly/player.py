@@ -1,6 +1,3 @@
-import pdb
-
-
 class Player(object):
     """
     Player object

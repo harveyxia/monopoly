@@ -1,8 +1,8 @@
+import json
+from random import randint
+
 from board import Board
 from player import Player
-from random import randint
-import json
-import pdb
 
 
 class Monopoly(object):
@@ -79,14 +79,14 @@ class Monopoly(object):
         prev_position = player.position
         player.move(dice[0] + dice[1])
         self.do_square_action(player, prev_position)
-        if dice[0] == dice[1] and not player.in_jail:       # first doubles, roll again if not in jail
+        if dice[0] == dice[1] and not player.in_jail:  # first doubles, roll again if not in jail
             dice = self.roll_dice()
             prev_position = player.position
             player.move(dice[0] + dice[1])
             self.do_square_action(player, prev_position)
-            if dice[0] == dice[1] and not player.in_jail:   # second doubles, roll again if not in jail
+            if dice[0] == dice[1] and not player.in_jail:  # second doubles, roll again if not in jail
                 dice = self.roll_dice()
-                if dice[0] == dice[1]:                      # third doubles, go to jail
+                if dice[0] == dice[1]:  # third doubles, go to jail
                     player.go_to_jail()
                 else:
                     prev_position = player.position

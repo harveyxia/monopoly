@@ -1,6 +1,7 @@
-from monopoly.monopoly import Monopoly
 from monopoly.board import Board
+from monopoly.monopoly import Monopoly
 from players.basic_player import BasicPlayer
+
 
 def run(trials):
     players = [BasicPlayer(color_index=Board.build_color_index, name="BasicPlayer1"),

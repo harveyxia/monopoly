@@ -1,5 +1,5 @@
-from monopoly.monopoly import Monopoly
 from monopoly.board import Board
+from monopoly.monopoly import Monopoly
 from players.basic_player import BasicPlayer
 
 
