@@ -98,7 +98,7 @@ class Player(object):
 
     # number houses on properties of any given color cannot differ by more than 1
     def check_purchase_house(self, square, board):
-        if board.avail_houses > 0:
+        if board.avail_houses > 0 and self.balance > square.price_build:
             if square.color not in self.owned_colors:
                 return False
             if square.num_building >= 4:        # can only upgrade to hotel
@@ -106,9 +106,37 @@ class Player(object):
             other_color_squares = list(self.color_index[square.color])
             other_color_squares.remove(square)
             for s in other_color_squares:
-                if square.num_building + 2 > s.num_buildings:
+                if abs(square.num_building + 1 - s.num_buildings) > 1:
                     return False
             return True
+        return False
+
+    def check_purchase_hotel(self, square, board):
+        if board.avail_hotels > 0 and self.balance > square.price_build:
+            if square.color not in self.owned_colors:
+                return False
+            if square.num_building != 4:        # must have 4 to purchase hotel
+                return False
+            other_color_squares = list(self.color_index[square.color])
+            other_color_squares.remove(square)
+            for s in other_color_squares:
+                if abs(square.num_building + 1 - s.num_buildings) > 1:
+                    return False
+            return True
+        return False
+
+    def purchase_house(self, square, board):
+        if self.check_purchase_house(square, board):
+            board.avail_houses -= 1
+            square.num_building += 1
+            self.balance -= square.price_build
+
+    def purchase_hotel(self, square, board):
+        if self.check_purchase_hotel(square, board):
+            board.avail_houses += 4
+            board.avail_hotels -= 1
+            square.num_building += 1 # now at 5
+            self.balance -= square.price_build
 
     def do_strat_buy_buildings(self, board):
         raise NotImplementedError
