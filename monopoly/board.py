@@ -43,8 +43,8 @@ class Board(object):
     def build_color_index(squares):
         color_index = {}
         for square in squares:
-            if square.color != 'None':
-                if square.color not in color_index:
+            if square.color.lower() != 'none':
+                if square.color.lower() not in color_index:
                     color_index[square.color.lower()] = [square]
                 else:
                     color_index[square.color.lower()].append(square)
