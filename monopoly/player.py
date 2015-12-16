@@ -2,15 +2,24 @@ class Player(object):
     """
     Player object
     """
+
     def __init__(self, name):
         self.name = name
-        self.balance = 1500     # cash balance
-        self.net_value = 1500   # net value, including houses and properties
+        self.balance = 1500  # cash balance
+        # self.net_value = 1500   # net value, including houses and properties
         self.in_jail = False
         self.jail_duration = 0
         self.position = 0
         self.properties = []
         self.bankrupt = False
+
+    def __str__(self):
+        return "%s:\n  " \
+               "position:%s\n  " \
+               "balance:%s\n  " \
+               "properties:%s\n  " \
+               "in_jail:%s" % \
+               (self.name, self.position, self.balance, self.properties, self.in_jail)
 
     def move(self, num_squares):
         if self.in_jail:
@@ -29,23 +38,31 @@ class Player(object):
 
     def pay_rent(self, square):
         if square.owner != self:
+            # player must mortgage or sell something to raise balance
             while self.balance < square.get_rent():
-                # player must mortgage or sell something to raise balance
-                self.do_strat_raise_money()
+                # if bankrupt, pay with whatever balance is available
+                if not self.do_strat_raise_money():
+                    square.owner.balance += self.balance
+                    self.balance = 0
+                    return
             self.balance -= square.get_rent()
+            square.owner.balance += square.get_rent()
 
     def pay_tax(self, square):
         tax = 0
-        if square.position == 4:        # income tax
+        if square.position == 4:  # income tax
             # pay either 10% of balance or $200, whichever is smaller
-            if self.balance*0.1 < 200:
-                tax = self.balance*0.1
+            if self.balance * 0.1 < 200:
+                tax = self.balance * 0.1
             else:
                 tax = 200
-        else:                           # luxury tax
+        else:  # luxury tax
             tax = 75
+        # player must mortgage or sell something to raise balance
         while self.balance < tax:
-            self.do_strat_raise_money()
+            # if bankrupt, pay with whatever balance is available
+            if not self.do_strat_raise_money():
+                self.balance = 0
         self.balance -= tax
 
     def go_to_jail(self):
@@ -57,7 +74,8 @@ class Player(object):
         # raise NotImplementedError
         pass
 
+    # return False if bankrupt, else True
     def do_strat_raise_money(self):
         # BANKRUPTCY HAPPENS HERE
-        # raise NotImplementedError
-        pass
+        self.bankrupt = True
+        return False

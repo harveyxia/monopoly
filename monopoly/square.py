@@ -1,5 +1,6 @@
 class Square(object):
-    """ A monopoly square
+    """
+    A monopoly square
     """
 
     def __init__(self, data):
