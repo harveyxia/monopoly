@@ -107,6 +107,7 @@ class Monopoly(object):
                 self.max_money -= 200
 
         # add logic to buy houses here
+        player.do_strat_buy_buildings(self.board)
 
         # do nothing on chance, community, jail, free parking squares
         if player.position in (0, 2, 7, 10, 17, 20, 22, 33, 36):

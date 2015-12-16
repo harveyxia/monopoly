@@ -97,17 +97,20 @@ class Player(object):
         pass
 
     # number houses on properties of any given color cannot differ by more than 1
-    def check_purchase_house(self, square):
-        if square.color not in self.owned_colors:
-            return False
-        other_color_squares = list(self.color_index[square.color])
-        other_color_squares.remove(square)
-        for s in other_color_squares:
-            if square.num_building + 2 > s.num_buildings:
+    def check_purchase_house(self, square, board):
+        if board.avail_houses > 0:
+            if square.color not in self.owned_colors:
                 return False
-        return True
+            if square.num_building >= 4:        # can only upgrade to hotel
+                return False
+            other_color_squares = list(self.color_index[square.color])
+            other_color_squares.remove(square)
+            for s in other_color_squares:
+                if square.num_building + 2 > s.num_buildings:
+                    return False
+            return True
 
-    def do_strat_buy_houses(self, board):
+    def do_strat_buy_buildings(self, board):
         raise NotImplementedError
 
     # strategy for unowned properties

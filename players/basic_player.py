@@ -2,7 +2,7 @@ from monopoly.player import Player
 
 
 class BasicPlayer(Player):
-    def do_strat_buy_houses(self, board):
+    def do_strat_buy_buildings(self, board):
         pass
 
     def do_strat_raise_money(self):
