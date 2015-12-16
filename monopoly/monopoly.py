@@ -10,7 +10,7 @@ class Monopoly(object):
     Monopoly class, represents entirety of game
     """
 
-    def __init__(self, players):
+    def __init__(self, players, max_money=None):
         """
 
         :type players: Player() subclass
@@ -26,6 +26,8 @@ class Monopoly(object):
         self.active_players = self.players
         self.player_turn = 0  # which Player has next move, default first player
 
+        self.max_money = max_money  # artificial cap on maximum money given out from passing GO
+
         self.is_over = False  # true if game is over
         self.winner = None
 
@@ -35,6 +37,7 @@ class Monopoly(object):
         self.is_over = True
         self.winner = self.active_players[0]
         print "--------------------Game finished---------------------"
+        print "%s wins!" % self.winner.name
 
     def run_debug(self):
         while self.num_active_players > 1:
@@ -44,6 +47,7 @@ class Monopoly(object):
         self.is_over = True
         self.winner = self.active_players[0]
         print "--------------------Game finished---------------------"
+        print "%s wins!" % self.winner.name
 
     # game consists of N moves until all but one player is bankrupt
     def make_move(self):
@@ -75,14 +79,14 @@ class Monopoly(object):
         prev_position = player.position
         player.move(dice[0] + dice[1])
         self.do_square_action(player, prev_position)
-        if dice[0] == dice[1] and not player.in_jail:  # first doubles, roll again if not in jail
+        if dice[0] == dice[1] and not player.in_jail:       # first doubles, roll again if not in jail
             dice = self.roll_dice()
             prev_position = player.position
             player.move(dice[0] + dice[1])
             self.do_square_action(player, prev_position)
-            if dice[0] == dice[1] and not player.in_jail:  # second doubles, roll again if not in jail
+            if dice[0] == dice[1] and not player.in_jail:   # second doubles, roll again if not in jail
                 dice = self.roll_dice()
-                if dice[0] == dice[1]:
+                if dice[0] == dice[1]:                      # third doubles, go to jail
                     player.go_to_jail()
                 else:
                     prev_position = player.position
@@ -93,9 +97,13 @@ class Monopoly(object):
         square = self.board.squares[player.position]
         # if pass GO, get $200
         if player.position < prev_position:
-            player.balance += 200
+            if self.max_money is None:
+                player.balance += 200
+            elif self.max_money and self.max_money >= 200:
+                player.balance += 200
+                self.max_money -= 200
 
-        # player.do
+        # add logic to buy houses here
 
         # do nothing on chance, community, jail, free parking squares
         if player.position in (0, 2, 7, 10, 17, 20, 22, 33, 36):

@@ -100,10 +100,15 @@ class Player(object):
         pass
 
     # number houses on properties of any given color cannot differ by more than 1
-    def purchase_house(self, square):
+    def check_purchase_house(self, square):
         if square.color not in self.owned_colors:
-            raise Exception("Cannot purchase house, player does not own color")
-
+            return False
+        other_color_squares = list(self.color_index[square.color])
+        other_color_squares.remove(square)
+        for s in other_color_squares:
+            if square.num_building + 2 > s.num_buildings:
+                return False
+        return True
 
     def do_strat_buy_houses(self, board):
         raise NotImplementedError
