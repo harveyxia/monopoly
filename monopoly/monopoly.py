@@ -165,9 +165,10 @@ class Monopoly(object):
         else:
             raise Exception("Must pass in a transcript JSON file")
 
-    # Takes current Monopoly game and creates a pretty-printed JSON file that
+    # Takes current Monopoly game and optionally creates a pretty-printed JSON file that
     # can be loaded using Monopoly.set_state()
-    def save_state(self, transcript="transcript.json"):
+    # returns the dict
+    def save_state(self, output_file=False, transcript="transcript.json"):
         data = {}
         data["num_players"] = self.num_active_players
         data["player_turn"] = self.player_turn
@@ -192,5 +193,7 @@ class Monopoly(object):
                 property_data["num_building"] = property.num_building
                 player_data["properties"].append(property_data)
             data["players"].append(player_data)
-        with open(transcript, 'w') as outfile:
-            json.dump(data, outfile, indent=2)
+        if output_file:
+            with open(transcript, 'w') as outfile:
+                json.dump(data, outfile, indent=2)
+        return data

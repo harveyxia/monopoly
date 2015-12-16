@@ -1,3 +1,5 @@
+import csv
+
 from monopoly.board import Board
 from monopoly.monopoly import Monopoly
 from players.basic_player import BasicPlayer
@@ -10,7 +12,7 @@ def simulate_square_counts(turns, num_players):
     :param turns: number of turns to run (a turn consists of one move for each player)
     """
     board = Board()
-    players = [BasicPlayer(color_index=board.color_index, name="BasicPlayer"+str(i)) for i in xrange(num_players)]
+    players = [BasicPlayer(color_index=board.color_index, name="BasicPlayer" + str(i)) for i in xrange(num_players)]
     monopoly = Monopoly(players=players)
     square_counts = [0 for i in xrange(40)]
     for i in xrange(num_players * turns):
@@ -25,11 +27,11 @@ def calculate_square_probs(square_counts):
 
 
 def calculate_roi(square_probs, num_properties=0):
-    if num_properties > 5:
-        raise Exception("%s exceeds max properties of 5." % str(num_properties))
     squares = Board().squares
     roi = []
     for i in xrange(len(squares)):
+        if i in (0, 2, 4, 7, 10, 17, 20, 22, 30, 33, 36, 38):   # skip the irrelevant squares
+            continue
         square = squares[i]
         square_prob = square_probs[i]
         # return attributes on the squares for sorting and analysis
@@ -47,3 +49,11 @@ def run(turns, num_players):
            4: calculate_roi(square_probs, 4),
            5: calculate_roi(square_probs, 5)}
     return roi
+
+
+def output_expected_value_file(filename, roi):
+    with open('csv/'+filename, 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=['name', 'value'])
+        writer.writeheader()
+        for r in roi:
+            writer.writerow({'name': r[0], 'value': r[2]})
