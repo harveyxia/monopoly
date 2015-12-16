@@ -7,9 +7,9 @@ class Square(object):
         self.name = data['name']
         self.type = data['type']
         self.color = data['color']
-        self.position = data['position']
-        self.price = data['price']
-        self.price_build = data['price_build']
+        self.position = int(data['position'])
+        self.price = int(data['price'])
+        self.price_build = int(data['price_build'])
         self.rent = {
             0: int(data['rent']),
             1: int(data['rent_build_1']),

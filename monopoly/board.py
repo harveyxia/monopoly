@@ -3,7 +3,8 @@ import os
 
 from square import Square
 
-dir = os.path.dirname(__file__)
+directory = os.path.dirname(__file__)
+
 
 class Board(object):
     """Monopoly board representation
@@ -14,8 +15,10 @@ class Board(object):
         self.squares = self._init_board_data()
         self.avail_houses = 32
         self.avail_hotels = 12
+        self.color_index = self.build_color_index(self.squares)
 
-    def _init_board_data(self, fname=dir + '/board.csv'):
+    @staticmethod
+    def _init_board_data(fname=directory + '/board.csv'):
         output = []
         keys = ('name',
                 'type',
@@ -30,8 +33,22 @@ class Board(object):
                 'rent_build_4',
                 'rent_build_5')
         with open(fname, 'rU') as csvfile:
-            next(csvfile, None) # skip first line (header)
+            next(csvfile, None)  # skip first line (header)
             data = csv.reader(csvfile)
             for row in data:
                 output.append(Square(dict(zip(keys, row))))
         return output
+
+    @staticmethod
+    def build_color_index(squares):
+        color_index = {}
+        for square in squares:
+            if square.color != 'None':
+                if square.color not in color_index:
+                    color_index[square.color.lower()] = [square]
+                else:
+                    color_index[square.color.lower()].append(square)
+        return color_index
+
+    def get_color_group(self, color):
+        return self.color_index[color.lower()]

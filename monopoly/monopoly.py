@@ -2,6 +2,7 @@ from board import Board
 from player import Player
 from random import randint
 import json
+import pdb
 
 
 class Monopoly(object):
@@ -9,13 +10,17 @@ class Monopoly(object):
     Monopoly class, represents entirety of game
     """
 
-    def __init__(self, num_players=4):
-        if num_players < 2:
+    def __init__(self, players):
+        """
+
+        :type players: Player() subclass
+        """
+        if len(players) < 2:
             raise Exception("num_players must be greater than 1")
 
         self.board = Board()
-        self.num_players = num_players
-        self.players = [Player("Player" + str(i)) for i in xrange(num_players)]
+        self.num_players = len(players)
+        self.players = players
         # num_active_players and active_players don't include bankrupt players
         self.num_active_players = self.num_players
         self.active_players = self.players
@@ -34,7 +39,8 @@ class Monopoly(object):
     def run_debug(self):
         while self.num_active_players > 1:
             player = self.make_move()
-            print player
+            # print player
+            print "%s balance: %s" % (player.name, str(player.balance))
         self.is_over = True
         self.winner = self.active_players[0]
         print "--------------------Game finished---------------------"
@@ -69,19 +75,27 @@ class Monopoly(object):
         prev_position = player.position
         player.move(dice[0] + dice[1])
         self.do_square_action(player, prev_position)
-        if dice[0] == dice[1] and not player.in_jail:  # doubles, roll again if not in jail
+        if dice[0] == dice[1] and not player.in_jail:  # first doubles, roll again if not in jail
             dice = self.roll_dice()
             prev_position = player.position
             player.move(dice[0] + dice[1])
             self.do_square_action(player, prev_position)
-            if dice[0] == dice[1]:  # third doubles, go to jail
-                player.go_to_jail()
+            if dice[0] == dice[1] and not player.in_jail:  # second doubles, roll again if not in jail
+                dice = self.roll_dice()
+                if dice[0] == dice[1]:
+                    player.go_to_jail()
+                else:
+                    prev_position = player.position
+                    player.move(dice[0] + dice[1])
+                    self.do_square_action(player, prev_position)
 
     def do_square_action(self, player, prev_position):
         square = self.board.squares[player.position]
         # if pass GO, get $200
         if player.position < prev_position:
             player.balance += 200
+
+        # player.do
 
         # do nothing on chance, community, jail, free parking squares
         if player.position in (0, 2, 7, 10, 17, 20, 22, 33, 36):
@@ -97,7 +111,8 @@ class Monopoly(object):
         elif square.owner and square.owner is not player:
             player.pay_rent(square)
         # if land on unowned property, do strat
-        else:
+        elif square.owner is None and square.owner is not player:
+            print "##########################################################"
             player.do_strat_unowned_square(square)
         # if land on chance or community, pick card and do card
         # check if player is bankrupt, if so remove
