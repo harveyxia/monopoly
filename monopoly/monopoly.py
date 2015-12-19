@@ -1,3 +1,12 @@
+# monopoly is responsible for:
+#   running the game
+#   turn-by-turn mechanics
+#   asking the player for input
+#     check to see if legal move
+#     ask player for strat (returns TRUE or FALSE)
+#     if player says yes, ask player to do thing (player doesn't check anything)
+#   state variable
+
 import json
 from random import randint
 
