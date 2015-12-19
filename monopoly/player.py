@@ -29,7 +29,7 @@ class Player(object):
 
     ############################
     #                          #
-    #         DO THINGS        #
+    #           MOVE           #
     #                          #
     ############################
 
@@ -40,6 +40,20 @@ class Player(object):
         if (self.position + num_squares > 40):
             self.years = self.years + 1
         self.position = (self.position + num_squares) % 40
+
+    def go_to_jail(self):
+        self.prev_position = self.position
+        self.position = 10
+        self.in_jail = True
+
+    # def swap_squares(self, other_player):
+    #     pass
+
+    ############################
+    #                          #
+    #          PAY UP          #
+    #                          #
+    ############################
 
     # pays rent
     # calls do_strat_raise_money
@@ -75,13 +89,11 @@ class Player(object):
                 return
         self.balance -= tax
 
-    def go_to_jail(self):
-        self.prev_position = self.position
-        self.position = 10
-        self.in_jail = True
-
-    def swap_squares(self, other_player):
-        pass
+    ############################
+    #                          #
+    #         PURCHASE         #
+    #                          #
+    ############################
 
     def purchase_house(self, square, board):
         board.avail_houses -= 1
@@ -93,7 +105,7 @@ class Player(object):
         board.avail_hotels -= 1
         square.num_building += 1 # now at 5
         self.balance -= square.price_build
-    
+
     # buys a square for a player
     # does NOT check permissions - will die if you try to buy something you can't
     def purchase_square(self, square):
