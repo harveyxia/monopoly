@@ -150,9 +150,16 @@ class Player(object):
         raise NotImplementedError
 
     # return False if bankrupt, else True
+    # this will raise the amount of money or die trying
     def do_strat_raise_money(self, money):
         raise NotImplementedError
 
+    # it returns TRUE if you got out of jail and FALSE otherwise
+    # all the game mechanism - such as paying 50 bucks if you fail to
+    # get out of jail on your third turn - should be implemented HERE
+    # you pass the dice roll in so that you can figure out if you
+    # successfully rolled out of jail, BUT the actually movement of the player
+    # should take place in monopoly
     def do_strat_get_out_of_jail(self, d):
         raise NotImplementedError
 
