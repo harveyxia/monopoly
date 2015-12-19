@@ -1,0 +1,13 @@
+BASIC STRATEGY
+
+step 1: calculate basic NPVs
+
+step 2: iterate on the NPVs
+
+we need 
+  - decide that takes NPVs + state of board and outputs a probability
+  - play that takes decide and plays the game. every time someone needs to make
+    a decision they will just call decide. the game should keep track of how
+    much each square earns over the course of the game and output an NPV
+    at the end of the game
+  - we can then iterate: a set of NPVs goes in, a set of NPVs comes out
