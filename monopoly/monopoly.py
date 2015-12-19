@@ -130,7 +130,7 @@ class Monopoly(object):
             player.pay_rent(square)
         # if land on unowned property, do strat
         elif square.owner is None and square.owner is not player:
-            print "##########################################################"
+            # print "##########################################################"
             player.do_strat_unowned_square(square)
         # if land on chance or community, pick card and do card
         # check if player is bankrupt, if so remove
