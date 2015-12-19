@@ -13,8 +13,7 @@ from players.basic_player import BasicPlayer
 
 
 def simulate_square_counts(turns):
-    board = Board()
-    players = [BasicPlayer(color_index=board.color_index, name="BasicPlayer" + str(i)) for i in xrange(4)]
+    players = [BasicPlayer(name="BasicPlayer" + str(i)) for i in xrange(4)]
     monopoly = Monopoly(players=players)
     square_counts = [0 for i in xrange(40)]
     for i in xrange(4 * turns):

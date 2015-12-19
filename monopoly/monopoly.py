@@ -56,9 +56,10 @@ class Monopoly(object):
         player = self.active_players[self.player_turn]
         self.player_turn = (self.player_turn + 1) % self.num_active_players
         if player.in_jail:
-            self.attempt_get_out_of_jail(player)
-        else:
-            self.roll_and_move(player, move_only=move_only)
+            if not player.do_strat_get_out_of_jail(self.roll_dice()):
+                return player
+        
+        self.roll_and_move(player, move_only=move_only)
         return player
 
     def return_years(self):
@@ -66,21 +67,6 @@ class Monopoly(object):
         for player in self.players:
             years.append(player.years)
         return years
-
-    def attempt_get_out_of_jail(self, player):
-        # if in jail for 3 turns, get out automatically and roll to move
-        if player.jail_duration >= 2:
-            player.in_jail = False
-            player.jail_duration = 0
-            self.roll_and_move(player)
-        else:
-            # if roll doubles, get out of jail but don't move forward
-            d = self.roll_dice()
-            if d[0] == d[1]:
-                player.in_jail = False
-                player.jail_duration = 0
-            else:
-                player.jail_duration += 1
 
     def roll_and_move(self, player, move_only=False):
         dice = self.roll_dice()
@@ -115,7 +101,7 @@ class Monopoly(object):
                 self.max_money -= 200
 
         # add logic to buy houses here
-        player.do_strat_buy_buildings(self.board)
+        player.do_strat_buy_buildings()
 
         # do nothing on chance, community, jail, free parking squares
         if player.position in (0, 2, 7, 10, 17, 20, 22, 33, 36):

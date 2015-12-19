@@ -14,10 +14,13 @@ class NpvPlayer(Player):
             if self.decide(self.square_buy_decisions[square.name]):
                 self.buy_square()
 
-    def do_strat_raise_money(self):
+    def do_strat_raise_money(self, money):
         pass
 
-    def do_strat_buy_buildings(self, board):
+    def do_strat_buy_buildings(self):
+        pass
+
+    def do_strat_get_out_of_jail(self, d):
         pass
 
     @staticmethod

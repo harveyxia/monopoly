@@ -142,7 +142,7 @@ class Player(object):
             square.num_building += 1 # now at 5
             self.balance -= square.price_build
 
-    def do_strat_buy_buildings(self, board):
+    def do_strat_buy_buildings(self):
         raise NotImplementedError
 
     # strategy for unowned properties
@@ -150,5 +150,9 @@ class Player(object):
         raise NotImplementedError
 
     # return False if bankrupt, else True
-    def do_strat_raise_money(self):
+    def do_strat_raise_money(self, money):
         raise NotImplementedError
+
+    def do_strat_get_out_of_jail(self, d):
+        raise NotImplementedError
+

@@ -9,8 +9,11 @@ class EmptyPlayer(Player):
     def do_strat_unowned_square(self, square):
         pass
 
-    def do_strat_raise_money(self):
+    def do_strat_raise_money(self, money):
         pass
 
-    def do_strat_buy_buildings(self, board):
+    def do_strat_buy_buildings(self):
+        pass
+
+    def do_strat_get_out_of_jail(self, d):
         pass
