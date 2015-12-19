@@ -61,6 +61,12 @@ class Monopoly(object):
             self.roll_and_move(player, move_only=move_only)
         return player
 
+    def return_years(self):
+        years = []
+        for player in self.players:
+            years.append(player.years)
+        return years
+
     def attempt_get_out_of_jail(self, player):
         # if in jail for 3 turns, get out automatically and roll to move
         if player.jail_duration >= 2:

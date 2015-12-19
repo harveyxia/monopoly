@@ -14,6 +14,7 @@ class Player(object):
         self.properties = []
         self.bankrupt = False
         self.board = None
+        self.years = 0
 
     def __str__(self):
         return "%s:\n  " \
@@ -26,6 +27,8 @@ class Player(object):
     def move(self, num_squares):
         if self.in_jail:
             raise Exception("%s cannot move because in jail." % self.name)
+        if (self.position + num_squares > 40):
+            self.years = self.years + 1
         self.position = (self.position + num_squares) % 40
 
     def buy_square(self, square):
@@ -49,7 +52,7 @@ class Player(object):
         return True
 
     def pay_rent(self, square):
-        print "%s is paying rent" % self.name
+        # print "%s is paying rent" % self.name
 
         if square.owner != self:
             # player must mortgage or sell something to raise balance
@@ -81,6 +84,7 @@ class Player(object):
         self.balance -= tax
 
     def go_to_jail(self):
+        self.prev_position = self.position
         self.position = 10
         self.in_jail = True
 
