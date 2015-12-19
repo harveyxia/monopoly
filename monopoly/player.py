@@ -41,7 +41,7 @@ class Player(object):
         self.properties.append(square)
         if self.owns_color(square.color):
             self.owned_colors.append(square.color)
-        square.owner = self
+        square.set_owner(self)
 
     # check if player owns all properties of a color. not an efficient implementation
     def owns_color(self, color):
@@ -55,15 +55,13 @@ class Player(object):
         # print "%s is paying rent" % self.name
 
         if square.owner != self:
-            # player must mortgage or sell something to raise balance
-            while self.balance < square.get_rent():
-                # if bankrupt, pay with whatever balance is available
-                if not self.do_strat_raise_money():
-                    square.owner.balance += self.balance
-                    self.balance = 0
-                    return
-            self.balance -= square.get_rent()
-            square.owner.balance += square.get_rent()
+            payment = square.get_rent()
+            # pay the player the rent or everything you have
+            if not self.do_strat_raise_money(payment):
+                payment = self.balance
+            self.balance -= payment
+            square.owner.balance += payment
+            square.update_npv(payment)
 
     def pay_tax(self, square):
         tax = 0
