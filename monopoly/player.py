@@ -55,15 +55,6 @@ class Player(object):
             self.owned_colors.append(square.color)
         square.owner = self
 
-    # check if player owns all properties of a color. 
-    # not an efficient implementation
-    def owns_color(self, color):
-        color_squares = self.board.get_color_group(color)
-        for square in color_squares:
-            if square not in self.properties:
-                return False
-        return True
-
     # pays rent
     # calls do_strat_raise_money
     def pay_rent(self, square):
@@ -123,6 +114,21 @@ class Player(object):
         board.avail_hotels -= 1
         square.num_building += 1 # now at 5
         self.balance -= square.price_build
+
+    ############################
+    #                          #
+    #       HELPFUL STUFF      #
+    #                          #
+    ############################
+
+    # check if player owns all properties of a color. 
+    # not an efficient implementation
+    def owns_color(self, color):
+        color_squares = self.board.get_color_group(color)
+        for square in color_squares:
+            if square not in self.properties:
+                return False
+        return True
 
     ############################
     #                          #
