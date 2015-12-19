@@ -15,7 +15,7 @@ class Board(object):
         self.squares = self._init_board_data()
         self.avail_houses = 32
         self.avail_hotels = 12
-        self.color_index = self.build_color_index(self.squares)
+        self.color_index = self._build_color_index(self.squares)
 
     @staticmethod
     def _init_board_data(fname=directory + '/board.csv'):
@@ -39,8 +39,7 @@ class Board(object):
                 output.append(Square(dict(zip(keys, row))))
         return output
 
-    @staticmethod
-    def build_color_index(squares):
+    def _build_color_index(self, squares):
         color_index = {}
         for square in squares:
             if square.color.lower() != 'none':

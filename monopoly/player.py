@@ -3,7 +3,7 @@ class Player(object):
     Player object
     """
 
-    def __init__(self, name, color_index):
+    def __init__(self, name):
         self.name = name
         self.balance = 1500  # cash balance
         # self.net_value = 1500   # net value, including houses and properties
@@ -13,8 +13,8 @@ class Player(object):
         self.owned_colors = []
         self.properties = []
         self.bankrupt = False
+        self.board = None
         self.years = 0
-        self.color_index = color_index
 
     def __str__(self):
         return "%s:\n  " \
@@ -45,7 +45,7 @@ class Player(object):
 
     # check if player owns all properties of a color. not an efficient implementation
     def owns_color(self, color):
-        color_squares = self.color_index[color]
+        color_squares = self.board.get_color_group(color)
         for square in color_squares:
             if square not in self.properties:
                 return False
@@ -107,7 +107,7 @@ class Player(object):
                 return False
             if square.num_building >= 4:        # can only upgrade to hotel
                 return False
-            other_color_squares = list(self.color_index[square.color])
+            other_color_squares = list(self.board.get_color_group(square.color))
             other_color_squares.remove(square)
             for s in other_color_squares:
                 if abs(square.num_building + 1 - s.num_buildings) > 1:
@@ -121,7 +121,7 @@ class Player(object):
                 return False
             if square.num_building != 4:        # must have 4 to purchase hotel
                 return False
-            other_color_squares = list(self.color_index[square.color])
+            other_color_squares = list(self.board.get_color_group(square.color))
             other_color_squares.remove(square)
             for s in other_color_squares:
                 if abs(square.num_building + 1 - s.num_buildings) > 1:

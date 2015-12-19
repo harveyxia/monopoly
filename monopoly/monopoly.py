@@ -21,6 +21,8 @@ class Monopoly(object):
         self.board = Board()
         self.num_players = len(players)
         self.players = players
+        for player in players:
+            player.board = self.board
         # num_active_players and active_players don't include bankrupt players
         self.num_active_players = self.num_players
         self.active_players = self.players
@@ -129,7 +131,7 @@ class Monopoly(object):
         elif square.owner and square.owner is not player:
             player.pay_rent(square)
         # if land on unowned property, do strat
-        elif square.owner is None and square.owner is not player:
+        elif square.owner is None:
             # print "##########################################################"
             player.do_strat_unowned_square(square)
         # if land on chance or community, pick card and do card
