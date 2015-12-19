@@ -41,26 +41,12 @@ class Player(object):
             self.years = self.years + 1
         self.position = (self.position + num_squares) % 40
 
-    # buys a square for a player
-    # does NOT check permissions - will die if you try to buy something you can't
-    def buy_square(self, square):
-        if square.owner:
-            raise Exception("%s cannot buy square because square owned by %s" % (self.name, square.owner.name))
-        if self.balance < square.price:
-            raise Exception("%s cannot buy square because insufficient balance" % self.name)
-        self.balance -= square.price
-        # increase net_value, by how much?
-        self.properties.append(square)
-        if self.owns_color(square.color):
-            self.owned_colors.append(square.color)
-        square.set_owner(self)
-
     # pays rent
     # calls do_strat_raise_money
     def pay_rent(self, square):
         # print "%s is paying rent" % self.name
         if square.owner == self:
-            raise Exception("I (%s) already own %s" % (self.name, square.owner.name))
+            raise Exception("I (%s) own %s" % (self.name, square.owner.name))
         # player must mortgage or sell something to raise balance
         while self.balance < square.get_rent():
             # if bankrupt, pay with whatever balance is available
@@ -94,15 +80,6 @@ class Player(object):
         self.position = 10
         self.in_jail = True
 
-    def purchase_square(self, square):
-        if square.owner:
-            raise Exception("Cannot purchase square, already owned")
-        if square.price > self.balance:
-            raise Exception("Cannot purchase square, exceeds balance")
-        square.owner = self
-        self.balance -= square.price
-        self.properties.append(square)
-
     def swap_squares(self, other_player):
         pass
 
@@ -116,6 +93,23 @@ class Player(object):
         board.avail_hotels -= 1
         square.num_building += 1 # now at 5
         self.balance -= square.price_build
+    
+    # buys a square for a player
+    # does NOT check permissions - will die if you try to buy something you can't
+    def purchase_square(self, square):
+        if square.owner:
+            raise Exception("%s cannot buy square because square owned by %s" % (self.name, square.owner.name))
+        if self.balance < square.price:
+            raise Exception("%s cannot buy square because insufficient balance" % self.name)
+        self.balance -= square.price
+        # increase net_value, by how much?
+        self.properties.append(square)
+        if self.owns_color(square.color):
+            self.owned_colors.append(square.color)
+        square.set_owner(self)
+
+    def purchase_buildings(self):
+        return self.do_strat_buy_buildings()
 
     ############################
     #                          #

@@ -132,7 +132,7 @@ class Monopoly(object):
                 self.max_money -= 200
 
         # add logic to buy houses here
-        player.do_strat_buy_buildings()
+        player.buy_buildings()
 
         # do nothing on chance, community, jail, free parking squares
         if player.position in (0, 2, 7, 10, 17, 20, 22, 33, 36):
@@ -150,7 +150,7 @@ class Monopoly(object):
         # if land on unowned property, do strat
         elif square.owner is None:
             # print "##########################################################"
-            player.do_strat_unowned_square(square)
+            player.purchase_square(square)
         # if land on chance or community, pick card and do card
         # check if player is bankrupt, if so remove
         if player.bankrupt:
