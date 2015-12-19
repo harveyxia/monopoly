@@ -9,6 +9,19 @@
 # from monopoly.monopoly import Monopoly
 # from players.basic_player import BasicPlayer
 
+def simulate_square_counts(turns, num_players):
+    """
+    Using Monte Carlo simulation calculate the probability of landing on each square of the board.
+    :param turns: number of turns to run (a turn consists of one move for each player)
+    """
+    players = [BasicPlayer("BasicPlayer" + str(i)) for i in xrange(num_players)]
+    monopoly = Monopoly(players=players)
+    square_counts = [0 for i in xrange(40)]
+    for i in xrange(4 * turns):
+        player = monopoly.make_move()
+        square_counts[player.position] += 1
+    years = monopoly.return_years()
+    return (square_counts, years)
 
 # def simulate_square_counts(turns):
 #     """

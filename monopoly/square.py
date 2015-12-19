@@ -18,9 +18,11 @@ class Square(object):
             4: int(data['rent_build_4']),
             5: int(data['rent_build_5'])
         }
-
-        self.owner = None
         self.num_building = 0  # 5 buildings == 1 hotel
+        self.owner = None
+
+        # use original owner's years
+        self.original_owner = None
 
     def add_building(self):
         if self.num_building == 5:
@@ -34,3 +36,12 @@ class Square(object):
 
     def get_rent(self):
         return self.rent[self.num_building]
+
+    def set_owner(self, player):
+        self.owner = player
+        if self.original_owner == None:
+            self.original_owner = player
+            self.purchase_year = player.years
+
+    def update_npv(self, payment):
+        pass

@@ -72,3 +72,4 @@ if len(sys.argv) > 3:
     simulate(sys.argv[1], int(float(sys.argv[2])), float(sys.argv[3]))
 elif len(sys.argv) > 2:
     simulate(sys.argv[1], int(float(sys.argv[2])))
+print "Success"

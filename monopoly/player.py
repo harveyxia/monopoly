@@ -53,12 +53,14 @@ class Player(object):
         self.properties.append(square)
         if self.owns_color(square.color):
             self.owned_colors.append(square.color)
-        square.owner = self
+        square.set_owner(self)
 
     # pays rent
     # calls do_strat_raise_money
     def pay_rent(self, square):
         # print "%s is paying rent" % self.name
+        if square.owner == self:
+            raise Exception("I (%s) already own %s" % (self.name, square.owner.name))
         # player must mortgage or sell something to raise balance
         while self.balance < square.get_rent():
             # if bankrupt, pay with whatever balance is available
