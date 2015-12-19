@@ -5,8 +5,8 @@ from monopoly.player import Player
 
 
 class NpvPlayer(Player):
-    def __init__(self, name, color_index):
-        super(NpvPlayer, self).__init__(name, color_index)
+    def __init__(self, name):
+        super(NpvPlayer, self).__init__(name)
         self.square_buy_decisions = generate_square_buy_decisions("roi.csv")
 
     def do_strat_unowned_square(self, square):

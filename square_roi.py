@@ -11,8 +11,7 @@ def simulate_square_counts(turns, num_players):
     :param num_players: number of players
     :param turns: number of turns to run (a turn consists of one move for each player)
     """
-    board = Board()
-    players = [BasicPlayer(color_index=board.color_index, name="BasicPlayer" + str(i)) for i in xrange(num_players)]
+    players = [BasicPlayer("BasicPlayer" + str(i)) for i in xrange(num_players)]
     monopoly = Monopoly(players=players)
     square_counts = [0 for i in xrange(40)]
     for i in xrange(num_players * turns):
@@ -57,3 +56,8 @@ def output_expected_value_file(filename, roi):
         writer.writeheader()
         for r in roi:
             writer.writerow({'name': r[0], 'value': r[2]})
+
+def main():
+    print run(100, 2)
+
+if __name__ == "__main__": main()
