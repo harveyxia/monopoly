@@ -46,6 +46,9 @@ class Player(object):
         self.position = 10
         self.in_jail = True
 
+    def leave_jail(self, d):
+        return self.do_strat_get_out_of_jail(d)
+
     # def swap_squares(self, other_player):
     #     pass
 
@@ -109,6 +112,8 @@ class Player(object):
     # buys a square for a player
     # does NOT check permissions - will die if you try to buy something you can't
     def purchase_square(self, square):
+        if not self.do_strat_unowned_square(square):
+            return
         if square.owner:
             raise Exception("%s cannot buy square because square owned by %s" % (self.name, square.owner.name))
         if self.balance < square.price:
@@ -116,7 +121,7 @@ class Player(object):
         self.balance -= square.price
         # increase net_value, by how much?
         self.properties.append(square)
-        if self.owns_color(square.color):
+        if square.color is None and self.owns_color(square.color):
             self.owned_colors.append(square.color)
         square.set_owner(self)
 
