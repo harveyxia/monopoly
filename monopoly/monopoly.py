@@ -33,6 +33,24 @@ class Monopoly(object):
         self.is_over = False  # true if game is over
         self.winner = None
 
+    ############################
+    #                          #
+    #      OTHER GETTERS       #
+    #                          #
+    ############################
+
+    def return_years(self):
+        years = []
+        for player in self.players:
+            years.append(player.years)
+        return years
+
+    ############################
+    #                          #
+    #            RUN           #
+    #                          #
+    ############################
+
     def run(self):
         while self.num_active_players > 1:
             self.make_move()
@@ -51,6 +69,16 @@ class Monopoly(object):
         print "--------------------Game finished---------------------"
         print "%s wins!" % self.winner.name
 
+    ############################
+    #                          #
+    #      TURN MECHANICS      #
+    #                          #
+    ############################
+
+    @staticmethod
+    def roll_dice():
+        return randint(1, 6), randint(1, 6)
+
     # game consists of N moves until all but one player is bankrupt
     def make_move(self, move_only=False):
         player = self.active_players[self.player_turn]
@@ -61,12 +89,6 @@ class Monopoly(object):
         
         self.roll_and_move(player, move_only=move_only)
         return player
-
-    def return_years(self):
-        years = []
-        for player in self.players:
-            years.append(player.years)
-        return years
 
     def roll_and_move(self, player, move_only=False):
         dice = self.roll_dice()
@@ -126,9 +148,46 @@ class Monopoly(object):
             self.active_players.remove(player)
             self.num_active_players -= 1
 
-    @staticmethod
-    def roll_dice():
-        return randint(1, 6), randint(1, 6)
+    ############################
+    #                          #
+    #     INTEGRITY CHECK      #
+    #                          #
+    ############################
+
+    # number houses on properties of any given color cannot differ by more than 1
+    def check_purchase_house(self, square, player):
+        if se.fboard.avail_houses > 0 and player.balance > square.price_build:
+            if square.color not in self.owned_colors:
+                return False
+            if square.num_building >= 4:        # can only upgrade to hotel
+                return False
+            other_color_squares = list(self.board.get_color_group(square.color))
+            other_color_squares.remove(square)
+            for s in other_color_squares:
+                if abs(square.num_building + 1 - s.num_buildings) > 1:
+                    return False
+            return True
+        return False
+
+    def check_purchase_hotel(self, square, player):
+        if self.board.avail_hotels > 0 and player.balance > square.price_build:
+            if square.color not in player.owned_colors:
+                return False
+            if square.num_building != 4:        # must have 4 to purchase hotel
+                return False
+            other_color_squares = list(self.board.get_color_group(square.color))
+            other_color_squares.remove(square)
+            for s in other_color_squares:
+                if abs(square.num_building + 1 - s.num_buildings) > 1:
+                    return False
+            return True
+        return False
+
+    ############################
+    #                          #
+    #          STATE           #
+    #                          #
+    ############################
 
     # Reads in a JSON transcript and returns a new Monopoly instance
     @classmethod

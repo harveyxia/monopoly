@@ -12,7 +12,7 @@ class NpvPlayer(Player):
     def do_strat_unowned_square(self, square):
         if square.price < self.balance:
             if self.decide(self.square_buy_decisions[square.name]):
-                self.buy_square()
+                return True
 
     def do_strat_raise_money(self, money):
         pass

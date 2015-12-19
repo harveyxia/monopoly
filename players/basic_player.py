@@ -17,7 +17,7 @@ class BasicPlayer(Player):
 
     def do_strat_unowned_square(self, square):
         if square.price < self.balance:
-            self.purchase_square(square)
+           return True
 
 
     # needs better logic
