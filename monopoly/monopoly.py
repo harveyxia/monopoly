@@ -119,8 +119,8 @@ class Monopoly(object):
             if dice[0] == dice[1] and not player.in_jail:  # first doubles, roll again if not in jail
                 self.roll_and_move(player, turn=turn + 1)
 
-    # chance and community_chest flags are true if we are performing an action after being moved there via a card
-    def do_square_action(self, player, prev_position, chance=False, community_chest=False):
+    # chance flag is true if we are performing an action after being moved there via a chance card
+    def do_square_action(self, player, prev_position, chance=False):
         square = self.board.squares[player.position]
         # if pass GO, get $200
         if player.position < prev_position:
@@ -191,26 +191,26 @@ class Monopoly(object):
         prev_position = player.position
 
         if card == 1:
-            print "Advance to Go (Collect $200)"
+            # Advance to Go (Collect $200)
             player.position = 0
             self.change_player_balance(player, 200)
         elif card == 2:
-            print "Advance to Illinois Ave. - If you pass Go, collect $200"
+            # Advance to Illinois Ave. - If you pass Go, collect $200
             player.position = 24
             self.do_square_action(player, prev_position, chance=True)
         elif card == 3:
-            print "Advance to St. Charles Place - If you pass Go, collect $200"
+            # Advance to St. Charles Place - If you pass Go, collect $200
             player.position = 11
             self.do_square_action(player, prev_position, chance=True)
         elif card == 4:
-            print "Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total ten times the amount thrown."
+            # Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total ten times the amount thrown.
             if player.position > 28:
                 player.position = 28
             else:
                 player.position = 12
             self.do_square_action(player, prev_position, chance=True)
         elif card == 5:
-            print "Advance token to the nearest Railroad and pay owner twice the rental to which he/she is otherwise entitled. If Railroad is unowned, you may buy it from the Bank."
+            # Advance token to the nearest Railroad and pay owner twice the rental to which he/she is otherwise entitled. If Railroad is unowned, you may buy it from the Bank.
             if player.position > 35:
                 player.position = 35
             elif player.position > 25:
@@ -221,21 +221,21 @@ class Monopoly(object):
                 player.position = 5
             self.do_square_action(player, prev_position, chance=True)
         elif card == 6:
-            print "Bank pays you dividend of $50"
+            # Bank pays you dividend of $50
             self.change_player_balance(player, 50)
         elif card == 7:
-            print "Get out of Jail Free - This card may be kept until needed, or traded/sold"
+            # Get out of Jail Free - This card may be kept until needed, or traded/sold
             if self.chance_jail_owner == None:
                 self.chance_jail_owner = player
         elif card == 8:
-            print "Go Back 3 Spaces"
+            # Go Back 3 Spaces"
             player.position = prev_position - 3
             self.do_square_action(player, prev_position, chance=True)
         elif card == 9:
-            print "Go to Jail - Go directly to Jail - Do not pass Go, do not collect $200"
+            # Go to Jail - Go directly to Jail - Do not pass Go, do not collect $200
             player.go_to_jail()
         elif card == 10:
-            print "Make general repairs on all your property - For each house pay $25 - For each hotel $100"
+            # Make general repairs on all your property - For each house pay $25 - For each hotel $100
             to_pay = 0
             for property in player.properties:
                 if property.num_building == 5:
@@ -244,25 +244,25 @@ class Monopoly(object):
                     to_pay -= property.num_building * 25
             self.change_player_balance(player, to_pay)
         elif card == 11:
-            print "Pay poor tax of $15"
+            # Pay poor tax of $15
             self.change_player_balance(player, -15)
         elif card == 12:
-            print "Take a trip to Reading Railroad - If you pass Go, collect $200"
+            # Take a trip to Reading Railroad - If you pass Go, collect $200
             player.position = 5
             self.do_square_action(player, prev_position, chance=True)
         elif card == 13:
-            print "Take a walk on the Boardwalk - Advance token to Boardwalk"
+            # Take a walk on the Boardwalk - Advance token to Boardwalk
             player.position = 39
             self.do_square_action(player, prev_position, chance=True)
         elif card == 14:
-            print "You have been elected Chairman of the Board - Pay each player $50"
+            # You have been elected Chairman of the Board - Pay each player $50
             for p in self.active_players:
                 player.pay_player(p, 50)
         elif card == 15:
-            print "Your building and loan matures - Collect $150"
+            # Your building and loan matures - Collect $150
             self.change_player_balance(player, 150)
         elif card == 16:
-            print "You have won a crossword competition - Collect $100"
+            # You have won a crossword competition - Collect $100
             self.change_player_balance(player, 100)
 
     def do_community_chest_card(self, player):
@@ -270,6 +270,68 @@ class Monopoly(object):
             self.shuffle_community_chest_cards()
         card = self.community_chest_cards.pop()
         prev_position = player.position
+
+        if card == 1:
+            # Advance to Go (Collect $200)
+            player.position = 0
+            self.change_player_balance(player, 200)
+        elif card == 2:
+            # Bank error in your favor - Collect $200
+            self.change_player_balance(player, 200)
+        elif card == 3:
+            # Doctor's fees - Pay $50
+            self.change_player_balance(player, -50)
+        elif card == 4:
+            # From sale of stock you get $50
+            self.change_player_balance(player, 50)
+        elif card == 5:
+            # Get out of Jail Free - This card may be kept until needed, or traded/sold
+            if self.community_chest_jail_owner == None:
+                self.community_chest_jail_owner = player
+        elif card == 6:
+            # Go to Jail - Go directly to Jail - Do not pass Go, do not collect $200
+            player.go_to_jail()
+        elif card == 7:
+            # Grand Opera Night – Collect $50 from every player for opening night seats
+            for p in self.active_players:
+                p.pay_player(player, 50)
+        elif card == 8:
+            # Holiday Fund matures - Receive $100
+            self.change_player_balance(player, 100)
+        elif card == 9:
+            # Income tax refund – Collect $20
+            self.change_player_balance(player, 20)
+        elif card == 10:
+            # It is your birthday - Collect $10 from each player
+            for p in self.active_players:
+                p.pay_player(player, 10)
+        elif card == 11:
+            # Life insurance matures – Collect $100
+            self.change_player_balance(player, 100)
+        elif card == 12:
+            # Pay hospital fees of $100
+            self.change_player_balance(player, -100)
+        elif card == 13:
+            # Pay school fees of $150
+            self.change_player_balance(player, -150)
+        elif card == 14:
+            # Receive $25 consultancy fee
+            self.change_player_balance(player, 25)
+        elif card == 15:
+            # You are assessed for street repairs – $40 per house – $115 per hotel
+            to_pay = 0
+            for property in player.properties:
+                if property.num_building == 5:
+                    to_pay -= 115
+                else:
+                    to_pay -= property.num_building * 40
+            self.change_player_balance(player, to_pay)
+        elif card == 16:
+            # You have won second prize in a beauty contest – Collect $10
+            self.change_player_balance(player, 10)
+        elif card == 17:
+            # You inherit $100
+            self.change_player_balance(player, 100)
 
     ############################
     #                          #
