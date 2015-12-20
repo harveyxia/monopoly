@@ -481,8 +481,8 @@ class Monopoly(object):
     #                          #
     ############################
 
-    def get_npvs(self):
-        return [(square.name, square.npvs) for square in self.board.squares]
+    def get_caps(self):
+        return [(square.name, square.caps) for square in self.board.squares]
 
     # Reads in a JSON transcript and returns a new Monopoly instance
     @classmethod

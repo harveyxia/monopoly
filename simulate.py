@@ -5,16 +5,16 @@ from players.cap_rate_player import CapRatePlayer
 from monopoly.monopoly import Monopoly
 
 def simulate(turns, games, discount=.05):
-    npvs = init.simulate("init.csv", turns, discount)
+    caps = init.simulate("init.csv", turns)
     
     for i in range(games):
-        players = [CapRatePlayer(name="NpvPlayer" + str(i), npvs=npvs) for i in xrange(4)]
+        players = [CapRatePlayer(name="CapPlayer" + str(i), caps=caps) for i in xrange(4)]
         monopoly = Monopoly(players=players)
         monopoly.run(100000)
-        npvs = combine_npvs(npvs, monopoly.get_npvs())
-    return npvs
+        caps = combine_caps(caps, monopoly.get_caps())
+    return caps
 
-def combine_npvs(prev, current):
+def combine_caps(prev, current):
     num_obs = []
     for i in range(len(prev)):
         num_obs.append([0] * 7)
@@ -25,14 +25,14 @@ def combine_npvs(prev, current):
     return prev
 
 def main():
-    npvs = []
+    caps = []
     if len(sys.argv) > 3:
-        npvs = simulate(int(sys.argv[1]), int(sys.argv[2]), float(sys.argv[3]))
+        caps = simulate(int(sys.argv[1]), int(sys.argv[2]), float(sys.argv[3]))
     elif len(sys.argv) > 2:
-        npvs = simulate(int(sys.argv[1]), int(sys.argv[2]))
-        print npvs
+        caps = simulate(int(sys.argv[1]), int(sys.argv[2]))
+        print caps
     else:
-        print "simulate <turns in initial npv calculation> <number of game iterations> [<discount rate>]"
-    output.output_npv_file("npv.csv", npvs)
+        print "simulate <turns in initial cap calculation> <number of game iterations> [<discount rate>]"
+    output.output_cap_file("cap.csv", caps)
 
 if __name__ == "__main__": main()

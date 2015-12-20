@@ -5,17 +5,17 @@ from monopoly.player import Player
 
 
 class CapRatePlayer(Player):
-    def __init__(self, name, npvs):
+    def __init__(self, name, caps):
         super(CapRatePlayer, self).__init__(name)
-        self.npvs = dict(npvs)
+        self.caps = dict(caps)
 
     def do_strat_unowned_square(self, square):
-        # print npvs[square.name][0]
+        # print caps[square.name][0]
         if self.balance < square.price:
             return False
-        if square.name in self.npvs:
-            # print self.npvs[square.name][0] * self.balance / square.price
-            return self.decide(self.prob(self.npvs[square.name][0], self.balance, square.price))
+        if square.name in self.caps:
+            # print self.caps[square.name][0] * self.balance / square.price
+            return self.decide(self.prob(self.caps[square.name][0], self.balance, square.price))
         else:
             return False
 
@@ -34,9 +34,9 @@ class CapRatePlayer(Player):
         squares = filter(lambda x: x.num_buildings < 5 and x.price <= self.balance, squares)
         if len(squares) == 0:
             return None
-        npvs = map(lambda x: self.npvs[x.name][x.num_buildings + 1], squares)
+        caps = map(lambda x: self.caps[x.name][x.num_buildings + 1], squares)
         prices = map(lambda x: x.price, squares)
-        probs = map(lambda x, y: self.prob(x, self.balance, y), npvs, prices)
+        probs = map(lambda x, y: self.prob(x, self.balance, y), caps, prices)
         p = max(probs)
         if self.decide(p):
             return squares[probs.index(p)]
@@ -60,5 +60,5 @@ class CapRatePlayer(Player):
         return True if random() < p else False
 
     @staticmethod
-    def prob(npv, balance, price):
-        return npv * balance / price / 1000000
+    def prob(cap, balance, price):
+        return cap * balance / price / 1000000
