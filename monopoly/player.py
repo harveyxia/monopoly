@@ -81,20 +81,10 @@ class Player(object):
         else:  # luxury tax
             tax = 75
         # player must mortgage or sell something to raise balance
-        while self.balance < tax:
-            # if bankrupt, pay with whatever balance is available
-            if not self.do_strat_raise_money():
-                self.balance = 0
-                return
-        self.balance -= tax
+        self.do_strat_raise_money(tax)
 
     def pay_player(self, other_player, amount):
-        while self.balance < amount:
-            # if bankrupt, pay with whatever balance is available
-            if not self.do_strat_raise_money():
-                self.balance = 0
-                return
-        self.balance -= amount
+        self.do_strat_raise_money(amount)
         other_player.balance += amount
 
     ############################

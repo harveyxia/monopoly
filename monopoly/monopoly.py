@@ -117,7 +117,6 @@ class Monopoly(object):
     # game consists of N moves until all but one player is bankrupt
     def make_move(self):
         player = self.active_players[self.player_turn]
-        self.debug(player.position)
         self.player_turn = (self.player_turn + 1) % self.num_active_players
         if player.in_jail:
             # TODO: use community chest, should be part of the jail strategy
@@ -148,6 +147,7 @@ class Monopoly(object):
     # chance flag is true if we are performing an action after being moved there via a chance card
     def do_square_action(self, player, prev_position, chance=False):
         square = self.board.squares[player.position]
+        self.debug("{0} on {1}".format(player.name, square.name))
         # if pass GO, get $200
         if player.position < prev_position:
             self.change_player_balance(player, 200)
