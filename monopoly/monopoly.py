@@ -14,7 +14,7 @@ from random import randint
 from board import Board
 from player import Player
 
-flag = True
+flag = False
 
 class Monopoly(object):
     """
@@ -69,16 +69,20 @@ class Monopoly(object):
     #                          #
     ############################
 
-    def run(self):
-        while self.num_active_players > 1:
+    def run(self, turns=-1):
+        flag = False
+        while self.num_active_players > 1 and turns != 0:
+            turns -= 1
             self.make_move()
         self.is_over = True
         self.winner = self.active_players[0]
         print "--------------------Game finished---------------------"
         print "%s wins!" % self.winner.name
 
-    def run_debug(self):
-        while self.num_active_players > 1:
+    def run_debug(self, turns=-1):
+        flag = True
+        while self.num_active_players > 1  and turns != 0:
+            turns -= 1
             player = self.make_move()
             # print player
             print "%s balance: %s" % (player.name, str(player.balance))
@@ -476,8 +480,8 @@ class Monopoly(object):
     #                          #
     ############################
 
-    def get_npvs():
-        return [(square.name, square.npvs) for square in board.squares]
+    def get_npvs(self):
+        return [(square.name, square.npvs) for square in self.board.squares]
 
     # Reads in a JSON transcript and returns a new Monopoly instance
     @classmethod
