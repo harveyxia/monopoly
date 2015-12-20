@@ -103,9 +103,10 @@ class Monopoly(object):
 
     # game consists of N moves until all but one player is bankrupt
     def make_move(self):
+        self.player_turn = self.player_turn % self.num_active_players
         player = self.active_players[self.player_turn]
         self.debug("******** {0}'s turn ********".format(player.name))
-        self.player_turn = (self.player_turn + 1) % self.num_active_players
+        self.player_turn = self.player_turn + 1
         if player.in_jail:
             # TODO: use community chest, should be part of the jail strategy
             # if player == self.chance_jail_owner or player == self.community_chest_jail_owner:
@@ -118,6 +119,7 @@ class Monopoly(object):
                 self.roll_and_move(player, dice)
         else:
             self.roll_and_move(player)
+        return player
 
     def roll_and_move(self, player, dice=None, turn=1):
         if dice is None:
@@ -185,7 +187,7 @@ class Monopoly(object):
         # check if player is bankrupt, if so remove
         if player.bankrupt:
             self.debug("Bankrupt!")
-            self.active_players.remove(player)
+            self.active_players = filter(lambda x : x.name != player.name, self.active_players)
             self.num_active_players -= 1
 
         while player.purchase_buildings(self.get_purchasable_buildings(player)):

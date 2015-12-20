@@ -32,8 +32,8 @@ class Square(object):
             raise ValueError('Square already has max buildings.')
         self.num_buildings += 1
         if self.should_update_npv():
-            self.purchase_years[num_buildings] = self.original_owner.years
-            self.update_npv(num_buildings, -1*self.price_build)
+            self.purchase_years[self.num_buildings] = self.original_owner.years
+            self.update_npv(self.num_buildings, -1*self.price_build)
 
     def remove_building(self):
         if self.num_buildings == 0:
