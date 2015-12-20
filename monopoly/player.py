@@ -129,9 +129,11 @@ class Player(object):
         self.balance -= price_to_pay
         # increase net_value, by how much?
         self.properties.append(square)
-        if square.color is None and self.owns_color(square.color):
+        if square.color != "None" and self.owns_color(square.color):
+            print self.name, "got all of", square.color
             self.owned_colors.append(square.color)
         square.set_owner(self)
+        print self.name, "is buying", square.name
         if square.mortgaged:
             square.unmortgage()
 
@@ -141,8 +143,10 @@ class Player(object):
             return False
         elif building.num_buildings < 4:
             purchase_house(building)
+            print self.name, "is buying a house on", building.name
         else:
             purchase_hotel(building)
+            print self.name, "is buying a hotel on", building.name
         return True
 
     ############################
@@ -174,6 +178,9 @@ class Player(object):
     # check if player owns all properties of a color. 
     # not an efficient implementation
     def owns_color(self, color):
+        print color
+        if color is None:
+            return False
         color_squares = self.board.get_color_group(color)
         for square in color_squares:
             if square not in self.properties:

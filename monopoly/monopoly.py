@@ -36,7 +36,7 @@ class Monopoly(object):
             player.board = self.board
         # num_active_players and active_players don't include bankrupt players
         self.num_active_players = self.num_players
-        self.active_players = self.players
+        self.active_players = players
         self.player_turn = 0  # which Player has next move, default first player
 
         self.is_over = False  # true if game is over
