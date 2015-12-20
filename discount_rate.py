@@ -1,10 +1,10 @@
 from monopoly.monopoly import Monopoly
-from players.basic_player import BasicPlayer
+from players.dumb_player import DumbPlayer
 
 
 def run(trials):
-    players = [BasicPlayer("BasicPlayer1"),
-               BasicPlayer("BasicPlayer2")]
+    players = [DumbPlayer("BasicPlayer1"),
+               DumbPlayer("BasicPlayer2")]
     monopoly = Monopoly(players)
     move_counts = [0 for i in xrange(trials)]
     player = monopoly.players[0]

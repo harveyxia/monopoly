@@ -1,10 +1,16 @@
 from monopoly.player import Player
 
 
-class BasicPlayer(Player):
-    def do_strat_buy_buildings(self, squares):
-        pass
+class DumbPlayer(Player):
 
+    # buy all the houses/hotels as possible
+    def do_strat_buy_buildings(self, squares):
+        if squares:
+            return squares[0]
+        else:
+            return None
+
+    # sell properties to raise money, in no particular order
     def do_strat_raise_money(self, money):
         while self.properties and self.balance < money:
             p = self.properties.pop()
@@ -16,6 +22,7 @@ class BasicPlayer(Player):
         self.balance -= money
         return money
 
+    # always buy unowned properties if landed
     def do_strat_unowned_square(self, square):
         if square.price < self.balance:
            return True
