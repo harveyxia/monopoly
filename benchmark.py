@@ -13,10 +13,9 @@ player_type_to_class = {
 
 
 def main(games, turns_per_game, player_types):
-    player_names = init_player_names(player_types)
-    stats = {player: 0 for player in player_names}
-
     def run_n_games(num_games):
+        player_names = init_player_names(player_types)
+        stats = {player: 0 for player in player_names}
         for i in xrange(num_games):
             players = init_new_players(player_types, player_names)
             m = Monopoly(players=players)
