@@ -95,14 +95,30 @@ class Monopoly(object):
         self.dice = randint(1, 6), randint(1, 6)
         return self.dice
 
+    def use_get_out_of_jail_free_card(self, player):
+        if player != self.chance_jail_owner or player != self.community_chest_jail_owner:
+            return False # doesn't own one
+        if player == self.chance_jail_owner:
+            player.in_jail = False
+            self.chance_jail_owner = None
+            self.chance_cards.insert(0, 7) # add the card to the back of the deck
+        elif player == self.community_chest_jail_owner:
+            player.in_jail = False
+            self.community_chest_jail_owner = None
+            self.community_chest_cards.insert(0, 5)
+        return True
+
     # game consists of N moves until all but one player is bankrupt
     def make_move(self):
         player = self.active_players[self.player_turn]
         self.player_turn = (self.player_turn + 1) % self.num_active_players
         if player.in_jail:
-            # TODO: use community chest??
-            # if self.chance_jail_owner == player or self.community_chest_jail_owner == player:
-                # use it??
+            # TODO: use community chest, should be part of the jail strategy
+            # if player == self.chance_jail_owner or player == self.community_chest_jail_owner:
+            #     if self.use_get_out_of_jail_free_card(player):
+            #         successfully used it, now roll
+            #         self.roll_and_move(player, dice)
+            #         return
             dice = self.roll_dice()
             if player.leave_jail(dice):
                 self.roll_and_move(player, dice)
@@ -175,8 +191,9 @@ class Monopoly(object):
             self.active_players.remove(player)
             self.num_active_players -= 1
 
-        # add logic to buy houses here
-        player.purchase_buildings([])
+        while player.purchase_buildings(self.get_purchasable_buildings(player)):
+            pass
+
     def change_player_balance(self, player, amount):
         if amount == 0:
             return
@@ -358,7 +375,7 @@ class Monopoly(object):
     # should return the set of squares for which houses are possible
     def check_purchase_house(self, square, player):
         if self.board.avail_houses > 0 and player.balance > square.price_build:
-            if square.color not in self.owned_colors:
+            if square.color not in player.owned_colors:
                 return False
             if square.num_buildings >= 4:        # can only upgrade to hotel
                 return False
@@ -414,6 +431,11 @@ class Monopoly(object):
         if self.board.squares[35].owner == player:
             owned += 1
         return owned
+
+    def get_purchasable_buildings(self, player):
+        return [square for square in player.properties
+                if self.check_purchase_house(square, player)
+                or self.check_purchase_hotel(square, player)]
 
     ############################
     #                          #
