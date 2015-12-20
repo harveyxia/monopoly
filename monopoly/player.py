@@ -60,19 +60,19 @@ class Player(object):
 
     # pays rent
     # calls do_strat_raise_money
-    def pay_rent(self, square):
+    def pay_rent(self, square, multiple=1):
         # print "%s is paying rent" % self.name
         if square.owner == self:
             raise Exception("I (%s) own %s" % (self.name, square.owner.name))
         # player must mortgage or sell something to raise balance
-        while self.balance < square.get_rent():
+        while self.balance < square.get_rent() * multiple:
             # if bankrupt, pay with whatever balance is available
             if not self.do_strat_raise_money():
                 square.owner.balance += self.balance
                 self.balance = 0
                 return
-        self.balance -= square.get_rent()
-        square.owner.balance += square.get_rent()
+        self.balance -= square.get_rent() * multiple
+        square.owner.balance += square.get_rent() * multiple
 
     def pay_tax(self, square):
         tax = 0
@@ -91,6 +91,15 @@ class Player(object):
                 self.balance = 0
                 return
         self.balance -= tax
+
+    def pay_player(self, other_player, amount):
+        while self.balance < amount:
+            # if bankrupt, pay with whatever balance is available
+            if not self.do_strat_raise_money():
+                self.balance = 0
+                return
+        self.balance -= amount
+        other_player.balance += amount
 
     ############################
     #                          #
