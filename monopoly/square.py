@@ -76,6 +76,7 @@ class Square(object):
                 for building_number in range(1, self.num_buildings+1):
                     self.update_npv(building_number, building_payoff)
             else:
+                # Tracking payments for utilities and railroads
                 self.update_npv(0, payment)
 
     # updates npv for a given building number
