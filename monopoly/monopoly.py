@@ -122,9 +122,6 @@ class Monopoly(object):
                 player.balance += 200
                 self.max_money -= 200
 
-        # add logic to buy houses here
-        player.purchase_buildings()
-
         # do nothing on chance, community, jail, free parking squares
         if player.position in (0, 2, 7, 10, 17, 20, 22, 33, 36):
             return
@@ -148,6 +145,9 @@ class Monopoly(object):
             self.active_players.remove(player)
             self.num_active_players -= 1
 
+        # add logic to buy houses here
+        player.purchase_buildings()
+
     ############################
     #                          #
     #     INTEGRITY CHECK      #
@@ -155,8 +155,9 @@ class Monopoly(object):
     ############################
 
     # number houses on properties of any given color cannot differ by more than 1
+    # should return the set of squares for which houses are possible
     def check_purchase_house(self, square, player):
-        if se.fboard.avail_houses > 0 and player.balance > square.price_build:
+        if self.board.avail_houses > 0 and player.balance > square.price_build:
             if square.color not in self.owned_colors:
                 return False
             if square.num_building >= 4:        # can only upgrade to hotel
@@ -169,6 +170,7 @@ class Monopoly(object):
             return True
         return False
 
+    # should return the set of squares for which hotels are possible
     def check_purchase_hotel(self, square, player):
         if self.board.avail_hotels > 0 and player.balance > square.price_build:
             if square.color not in player.owned_colors:

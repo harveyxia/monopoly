@@ -1,6 +1,6 @@
 TODO
 
-move get out of jail logic to the player (they need to decide whether or not to pay)
+logic for houses needs to be better abstracted
 
 add jail cards / community chest / chance
 fix NPVs to include future houses / hotels
