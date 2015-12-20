@@ -100,6 +100,9 @@ class Monopoly(object):
         player = self.active_players[self.player_turn]
         self.player_turn = (self.player_turn + 1) % self.num_active_players
         if player.in_jail:
+            # TODO: use community chest??
+            # if self.chance_jail_owner == player or self.community_chest_jail_owner == player:
+                # use it??
             dice = self.roll_dice()
             if player.leave_jail(dice):
                 self.roll_and_move(player, dice)
@@ -141,22 +144,34 @@ class Monopoly(object):
             player.pay_tax(square)
         # if land on owned property, pay rent
         elif square.owner and square.owner is not player:
-            if (player.position == 12 or player.position == 28) and chance == True:
-                # chance card: utilities have to pay 10 times your roll
+            if self.on_utility(player):
                 roll = self.dice[0] + self.dice[1]
-                player.pay_player(square.owner, 10 * roll)
-            elif (player.position == 5 or player.position == 15 or player.position == 25 or player.position == 35) and chance == True:
-                # chance card: have to pay double the railroad rent
-                player.pay_rent(square, multiple=2)
-            player.pay_rent(square)
+                if chance == True:
+                    # chance card: utilities have to pay 10 times your roll
+                    player.pay_player(square.owner, 10 * roll)
+                elif self.board.squares[12].owner == self.board.squares[28].owner:
+                    # same owner owns both utilities, pay 10 * roll
+                    player.pay_player(square.owner, 10 * roll)
+                else:
+                    # different owners, pay 4 * roll
+                    player.pay_player(square.owner, 4 * roll)
+            elif self.on_railroad(player):
+                railroads_owned = self.railroads_owned(square.owner)
+                if chance == True:
+                    # chance card: have to pay double the normal railroad rent
+                    player.pay_rent(square, multiple=(railroads_owned * 2))
+                else:
+                    player.pay_rent(square, multiple=railroads_owned)
+            else: # normal rent
+                player.pay_rent(square)
         # if land on unowned property, do strat
         elif square.owner is None:
             # print "##########################################################"
             player.purchase_square(square)
         # if land on chance, pick card and do card
-        elif player.position == 7 or player.position == 22 or player.position == 36:
+        elif self.on_chance(player):
             self.do_chance_card(player)
-        elif player.position == 2 or player.position == 17 or player.position == 33:
+        elif self.on_community_chest(player):
             self.do_community_chest_card(player)
         # check if player is bankrupt, if so remove
         if player.bankrupt:
@@ -177,6 +192,7 @@ class Monopoly(object):
         if self.chance_jail_owner != None:
             self.chance_cards.remove(7) # remove get out of jail card
         random.shuffle(self.chance_cards)
+
 
     def shuffle_community_chest_cards(self):
         self.community_chest_cards = range(1, 17)
@@ -292,21 +308,21 @@ class Monopoly(object):
             # Go to Jail - Go directly to Jail - Do not pass Go, do not collect $200
             player.go_to_jail()
         elif card == 7:
-            # Grand Opera Night – Collect $50 from every player for opening night seats
+            # Grand Opera Night - Collect $50 from every player for opening night seats
             for p in self.active_players:
                 p.pay_player(player, 50)
         elif card == 8:
             # Holiday Fund matures - Receive $100
             self.change_player_balance(player, 100)
         elif card == 9:
-            # Income tax refund – Collect $20
+            # Income tax refund - Collect $20
             self.change_player_balance(player, 20)
         elif card == 10:
             # It is your birthday - Collect $10 from each player
             for p in self.active_players:
                 p.pay_player(player, 10)
         elif card == 11:
-            # Life insurance matures – Collect $100
+            # Life insurance matures - Collect $100
             self.change_player_balance(player, 100)
         elif card == 12:
             # Pay hospital fees of $100
@@ -318,7 +334,7 @@ class Monopoly(object):
             # Receive $25 consultancy fee
             self.change_player_balance(player, 25)
         elif card == 15:
-            # You are assessed for street repairs – $40 per house – $115 per hotel
+            # You are assessed for street repairs - $40 per house - $115 per hotel
             to_pay = 0
             for property in player.properties:
                 if property.num_building == 5:
@@ -327,7 +343,7 @@ class Monopoly(object):
                     to_pay -= property.num_building * 40
             self.change_player_balance(player, to_pay)
         elif card == 16:
-            # You have won second prize in a beauty contest – Collect $10
+            # You have won second prize in a beauty contest - Collect $10
             self.change_player_balance(player, 10)
         elif card == 17:
             # You inherit $100
@@ -367,6 +383,36 @@ class Monopoly(object):
                     return False
             return True
         return False
+
+    ############################
+    #                          #
+    #         HELPERS          #
+    #                          #
+    ############################
+
+    def on_utility(self, player):
+        return player.position == 12 or player.position == 28
+
+    def on_railroad(self, player):
+        return player.position == player.position == 5 or player.position == 15 or player.position == 25 or player.position == 35
+
+    def on_chance(self, player):
+        return player.position == 7 or player.position == 22 or player.position == 36
+
+    def on_community_chest(self, player):
+        return player.position == 2 or player.position == 17 or player.position == 33
+
+    def railroads_owned(self, player):
+        owned = 0
+        if self.board.squares[5].owner == player:
+            owned += 1
+        if self.board.squares[15].owner == player:
+            owned += 1
+        if self.board.squares[25].owner == player:
+            owned += 1
+        if self.board.squares[35].owner == player:
+            owned += 1
+        return owned
 
     ############################
     #                          #
