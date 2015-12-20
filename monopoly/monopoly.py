@@ -175,8 +175,9 @@ class Monopoly(object):
             self.active_players.remove(player)
             self.num_active_players -= 1
 
-        # add logic to buy houses here
-        player.purchase_buildings([])
+        while player.purchase_buildings(self.get_purchasable_buildings(player)):
+            pass
+
     def change_player_balance(self, player, amount):
         if amount == 0:
             return
@@ -414,6 +415,11 @@ class Monopoly(object):
         if self.board.squares[35].owner == player:
             owned += 1
         return owned
+
+    def get_purchasable_buildings(self, player):
+        return [square for square in player.properties
+                if self.check_purchase_house(square, player)
+                or self.check_purchase_hotel(square, player)]
 
     ############################
     #                          #
