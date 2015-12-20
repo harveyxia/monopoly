@@ -10,7 +10,7 @@ def simulate(turns, games, discount=.05):
     for _ in range(games):
         players = [NpvPlayer(name="NpvPlayer" + str(i), npvs=npvs) for i in xrange(4)]
         monopoly = Monopoly(players=players)
-        monopoly.run(10000)
+        monopoly.run(100000)
         npvs = monopoly.get_npvs()
     return npvs
 
