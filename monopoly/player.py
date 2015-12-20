@@ -133,10 +133,10 @@ class Player(object):
         if building is None:
             return False
         elif building.num_buildings < 4:
-            purchase_house(building)
+            self.purchase_house(building)
             print self.name, "is buying a house on", building.name
         else:
-            purchase_hotel(building)
+            self.purchase_hotel(building)
             print self.name, "is buying a hotel on", building.name
         return True
 

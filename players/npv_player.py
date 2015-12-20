@@ -38,8 +38,8 @@ class NpvPlayer(Player):
         prices = map(lambda x: x.price, squares)
         probs = map(lambda x, y: self.prob(x, self.balance, y), npvs, prices)
         p = max(probs)
-        if decide(p):
-            return squares[probs.index(r)]
+        if self.decide(p):
+            return squares[probs.index(p)]
         else:
             return None
 

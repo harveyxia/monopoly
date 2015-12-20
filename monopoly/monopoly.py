@@ -194,7 +194,8 @@ class Monopoly(object):
             self.do_community_chest_card(player)
         # check if player is bankrupt, if so remove
         if player.bankrupt:
-            self.active_players.remove(player)
+            self.active_players = filter(lambda x : x.name != player.name, self.active_players)
+            # self.active_players.remove(player)
             self.num_active_players -= 1
 
         while player.purchase_buildings(self.get_purchasable_buildings(player)):
