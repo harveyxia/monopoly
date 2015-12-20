@@ -409,6 +409,37 @@ class Monopoly(object):
             return True
         return False
 
+    def check_sell_house(self, square, player):
+        if square.owner == player:
+            if square.num_buildings <= 0:
+                return False
+            other_color_squares = list(self.board.get_color_group(square.color))
+            other_color_squares.remove(square)
+            for s in other_color_squares:
+                if abs(square.num_buildings - 1 - s.num_buildings) > 1:
+                    return False
+            return True
+        return False
+
+    def check_sell_hotel(self, square, player):
+        if square.owner == player:
+            if square.num_buildings != 5:
+                return False
+            other_color_squares = list(self.board.get_color_group(square.color))
+            other_color_squares.remove(square)
+            for s in other_color_squares:
+                if abs(square.num_buildings - 1 - s.num_buildings) > 1:
+                    return False
+            return True
+        return False
+
+    def check_mortgage_square(self, square, player):
+        if square.owner == player:
+            if square.num_buildings != 0:
+                return False
+            return True
+        return False
+
     ############################
     #                          #
     #         HELPERS          #

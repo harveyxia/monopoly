@@ -104,14 +104,14 @@ class Player(object):
     ############################
 
     def purchase_house(self, square):
-        board.avail_houses -= 1
         square.add_building()
+        board.avail_houses -= 1
         self.balance -= square.price_build
 
     def purchase_hotel(self, square):
+        square.add_building() # now at 5
         board.avail_houses += 4
         board.avail_hotels -= 1
-        square.add_building() # now at 5
         self.balance -= square.price_build
 
     # buys a square for a player
@@ -119,7 +119,7 @@ class Player(object):
     def purchase_square(self, square):
         if not self.do_strat_unowned_square(square):
             return
-        if square.owner:
+        if square.owner and square.mortgaged == False:
             raise Exception("%s cannot buy square because square owned by %s" % (self.name, square.owner.name))
         if self.balance < square.price:
             raise Exception("%s cannot buy square because insufficient balance" % self.name)
@@ -139,6 +139,27 @@ class Player(object):
         else:
             purchase_hotel(building)
         return True
+
+    ############################
+    #                          #
+    #           SELL           #
+    #                          #
+    ############################
+
+    def sell_house(self, square):
+        square.remove_building()
+        board.avail_houses += 1
+        self.balance += 0.5 * square.price_build
+
+    def sell_hotel(self, square):
+        square.remove_building()
+        board.avail_hotels += 1
+        self.balance += 0.5 * (5 * square.price_build) # sell all 5
+
+    def mortgage_square(self, square):
+        square.mortgage()
+        self.balance += 0.5 * square.price
+
 
     ############################
     #                          #

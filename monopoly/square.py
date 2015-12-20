@@ -20,6 +20,7 @@ class Square(object):
         }
         self.num_buildings = 0  # 5 buildings == 1 hotel
         self.owner = None
+        self.mortgaged = False
 
         # use original owner's years
         self.original_owner = None
@@ -48,6 +49,14 @@ class Square(object):
             self.original_owner = player
             self.purchase_years[0] = self.original_owner.years
             self.update_npv(0, -1*self.price)
+
+    def mortgage(self):
+        if not self.mortgaged:
+            self.mortgaged = True
+
+    def unmortgage(self):
+        if self.mortgaged:
+            self.mortgaged = False
 
     def should_update_npv(self):
         # only care about result for original owner
