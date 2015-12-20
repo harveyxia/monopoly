@@ -14,6 +14,7 @@ from random import randint
 from board import Board
 from player import Player
 
+flag = True
 
 class Monopoly(object):
     """
@@ -50,9 +51,13 @@ class Monopoly(object):
 
     ############################
     #                          #
-    #      OTHER GETTERS       #
+    #      OTHER HELPERS       #
     #                          #
     ############################
+
+    def debug(self, message):
+        if flag:
+            print message
 
     def return_years(self):
         years = []
@@ -110,6 +115,7 @@ class Monopoly(object):
     # game consists of N moves until all but one player is bankrupt
     def make_move(self):
         player = self.active_players[self.player_turn]
+        self.debug(player.position)
         self.player_turn = (self.player_turn + 1) % self.num_active_players
         if player.in_jail:
             # TODO: use community chest, should be part of the jail strategy
@@ -176,6 +182,7 @@ class Monopoly(object):
                 else:
                     player.pay_rent(square, multiple=railroads_owned)
             else: # normal rent
+                self.debug("paying rent")
                 player.pay_rent(square)
         # if land on unowned property, do strat
         elif square.owner is None:

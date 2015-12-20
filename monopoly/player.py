@@ -47,7 +47,8 @@ class Player(object):
         self.in_jail = True
 
     def leave_jail(self, d):
-        return self.do_strat_get_out_of_jail(d)
+        if self.do_strat_get_out_of_jail(d):
+            self.in_jail = False
 
     # def swap_squares(self, other_player):
     #     pass
@@ -133,7 +134,14 @@ class Player(object):
         square.set_owner(self)
 
     def purchase_buildings(self, squares):
-        return self.do_strat_buy_buildings(squares)
+        building = self.do_strat_buy_buildings(squares)
+        if building is None:
+            return False
+        elif building.num_buildings < 4:
+            purchase_house(building)
+        else:
+            purchase_hotel(building)
+        return True
 
     ############################
     #                          #
