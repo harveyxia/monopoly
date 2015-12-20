@@ -15,7 +15,6 @@ def output_npv_file(filename, npvs):
             ])
         writer.writeheader()
         for npv in npvs:
-            print npv
             name = npv[0]
             values = npv[1]
             writer.writerow({

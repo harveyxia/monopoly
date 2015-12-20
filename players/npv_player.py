@@ -5,25 +5,35 @@ from monopoly.player import Player
 
 
 class NpvPlayer(Player):
-    def __init__(self, name):
+    def __init__(self, name, npvs):
         super(NpvPlayer, self).__init__(name)
-        if self.npvs is None:
-            raise Exception("cannot create NPV player %s without npv file." % self.name)
+        self.npvs = dict(npvs)
 
     def do_strat_unowned_square(self, square):
         # print npvs[square.name][0]
-        print npvs[square.name][0] * self.money / square.cost
-        return decide(npvs[square.name][0] * self.money / square.cost)
+        if square.name in self.npvs:
+            # print self.npvs[square.name][0] * self.balance / square.price
+            return self.decide(self.npvs[square.name][0] * self.balance / square.price)
+        else:
+            return False
 
     def do_strat_raise_money(self, money):
-        pass
+        while self.properties and self.balance < money:
+            p = self.properties.pop()
+            p.owner = None
+            self.balance += p.price
+        if self.balance < money:
+            self.bankrupt = True
+            return self.balance
+        self.balance -= money
+        return money
 
     def do_strat_buy_buildings(self, squares):
         pass
 
     def do_strat_get_out_of_jail(self, d):
         # TODO: use get out of jail cards
-        pass
+        return False
 
     @staticmethod
     def decide(p):
