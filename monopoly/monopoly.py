@@ -336,10 +336,10 @@ class Monopoly(object):
             # You are assessed for street repairs - $40 per house - $115 per hotel
             to_pay = 0
             for property in player.properties:
-                if property.num_building == 5:
+                if property.num_buildings == 5:
                     to_pay -= 115
                 else:
-                    to_pay -= property.num_building * 40
+                    to_pay -= property.num_buildings * 40
             self.change_player_balance(player, to_pay)
         elif card == 16:
             # You have won second prize in a beauty contest - Collect $10
