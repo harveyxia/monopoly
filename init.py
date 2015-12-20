@@ -68,6 +68,7 @@ def run(turns, discount):
 def simulate(filename, turns, discount = .05):
     npvs = run(turns, discount)
     output.output_npv_file(filename, npvs)
+    return npvs
 
 #!/usr/bin/python
 
