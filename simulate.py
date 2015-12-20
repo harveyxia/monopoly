@@ -10,7 +10,7 @@ def simulate(turns, games, discount=.05):
     for _ in range(games):
         players = [NpvPlayer(name="NpvPlayer" + str(i), npvs=npvs) for i in xrange(4)]
         monopoly = Monopoly(players=players)
-        monopoly.run_debug()
+        monopoly.run(100000)
         npvs = monopoly.get_npvs()
     return npvs
 
@@ -23,6 +23,6 @@ def main():
         print npvs
     else:
         print "simulate <turns in initial npv calculation> <number of game iterations> [<discount rate>]"
-    output.output_npv_file(filename, npvs)
+    output.output_npv_file("npv.csv", npvs)
 
 if __name__ == "__main__": main()

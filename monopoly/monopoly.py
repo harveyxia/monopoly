@@ -14,14 +14,14 @@ from random import randint
 from board import Board
 from player import Player
 
-flag = True
+flag = False
 
 class Monopoly(object):
     """
     Monopoly class, represents entirety of game
     """
 
-    def __init__(self, players, max_money=None):
+    def __init__(self, players):
         """
 
         :type players: Player() subclass
@@ -38,8 +38,6 @@ class Monopoly(object):
         self.num_active_players = self.num_players
         self.active_players = self.players
         self.player_turn = 0  # which Player has next move, default first player
-
-        self.max_money = max_money  # artificial cap on maximum money given out from passing GO
 
         self.is_over = False  # true if game is over
         self.winner = None
@@ -71,16 +69,20 @@ class Monopoly(object):
     #                          #
     ############################
 
-    def run(self):
-        while self.num_active_players > 1:
+    def run(self, turns=-1):
+        flag = False
+        while self.num_active_players > 1 and turns != 0:
+            turns -= 1
             self.make_move()
         self.is_over = True
         self.winner = self.active_players[0]
         print "--------------------Game finished---------------------"
         print "%s wins!" % self.winner.name
 
-    def run_debug(self):
-        while self.num_active_players > 1:
+    def run_debug(self, turns=-1):
+        flag = True
+        while self.num_active_players > 1  and turns != 0:
+            turns -= 1
             player = self.make_move()
             # print player
             print "%s balance: %s" % (player.name, str(player.balance))
@@ -202,13 +204,10 @@ class Monopoly(object):
             pass
 
     def change_player_balance(self, player, amount):
-        if amount == 0:
-            return
-        if self.max_money is None:
+        if amount >= 0:
             player.balance += amount
-        elif self.max_money and self.max_money >= amount:
-            player.balance += amount
-            self.max_money -= amount
+        else:
+            player.do_strat_raise_money(-1*amount)
 
     def shuffle_chance_cards(self):
         self.chance_cards = range(1, 16)
@@ -481,8 +480,8 @@ class Monopoly(object):
     #                          #
     ############################
 
-    def get_npvs():
-        return [(square.name, square.npvs) for square in board.squares]
+    def get_npvs(self):
+        return [(square.name, square.npvs) for square in self.board.squares]
 
     # Reads in a JSON transcript and returns a new Monopoly instance
     @classmethod
