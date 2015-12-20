@@ -48,14 +48,13 @@ class Player(object):
         if square.owner == self:
             raise Exception("I (%s) own %s" % (self.name, square.owner.name))
         # player must mortgage or sell something to raise balance
-        while self.balance < square.get_rent():
-            # if bankrupt, pay with whatever balance is available
-            if not self.do_strat_raise_money():
-                square.owner.balance += self.balance
-                self.balance = 0
-                return
-        self.balance -= square.get_rent()
-        square.owner.balance += square.get_rent()
+        payment = square.get_rent()
+        # pay the player the rent or everything you have
+        if not self.do_strat_raise_money(payment):
+            payment = self.balance
+        self.balance -= payment
+        square.owner.balance += payment
+        square.track_payment(payment)
 
     def pay_tax(self, square):
         tax = 0
@@ -83,15 +82,15 @@ class Player(object):
     def swap_squares(self, other_player):
         pass
 
-    def purchase_house(self, square, board):
+    def purchase_house(self, square):
         board.avail_houses -= 1
-        square.num_building += 1
+        square.add_building()
         self.balance -= square.price_build
 
-    def purchase_hotel(self, square, board):
+    def purchase_hotel(self, square):
         board.avail_houses += 4
         board.avail_hotels -= 1
-        square.num_building += 1 # now at 5
+        square.add_building() # now at 5
         self.balance -= square.price_build
     
     # buys a square for a player

@@ -168,12 +168,12 @@ class Monopoly(object):
         if se.fboard.avail_houses > 0 and player.balance > square.price_build:
             if square.color not in self.owned_colors:
                 return False
-            if square.num_building >= 4:        # can only upgrade to hotel
+            if square.num_buildings >= 4:        # can only upgrade to hotel
                 return False
             other_color_squares = list(self.board.get_color_group(square.color))
             other_color_squares.remove(square)
             for s in other_color_squares:
-                if abs(square.num_building + 1 - s.num_buildings) > 1:
+                if abs(square.num_buildings + 1 - s.num_buildings) > 1:
                     return False
             return True
         return False
@@ -182,12 +182,12 @@ class Monopoly(object):
         if self.board.avail_hotels > 0 and player.balance > square.price_build:
             if square.color not in player.owned_colors:
                 return False
-            if square.num_building != 4:        # must have 4 to purchase hotel
+            if square.num_buildings != 4:        # must have 4 to purchase hotel
                 return False
             other_color_squares = list(self.board.get_color_group(square.color))
             other_color_squares.remove(square)
             for s in other_color_squares:
-                if abs(square.num_building + 1 - s.num_buildings) > 1:
+                if abs(square.num_buildings + 1 - s.num_buildings) > 1:
                     return False
             return True
         return False
@@ -221,7 +221,7 @@ class Monopoly(object):
                 for property in data["players"][i]["properties"]:
                     square = next((x for x in m.board.squares if x.name == property["name"]), None)
                     if square:
-                        square.num_building = property["num_building"]
+                        square.num_buildings = property["num_buildings"]
                         player.properties.append(square)
             return m
         else:
@@ -252,7 +252,7 @@ class Monopoly(object):
             for property in player.properties:
                 property_data = {}
                 property_data["name"] = property.name
-                property_data["num_building"] = property.num_building
+                property_data["num_buildings"] = property.num_buildings
                 player_data["properties"].append(property_data)
             data["players"].append(player_data)
         if output_file:
