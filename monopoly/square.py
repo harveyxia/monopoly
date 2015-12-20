@@ -23,8 +23,8 @@ class Square(object):
 
         # use original owner's years
         self.original_owner = None
-        self.purchase_years = [None] * len(rent)
-        self.payoffs = [0] * len(rent)
+        self.purchase_years = [None] * len(self.rent)
+        self.payoffs = [0] * len(self.rent)
 
     def add_building(self):
         if self.num_buildings == 5:
@@ -55,17 +55,22 @@ class Square(object):
 
     def track_payment(self, payment):
         if self.should_update_npv():
-            building_number = 0
-            while payment > 0:
-                # only count the extra payment for that building
-                already_paid = self.rent[building_number-1] if building_number > 0 else 0
-                to_pay = self.rent[building_number] - already_paid
-                payoff = to_pay if to_pay <= payment else payment
-                self.update_payoff(building_num, payoff)
-                payment -= payoff
-                building_number += 1
+            # print("payment of {0} on {1}".format(payment, self.name))
+            if self.type == "street":
+                building_number = 0
+                while payment > 0:
+                    # only count the extra payment for that building
+                    already_paid = self.rent[building_number-1] if building_number > 0 else 0
+                    to_pay = self.rent[building_number] - already_paid
+                    payoff = to_pay if to_pay <= payment else payment
+                    self.update_payoff(building_num, payoff)
+                    payment -= payoff
+                    building_number += 1
+            else:
+                self.update_payoff(0, payment)
 
     # updates payoff for a given building number
     def update_payoff(self, building_number, payoff):
+        # print("payoff of {0} for {1} building number {2}".format(payoff, self.name, building_number))
         years_elapsed = self.original_owner.years - self.purchase_years[building_number]
-        self.payoff[building_number] += payoff / (1+0.05)**(years_elapsed)
+        self.payoffs[building_number] += payoff / (1+0.05)**(years_elapsed)
