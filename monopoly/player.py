@@ -119,16 +119,21 @@ class Player(object):
     def purchase_square(self, square):
         if not self.do_strat_unowned_square(square):
             return
-        if square.owner and square.mortgaged == False:
+        if square.owner and not square.mortgaged:
             raise Exception("%s cannot buy square because square owned by %s" % (self.name, square.owner.name))
-        if self.balance < square.price:
+        price_to_pay = square.price
+        if square.mortgaged:
+            price_to_pay = square.price * 1.1 # 10% interest    
+        if self.balance < price_to_pay:
             raise Exception("%s cannot buy square because insufficient balance" % self.name)
-        self.balance -= square.price
+        self.balance -= price_to_pay
         # increase net_value, by how much?
         self.properties.append(square)
         if square.color is None and self.owns_color(square.color):
             self.owned_colors.append(square.color)
         square.set_owner(self)
+        if square.mortgaged:
+            square.unmortgage()
 
     def purchase_buildings(self, squares):
         building = self.do_strat_buy_buildings(squares)
@@ -159,7 +164,6 @@ class Player(object):
     def mortgage_square(self, square):
         square.mortgage()
         self.balance += 0.5 * square.price
-
 
     ############################
     #                          #
