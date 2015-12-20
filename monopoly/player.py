@@ -6,7 +6,7 @@ class Player(object):
     Player object
     """
 
-    def __init__(self, name, npvs=None):
+    def __init__(self, name):
         self.name = name
         self.balance = 1500  # cash balance
         # self.net_value = 1500   # net value, including houses and properties
@@ -17,10 +17,6 @@ class Player(object):
         self.properties = []
         self.bankrupt = False
         self.board = None
-        if npvs is None:
-            self.npvs = None
-        else:
-            self.npvs = dict(npvs)
         self.years = 0
 
     def __str__(self):

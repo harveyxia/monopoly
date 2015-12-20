@@ -73,7 +73,10 @@ def simulate(filename, turns, discount=.05):
 
 import sys
 
-if len(sys.argv) > 3:
-    simulate(sys.argv[1], int(float(sys.argv[2])), float(sys.argv[3]))
-elif len(sys.argv) > 2:
-    simulate(sys.argv[1], int(float(sys.argv[2])))
+def main():
+    if len(sys.argv) > 3:
+        simulate(sys.argv[1], int(float(sys.argv[2])), float(sys.argv[3]))
+    elif len(sys.argv) > 2:
+        simulate(sys.argv[1], int(float(sys.argv[2])))
+
+if __name__ == "__main__": main()
