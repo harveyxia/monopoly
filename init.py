@@ -32,7 +32,7 @@ def calculate_square_probs(square_counts, years):
     return map(lambda x: float(x) / average_length, square_counts)
 
 
-def calculate_npv(square_probs, discount, num_properties):
+def calculate_npv(square_probs, discount):
     squares = Board().squares
     npvs = []
     for i in xrange(len(squares)):
@@ -40,32 +40,30 @@ def calculate_npv(square_probs, discount, num_properties):
             continue
         square = squares[i]
         square_prob = square_probs[i]
-        # return attributes on the squares for sorting and analysis
-        # if num_properties > 0:
-        #     square_rent = float(square.price_build) / (square.price + square.price_build * num_properties) * square.rent[num_properties]
-        # else:
-        #     square_rent = float(square.price) / (square.price + square.price_build * num_properties) * square.rent[num_properties]
-        
-        if square.rent[5] == 0: # for utilities, railroads
-            square_rent = square.rent[num_properties]
-        elif num_properties > 0 and square.price_build > 0:
-            square_rent = float(square.price_build) / (square.price + square.price_build * 5) * square.rent[5]
-        else:
-            square_rent = float(square.price) / (square.price + square.price_build * 5) * square.rent[5]
-        npvs.append((square.name + " " + str(num_properties), square.color, square_rent * square_prob / (1 - discount) * 3))
+        npv = [0,0,0,0,0,0]
+        for num_properties in xrange(6):
+            # return attributes on the squares for sorting and analysis
+            # if num_properties > 0:
+            #     square_rent = float(square.price_build) / (square.price + square.price_build * num_properties) * square.rent[num_properties]
+            # else:
+            #     square_rent = float(square.price) / (square.price + square.price_build * num_properties) * square.rent[num_properties]
+            
+            if square.rent[5] == 0: # for utilities, railroads
+                square_rent = square.rent[num_properties]
+            elif num_properties > 0 and square.price_build > 0:
+                square_rent = float(square.price_build) / (square.price + square.price_build * 5) * square.rent[5]
+            else:
+                square_rent = float(square.price) / (square.price + square.price_build * 5) * square.rent[5]
+            npv[num_properties] = square_rent * square_prob / (1 - discount) * 3
+        npvs.append((square.name, npv))
+        print npv
     return npvs
 
 
 def run(turns, discount):
     (square_counts, years) = simulate_square_counts(turns)
     square_probs = calculate_square_probs(square_counts, years)
-    npvs = [calculate_npv(square_probs, discount, 0),
-            calculate_npv(square_probs, discount, 1),
-            calculate_npv(square_probs, discount, 2),
-            calculate_npv(square_probs, discount, 3),
-            calculate_npv(square_probs, discount, 4),
-            calculate_npv(square_probs, discount, 5)]
-    return npvs
+    return calculate_npv(square_probs, discount)
 
 def simulate(filename, turns, discount = .05):
     npvs = run(turns, discount)
