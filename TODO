@@ -2,7 +2,7 @@ TODO
 
 move get out of jail logic to the player (they need to decide whether or not to pay)
 
-add jail cards / community chest / chance
+use the get out of jail cards (see commented code in monopoly.make_move)
 fix NPVs to include future houses / hotels
 simulation (NPVs -> NPVs)
   - tracking the amount of return and discounting by the discount rate (5%)

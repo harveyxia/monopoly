@@ -22,6 +22,7 @@ class BasicPlayer(Player):
 
     # needs better logic
     def do_strat_get_out_of_jail(self, d):
+        # TODO: use get out of jail cards
         if self.jail_duration >= 3:
             self.jail_duration = 0
             self.in_jail = False

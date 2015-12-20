@@ -16,4 +16,5 @@ class EmptyPlayer(Player):
         pass
 
     def do_strat_get_out_of_jail(self, d):
+        # TODO: use get out of jail cards
         pass
