@@ -95,13 +95,13 @@ class Player(object):
 
     def purchase_house(self, square):
         square.add_building()
-        board.avail_houses -= 1
+        self.board.avail_houses -= 1
         self.balance -= square.price_build
 
     def purchase_hotel(self, square):
         square.add_building() # now at 5
-        board.avail_houses += 4
-        board.avail_hotels -= 1
+        self.board.avail_houses += 4
+        self.board.avail_hotels -= 1
         self.balance -= square.price_build
 
     # buys a square for a player
@@ -148,12 +148,12 @@ class Player(object):
 
     def sell_house(self, square):
         square.remove_building()
-        board.avail_houses += 1
+        self.board.avail_houses += 1
         self.balance += 0.5 * square.price_build
 
     def sell_hotel(self, square):
         square.remove_building()
-        board.avail_hotels += 1
+        self.board.avail_hotels += 1
         self.balance += 0.5 * (5 * square.price_build) # sell all 5
 
     def mortgage_square(self, square):

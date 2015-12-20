@@ -113,8 +113,9 @@ class Monopoly(object):
 
     # game consists of N moves until all but one player is bankrupt
     def make_move(self):
+        self.player_turn = self.player_turn % self.num_active_players
         player = self.active_players[self.player_turn]
-        self.player_turn = (self.player_turn + 1) % self.num_active_players
+        self.player_turn = self.player_turn + 1
         if player.in_jail:
             # TODO: use community chest, should be part of the jail strategy
             # if player == self.chance_jail_owner or player == self.community_chest_jail_owner:
