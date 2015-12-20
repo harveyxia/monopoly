@@ -59,14 +59,15 @@ def calculate_npv(square_probs, discount):
     return npvs
 
 
-def run(turns, discount):
+def run(turns, discount=.05):
     (square_counts, years) = simulate_square_counts(turns)
     square_probs = calculate_square_probs(square_counts, years)
     return calculate_npv(square_probs, discount)
 
-def simulate(filename, turns, discount = .05):
+def simulate(filename, turns, discount=.05):
     npvs = run(turns, discount)
     output.output_npv_file(filename, npvs)
+    return npvs
 
 #!/usr/bin/python
 
