@@ -15,7 +15,7 @@ class NpvPlayer(Player):
             return False
         if square.name in self.npvs:
             # print self.npvs[square.name][0] * self.balance / square.price
-            return self.decide(prob(self.npvs[square.name][0], self.balance, square.price))
+            return self.decide(self.prob(self.npvs[square.name][0], self.balance, square.price))
         else:
             return False
 
@@ -32,12 +32,14 @@ class NpvPlayer(Player):
 
     def do_strat_buy_buildings(self, squares):
         squares = filter(lambda x: x.num_buildings < 5 and x.price <= self.balance, squares)
+        if len(squares) == 0:
+            return None
         npvs = map(lambda x: self.npvs[x.name][x.buildings + 1], squares)
         prices = map(lambda x: x.price, squares)
-        probs = map(lambda x, y: x * self.balance / y, npvs, prices)
-        prob = max(probs)
-        if decide(prob):
-            return squares[prob.index(prob)]
+        probs = map(lambda x, y: self.prob(x, self.balance, y), npvs, prices)
+        p = max(probs)
+        if decide(p):
+            return squares[probs.index(r)]
         else:
             return None
 
@@ -49,6 +51,6 @@ class NpvPlayer(Player):
     def decide(p):
         return True if random() < p else False
 
-    @staticmethoc
+    @staticmethod
     def prob(npv, balance, price):
         return npv * balance / price
