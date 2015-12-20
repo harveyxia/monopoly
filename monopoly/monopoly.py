@@ -1,3 +1,12 @@
+# monopoly is responsible for:
+#   running the game
+#   turn-by-turn mechanics
+#   asking the player for input
+#     check to see if legal move
+#     ask player for strat (returns TRUE or FALSE)
+#     if player says yes, ask player to do thing (player doesn't check anything)
+#   state variable
+
 import json
 import random
 from random import randint
@@ -41,6 +50,24 @@ class Monopoly(object):
         random.shuffle(community_chest_cards)
         self.community_chest_jail_owner = None
 
+    ############################
+    #                          #
+    #      OTHER GETTERS       #
+    #                          #
+    ############################
+
+    def return_years(self):
+        years = []
+        for player in self.players:
+            years.append(player.years)
+        return years
+
+    ############################
+    #                          #
+    #            RUN           #
+    #                          #
+    ############################
+
     def run(self):
         while self.num_active_players > 1:
             self.make_move()
@@ -58,6 +85,83 @@ class Monopoly(object):
         self.winner = self.active_players[0]
         print "--------------------Game finished---------------------"
         print "%s wins!" % self.winner.name
+
+    ############################
+    #                          #
+    #      TURN MECHANICS      #
+    #                          #
+    ############################
+
+    @staticmethod
+    def roll_dice():
+        return randint(1, 6), randint(1, 6)
+
+    # game consists of N moves until all but one player is bankrupt
+    def make_move(self):
+        player = self.active_players[self.player_turn]
+        self.player_turn = (self.player_turn + 1) % self.num_active_players
+        if player.in_jail:
+            dice = self.roll_dice()
+            if player.leave_jail(dice):
+                self.roll_and_move(player, dice)
+        else:
+            self.roll_and_move(player)
+        return player
+
+    def roll_and_move(self, player, dice=None, turn=1):
+        if dice is None:
+            dice = self.roll_dice()
+        if turn == 3 and dice[0] == dice[1]:
+            player.go_to_jail()
+        else:
+            prev_position = player.position
+            player.move(dice[0] + dice[1])
+            self.do_square_action(player, prev_position)
+            if dice[0] == dice[1] and not player.in_jail:  # first doubles, roll again if not in jail
+                self.roll_and_move(player, turn=turn + 1)
+
+    def do_square_action(self, player, prev_position):
+        square = self.board.squares[player.position]
+        # if pass GO, get $200
+        if player.position < prev_position:
+            self.change_player_balance(player, 200)
+
+        # add logic to buy houses here
+        player.purchase_buildings()
+
+        # do nothing on chance, community, jail, free parking squares
+        if player.position in (0, 2, 7, 10, 17, 20, 22, 33, 36):
+            return
+
+        # if go to jail, go to jail
+        if player.position == 30:
+            player.go_to_jail()
+        # if land on income or luxury tax, pay tax
+        elif player.position == 4 or player.position == 38:
+            player.pay_tax(square)
+        # if land on owned property, pay rent
+        elif square.owner and square.owner is not player:
+            player.pay_rent(square)
+        # if land on unowned property, do strat
+        elif square.owner is None:
+            # print "##########################################################"
+            player.purchase_square(square)
+        # if land on chance or community, pick card and do card
+        # check if player is bankrupt, if so remove
+        if player.bankrupt:
+            self.active_players.remove(player)
+            self.num_active_players -= 1
+
+    def change_player_balance(self, player, amount=200):
+        if amount > 0:
+            if self.max_money is None:
+                player.balance += amount
+            elif self.max_money and self.max_money >= amount:
+                player.balance += amount
+                self.max_money -= amount
+        else:
+            player.balance -= amount
+            self.max_money += amount
 
     def chance_card(self, player):
         card = self.chance_cards.pop()
@@ -121,105 +225,46 @@ class Monopoly(object):
     def community_chest_card(self, player):
         card = self.community_chest_cards.pop()
 
-    # game consists of N moves until all but one player is bankrupt
-    def make_move(self, move_only=False):
-        player = self.active_players[self.player_turn]
-        self.player_turn = (self.player_turn + 1) % self.num_active_players
-        if player.in_jail:
-            self.attempt_get_out_of_jail(player)
-        else:
-            self.roll_and_move(player, move_only=move_only)
-        return player
+    ############################
+    #                          #
+    #     INTEGRITY CHECK      #
+    #                          #
+    ############################
 
-    def return_years(self):
-        years = []
-        for player in self.players:
-            years.append(player.years)
-        return years
+    # number houses on properties of any given color cannot differ by more than 1
+    def check_purchase_house(self, square, player):
+        if se.fboard.avail_houses > 0 and player.balance > square.price_build:
+            if square.color not in self.owned_colors:
+                return False
+            if square.num_building >= 4:        # can only upgrade to hotel
+                return False
+            other_color_squares = list(self.board.get_color_group(square.color))
+            other_color_squares.remove(square)
+            for s in other_color_squares:
+                if abs(square.num_building + 1 - s.num_buildings) > 1:
+                    return False
+            return True
+        return False
 
-    def attempt_get_out_of_jail(self, player):
-        # if in jail for 3 turns, get out automatically and roll to move
-        if player.jail_duration >= 2:
-            player.in_jail = False
-            player.jail_duration = 0
-            self.roll_and_move(player)
-        else:
-            # if roll doubles, get out of jail but don't move forward
-            d = self.roll_dice()
-            if d[0] == d[1]:
-                player.in_jail = False
-                player.jail_duration = 0
-            else:
-                player.jail_duration += 1
+    def check_purchase_hotel(self, square, player):
+        if self.board.avail_hotels > 0 and player.balance > square.price_build:
+            if square.color not in player.owned_colors:
+                return False
+            if square.num_building != 4:        # must have 4 to purchase hotel
+                return False
+            other_color_squares = list(self.board.get_color_group(square.color))
+            other_color_squares.remove(square)
+            for s in other_color_squares:
+                if abs(square.num_building + 1 - s.num_buildings) > 1:
+                    return False
+            return True
+        return False
 
-    def roll_and_move(self, player, move_only=False):
-        dice = self.roll_dice()
-        prev_position = player.position
-        player.move(dice[0] + dice[1])
-        if not move_only:
-            self.do_square_action(player, prev_position)
-        if dice[0] == dice[1] and not player.in_jail:  # first doubles, roll again if not in jail
-            dice = self.roll_dice()
-            prev_position = player.position
-            player.move(dice[0] + dice[1])
-            if not move_only:
-                self.do_square_action(player, prev_position)
-            if dice[0] == dice[1] and not player.in_jail:  # second doubles, roll again if not in jail
-                dice = self.roll_dice()
-                if dice[0] == dice[1]:  # third doubles, go to jail
-                    player.go_to_jail()
-                else:
-                    prev_position = player.position
-                    player.move(dice[0] + dice[1])
-                    if not move_only:
-                        self.do_square_action(player, prev_position)
-
-    def change_player_balance(self, player, amount=200):
-        if amount > 0:
-            if self.max_money is None:
-                player.balance += amount
-            elif self.max_money and self.max_money >= amount:
-                player.balance += amount
-                self.max_money -= amount
-        else:
-            player.balance -= amount
-            self.max_money += amount
-
-    def do_square_action(self, player, prev_position):
-        square = self.board.squares[player.position]
-        # if pass GO, get $200
-        if player.position < prev_position:
-            self.change_player_balance(player, 200)
-
-        # add logic to buy houses here
-        player.do_strat_buy_buildings(self.board)
-
-        # do nothing on chance, community, jail, free parking squares
-        if player.position in (0, 2, 7, 10, 17, 20, 22, 33, 36):
-            return
-
-        # if go to jail, go to jail
-        if player.position == 30:
-            player.go_to_jail()
-        # if land on income or luxury tax, pay tax
-        elif player.position == 4 or player.position == 38:
-            player.pay_tax(square)
-        # if land on owned property, pay rent
-        elif square.owner and square.owner is not player:
-            player.pay_rent(square)
-        # if land on unowned property, do strat
-        elif square.owner is None:
-            # print "##########################################################"
-            player.do_strat_unowned_square(square)
-        # if land on chance or community, pick card and do card
-        # check if player is bankrupt, if so remove
-        if player.bankrupt:
-            self.active_players.remove(player)
-            self.num_active_players -= 1
-
-    @staticmethod
-    def roll_dice():
-        return randint(1, 6), randint(1, 6)
+    ############################
+    #                          #
+    #          STATE           #
+    #                          #
+    ############################
 
     # Reads in a JSON transcript and returns a new Monopoly instance
     @classmethod
