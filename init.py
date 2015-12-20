@@ -1,7 +1,7 @@
 # this file provides us with the bare probabilities of landing on squares
 # as well as the average number of turns per year
 
-# run this using python init.py "npv.csv" 100000
+# run this using python init.py "npv.csv" 60000
 # the game basically just runs a game of monopoly where the players don't do
 # anything.
 
@@ -41,7 +41,18 @@ def calculate_npv(square_probs, discount, num_properties):
         square = squares[i]
         square_prob = square_probs[i]
         # return attributes on the squares for sorting and analysis
-        npvs.append((square.name + str(num_properties), square.color, square.rent[num_properties] * square_prob / (1 - discount) * 4))
+        # if num_properties > 0:
+        #     square_rent = float(square.price_build) / (square.price + square.price_build * num_properties) * square.rent[num_properties]
+        # else:
+        #     square_rent = float(square.price) / (square.price + square.price_build * num_properties) * square.rent[num_properties]
+        
+        if square.rent[5] == 0: # for utilities, railroads
+            square_rent = square.rent[num_properties]
+        elif num_properties > 0 and square.price_build > 0:
+            square_rent = float(square.price_build) / (square.price + square.price_build * 5) * square.rent[5]
+        else:
+            square_rent = float(square.price) / (square.price + square.price_build * 5) * square.rent[5]
+        npvs.append((square.name + " " + str(num_properties), square.color, square_rent * square_prob / (1 - discount) * 3))
     return npvs
 
 
@@ -58,7 +69,6 @@ def run(turns, discount):
 
 def simulate(filename, turns, discount = .05):
     npvs = run(turns, discount)
-    npvs = output.npv_distribute(npvs)
     output.output_npv_file(filename, npvs)
 
 #!/usr/bin/python

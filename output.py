@@ -1,8 +1,5 @@
 import csv
 
-def npv_distribute(npvs):
-    return npvs
-
 def output_npv_file(filename, npvs):
     with open('csv/'+filename, 'w') as csvfile:
         writer = csv.DictWriter(
