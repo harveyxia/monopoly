@@ -193,7 +193,10 @@ class Monopoly(object):
             player.liquidate()
             self.active_players = filter(lambda x : x.name != player.name, self.active_players)
             self.num_active_players -= 1
-
+            # if len(self.active_players) != self.num_active_players:
+            #     for p in self.active_players:
+            #         print p.name
+            #     print "tried to remove", player.name
         while player.purchase_buildings(self.get_purchasable_buildings(player)):
             self.debug("Purchased a building")
         self.debug("Balance: {0}".format(player.balance))
@@ -492,9 +495,8 @@ class Monopoly(object):
 
     def clean_caps(self):
         for square in self.board.squares:
-            for building_number in range(1, square.num_buildings+1):
-                if square.purchase_years[building_number] is None:
-                    square.caps[building_number] = 0
+            square.clean_cap()
+            # print square.caps
 
     def get_caps(self):
         self.clean_caps()

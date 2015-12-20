@@ -15,7 +15,7 @@ class CapRatePlayer(Player):
             return False
         if square.name in self.caps:
             # print self.caps[square.name][0] * self.balance / square.price
-            return self.decide(self.prob(self.caps[square.name][0], self.balance, square.price))
+            return self.decide(self.prob(self.caps[square.name][0], self.balance))
         else:
             return False
 
@@ -36,7 +36,7 @@ class CapRatePlayer(Player):
             return None
         caps = map(lambda x: self.caps[x.name][x.num_buildings + 1], squares)
         prices = map(lambda x: x.price, squares)
-        probs = map(lambda x, y: self.prob(x, self.balance, y), caps, prices)
+        probs = map(lambda x: self.prob(x, self.balance), caps)
         p = max(probs)
         if self.decide(p):
             return squares[probs.index(p)]
@@ -60,5 +60,7 @@ class CapRatePlayer(Player):
         return True if random() < p else False
 
     @staticmethod
-    def prob(cap, balance, price):
-        return cap * balance / price / 1000000
+    def prob(cap, balance):
+        if balance < 100:
+            return 0
+        return cap * 5

@@ -73,7 +73,7 @@ class Square(object):
                 base_payoff = payment * (float(self.price)/total_spent)
                 building_payoff = payment * (float(self.price_build)/total_spent)
                 self.update_cap(0, base_payoff)
-                for building_number in range(1, self.num_buildings+1):
+                for building_number in range(0, self.num_buildings):
                     self.update_cap(building_number, building_payoff)
             else:
                 # Tracking payments for utilities and railroads
@@ -86,7 +86,8 @@ class Square(object):
         # print("payoff of {0} for {1} building number {2}".format(payoff, self.name, building_number))
         years_elapsed = self.original_owner.years - self.purchase_years[building_number]
         self.caps[building_number] += payoff * (1/(1+0.01))**(years_elapsed)
-        
+        save = self.caps[building_number]
+
         if building_number == 0: 
             price = self.price 
         else: 
@@ -95,7 +96,13 @@ class Square(object):
         if price < self.caps[building_number]:
             if years_elapsed > 0:
                 self.caps[building_number] = 1 / (years_elapsed * price / self.caps[building_number])
-            else:
+
+            if self.caps[building_number] > 1:
                 self.caps[building_number] = 1
             self.purchase_years[building_number] = None
+
+    def clean_cap(self):
+        for building_number in range(0, 6):
+            if self.purchase_years[building_number] != None:
+                self.caps[building_number] = 0
 
