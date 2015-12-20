@@ -11,9 +11,11 @@ class NpvPlayer(Player):
 
     def do_strat_unowned_square(self, square):
         # print npvs[square.name][0]
+        if self.balance < square.price:
+            return False
         if square.name in self.npvs:
             # print self.npvs[square.name][0] * self.balance / square.price
-            return self.decide(self.npvs[square.name][0] * self.balance / square.price)
+            return self.decide(prob(self.npvs[square.name][0], self.balance, square.price))
         else:
             return False
 
@@ -29,7 +31,15 @@ class NpvPlayer(Player):
         return money
 
     def do_strat_buy_buildings(self, squares):
-        pass
+        squares = filter(lambda x: x.num_buildings < 5 and x.price <= self.balance, squares)
+        npvs = map(lambda x: self.npvs[x.name][x.buildings + 1], squares)
+        prices = map(lambda x: x.price, squares)
+        probs = map(lambda x, y: x * self.balance / y, npvs, prices)
+        prob = max(probs)
+        if decide(prob):
+            return squares[prob.index(prob)]
+        else:
+            return None
 
     def do_strat_get_out_of_jail(self, d):
         # TODO: use get out of jail cards
@@ -38,3 +48,7 @@ class NpvPlayer(Player):
     @staticmethod
     def decide(p):
         return True if random() < p else False
+
+    @staticmethoc
+    def prob(npv, balance, price):
+        return npv * balance / price
