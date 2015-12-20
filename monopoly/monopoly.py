@@ -481,7 +481,14 @@ class Monopoly(object):
     #                          #
     ############################
 
+    def clean_caps(self):
+        for square in self.board.squares:
+            for building_number in range(1, square.num_buildings+1):
+                if square.purchase_years[building_number] is None:
+                    square.caps[building_number] = 0
+
     def get_caps(self):
+        self.clean_caps()
         return [(square.name, square.caps) for square in self.board.squares]
 
     # Reads in a JSON transcript and returns a new Monopoly instance

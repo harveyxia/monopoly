@@ -30,7 +30,6 @@ def main():
         caps = simulate(int(sys.argv[1]), int(sys.argv[2]), float(sys.argv[3]))
     elif len(sys.argv) > 2:
         caps = simulate(int(sys.argv[1]), int(sys.argv[2]))
-        print caps
     else:
         print "simulate <turns in initial cap calculation> <number of game iterations> [<discount rate>]"
     output.output_cap_file("cap.csv", caps)

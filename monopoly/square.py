@@ -81,6 +81,21 @@ class Square(object):
 
     # updates cap for a given building number
     def update_cap(self, building_number, payoff):
+        if self.purchase_years[building_number] is None:
+            return
         # print("payoff of {0} for {1} building number {2}".format(payoff, self.name, building_number))
         years_elapsed = self.original_owner.years - self.purchase_years[building_number]
         self.caps[building_number] += payoff * (1/(1+0.01))**(years_elapsed)
+        
+        if building_number == 0: 
+            price = self.price 
+        else: 
+            price = self.price_build
+
+        if price < self.caps[building_number]:
+            if years_elapsed > 0:
+                self.caps[building_number] = 1 / (years_elapsed * price / self.caps[building_number])
+            else:
+                self.caps[building_number] = 1
+            self.purchase_years[building_number] = None
+

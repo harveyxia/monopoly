@@ -172,7 +172,6 @@ class Player(object):
             prop.num_buildings = 0
             prop.mortaged = False
 
-
     ############################
     #                          #
     #       HELPFUL STUFF      #
