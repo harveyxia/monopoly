@@ -185,7 +185,7 @@ class Monopoly(object):
                 player.pay_rent(square)
         # if land on unowned property, do strat
         elif square.owner is None:
-            if player.purchase_square(square):
+            if self.on_purchasable(player) and player.purchase_square(square):
                 self.debug("Purchased")
         # if land on chance, pick card and do card
         elif self.on_chance(player):
@@ -443,16 +443,22 @@ class Monopoly(object):
     ############################
 
     def on_utility(self, player):
-        return player.position == 12 or player.position == 28
+        return self.board.squares[player.position].type == "utility"
 
     def on_railroad(self, player):
-        return player.position == player.position == 5 or player.position == 15 or player.position == 25 or player.position == 35
+        return self.board.squares[player.position].type == "Railroad"
 
     def on_chance(self, player):
-        return player.position == 7 or player.position == 22 or player.position == 36
+        return self.board.squares[player.position].type == "Chance"
 
     def on_community_chest(self, player):
-        return player.position == 2 or player.position == 17 or player.position == 33
+        return self.board.squares[player.position].type == "Chest"
+
+    def on_street(self, player):
+        return self.board.squares[player.position].type == "Street"
+
+    def on_purchasable(self, player):
+        return self.on_street(player) or self.on_utility(player) or self.on_railroad(player)
 
     def railroads_owned(self, player):
         owned = 0
