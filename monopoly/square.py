@@ -41,6 +41,9 @@ class Square(object):
         self.num_buildings -= 1
 
     def get_rent(self):
+        # if self.num_buildings > 1:
+        #     print self.num_buildings
+        #     print self.rent[self.num_buildings]
         return self.rent[self.num_buildings]
 
     def set_owner(self, player):
@@ -67,8 +70,8 @@ class Square(object):
             # print("payment of {0} on {1}".format(payment, self.name))
             if self.type == "Street":
                 total_spent = self.price + self.price_build*self.num_buildings
-                base_payoff = payment * (self.price/total_spent)
-                building_payoff = payment * (self.price_build/total_spent)
+                base_payoff = payment * (float(self.price)/total_spent)
+                building_payoff = payment * (float(self.price_build)/total_spent)
                 self.update_npv(0, base_payoff)
                 for building_number in range(1, self.num_buildings+1):
                     self.update_npv(building_number, building_payoff)
@@ -79,4 +82,4 @@ class Square(object):
     def update_npv(self, building_number, payoff):
         # print("payoff of {0} for {1} building number {2}".format(payoff, self.name, building_number))
         years_elapsed = self.original_owner.years - self.purchase_years[building_number]
-        self.npvs[building_number] += payoff * (1/(1+0.001))**(years_elapsed)
+        self.npvs[building_number] += payoff * (1/(1+0.01))**(years_elapsed)
