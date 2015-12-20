@@ -95,14 +95,30 @@ class Monopoly(object):
         self.dice = randint(1, 6), randint(1, 6)
         return self.dice
 
+    def use_get_out_of_jail_free_card(self, player):
+        if player != self.chance_jail_owner or player != self.community_chest_jail_owner:
+            return False # doesn't own one
+        if player == self.chance_jail_owner:
+            player.in_jail = False
+            self.chance_jail_owner = None
+            self.chance_cards.insert(0, 7) # add the card to the back of the deck
+        elif player == self.community_chest_jail_owner:
+            player.in_jail = False
+            self.community_chest_jail_owner = None
+            self.community_chest_cards.insert(0, 5)
+        return True
+
     # game consists of N moves until all but one player is bankrupt
     def make_move(self):
         player = self.active_players[self.player_turn]
         self.player_turn = (self.player_turn + 1) % self.num_active_players
         if player.in_jail:
-            # TODO: use community chest??
-            # if self.chance_jail_owner == player or self.community_chest_jail_owner == player:
-                # use it??
+            # TODO: use community chest, should be part of the jail strategy
+            # if player == self.chance_jail_owner or player == self.community_chest_jail_owner:
+            #     if self.use_get_out_of_jail_free_card(player):
+            #         successfully used it, now roll
+            #         self.roll_and_move(player, dice)
+            #         return
             dice = self.roll_dice()
             if player.leave_jail(dice):
                 self.roll_and_move(player, dice)
