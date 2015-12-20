@@ -34,7 +34,7 @@ class NpvPlayer(Player):
         squares = filter(lambda x: x.num_buildings < 5 and x.price <= self.balance, squares)
         if len(squares) == 0:
             return None
-        npvs = map(lambda x: self.npvs[x.name][x.buildings + 1], squares)
+        npvs = map(lambda x: self.npvs[x.name][x.num_buildings + 1], squares)
         prices = map(lambda x: x.price, squares)
         probs = map(lambda x, y: self.prob(x, self.balance, y), npvs, prices)
         p = max(probs)
