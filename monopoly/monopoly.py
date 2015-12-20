@@ -78,16 +78,6 @@ class Monopoly(object):
         print "--------------------Game finished---------------------"
         print "%s wins!" % self.winner.name
 
-    def run_debug(self, turns=-1):
-        while self.num_active_players > 1  and turns != 0:
-            turns -= 1
-            player = self.make_move()
-            self.debug("%s balance: %s" % (player.name, str(player.balance)))
-        self.is_over = True
-        self.winner = self.active_players[0]
-        print "--------------------Game finished---------------------"
-        print "%s wins!" % self.winner.name
-
     ############################
     #                          #
     #      TURN MECHANICS      #
@@ -114,6 +104,7 @@ class Monopoly(object):
     # game consists of N moves until all but one player is bankrupt
     def make_move(self):
         player = self.active_players[self.player_turn]
+        self.debug("******** {0}'s turn ********".format(player.name))
         self.player_turn = (self.player_turn + 1) % self.num_active_players
         if player.in_jail:
             # TODO: use community chest, should be part of the jail strategy
@@ -127,7 +118,6 @@ class Monopoly(object):
                 self.roll_and_move(player, dice)
         else:
             self.roll_and_move(player)
-        return player
 
     def roll_and_move(self, player, dice=None, turn=1):
         if dice is None:
@@ -144,7 +134,7 @@ class Monopoly(object):
     # chance flag is true if we are performing an action after being moved there via a chance card
     def do_square_action(self, player, prev_position, chance=False):
         square = self.board.squares[player.position]
-        self.debug("{0} on {1}".format(player.name, square.name))
+        self.debug("Landed on {1}".format(player.name, square.name))
         # if pass GO, get $200
         if player.position < prev_position:
             self.change_player_balance(player, 200)
@@ -194,11 +184,13 @@ class Monopoly(object):
             self.do_community_chest_card(player)
         # check if player is bankrupt, if so remove
         if player.bankrupt:
+            self.debug("Bankrupt!")
             self.active_players.remove(player)
             self.num_active_players -= 1
 
         while player.purchase_buildings(self.get_purchasable_buildings(player)):
-            pass
+            self.debug("Purchased a building")
+        self.debug("Balance: {0}".format(player.balance))
 
     def change_player_balance(self, player, amount):
         if amount >= 0:

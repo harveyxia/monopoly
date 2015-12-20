@@ -169,7 +169,6 @@ class Player(object):
     # check if player owns all properties of a color. 
     # not an efficient implementation
     def owns_color(self, color):
-        print color
         if color is None:
             return False
         color_squares = self.board.get_color_group(color)
