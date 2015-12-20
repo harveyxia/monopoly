@@ -1,6 +1,6 @@
 import csv
 
-def output_npv_file(filename, npvs):
+def output_cap_file(filename, caps):
     with open('csv/'+filename, 'w') as csvfile:
         writer = csv.DictWriter(
             csvfile,
@@ -14,9 +14,9 @@ def output_npv_file(filename, npvs):
                 'value5'
             ])
         writer.writeheader()
-        for npv in npvs:
-            name = npv[0]
-            values = npv[1]
+        for cap in caps:
+            name = cap[0]
+            values = cap[1]
             writer.writerow({
                 'name': name,
                 'value0': values[0],
