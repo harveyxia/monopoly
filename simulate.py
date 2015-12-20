@@ -18,7 +18,7 @@ def combine_npvs(prev, current, nGames):
     for i in range(len(prev)):
         for j in range(6):
             if current[i][1][j] != 0:
-                prev[i][1][j] = (prev[i][1][j] + current[i][1][j])/nGames
+                prev[i][1][j] = (prev[i][1][j]*(nGames-1) + current[i][1][j])/nGames
     return prev
 
 def main():
@@ -29,5 +29,6 @@ def main():
         print npvs
     else:
         print "simulate <turns in initial npv calculation> <number of game iterations> [<discount rate>]"
+    output.output_npv_file("npv.csv", npvs)
 
 if __name__ == "__main__": main()
