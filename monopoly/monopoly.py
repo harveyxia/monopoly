@@ -96,7 +96,7 @@ class Monopoly(object):
     ############################
 
     @staticmethod
-    def roll_dice(self):
+    def roll_dice():
         return randint(1, 6), randint(1, 6)
 
     def use_get_out_of_jail_free_card(self, player):
