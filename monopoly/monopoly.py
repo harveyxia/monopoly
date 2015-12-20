@@ -133,7 +133,7 @@ class Monopoly(object):
             prev_position = player.position
             player.move(dice[0] + dice[1])
             self.do_square_action(player, prev_position)
-            if dice[0] == dice[1] and not player.in_jail:  # first doubles, roll again if not in jail
+            if dice[0] == dice[1] and not player.in_jail and not player.bankrupt:  # first doubles, roll again if not in jail
                 self.roll_and_move(player, turn=turn + 1)
 
     # chance flag is true if we are performing an action after being moved there via a chance card

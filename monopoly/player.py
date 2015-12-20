@@ -122,10 +122,10 @@ class Player(object):
         # increase net_value, by how much?
         self.properties.append(square)
         if square.color != "None" and self.owns_color(square.color):
-            print self.name, "got all of", square.color
+            # print self.name, "got all of", square.color
             self.owned_colors.append(square.color)
         square.set_owner(self)
-        print self.name, "is buying", square.name
+        # print self.name, "is buying", square.name
         if square.mortgaged:
             square.unmortgage()
         return True
@@ -136,10 +136,10 @@ class Player(object):
             return False
         elif building.num_buildings < 4:
             self.purchase_house(building)
-            print self.name, "is buying a house on", building.name
+            # print self.name, "is buying a house on", building.name
         else:
             self.purchase_hotel(building)
-            print self.name, "is buying a hotel on", building.name
+            # print self.name, "is buying a hotel on", building.name
         return True
 
     ############################
