@@ -291,21 +291,21 @@ class Monopoly(object):
             # Go to Jail - Go directly to Jail - Do not pass Go, do not collect $200
             player.go_to_jail()
         elif card == 7:
-            # Grand Opera Night – Collect $50 from every player for opening night seats
+            # Grand Opera Night - Collect $50 from every player for opening night seats
             for p in self.active_players:
                 p.pay_player(player, 50)
         elif card == 8:
             # Holiday Fund matures - Receive $100
             self.change_player_balance(player, 100)
         elif card == 9:
-            # Income tax refund – Collect $20
+            # Income tax refund - Collect $20
             self.change_player_balance(player, 20)
         elif card == 10:
             # It is your birthday - Collect $10 from each player
             for p in self.active_players:
                 p.pay_player(player, 10)
         elif card == 11:
-            # Life insurance matures – Collect $100
+            # Life insurance matures - Collect $100
             self.change_player_balance(player, 100)
         elif card == 12:
             # Pay hospital fees of $100
@@ -317,7 +317,7 @@ class Monopoly(object):
             # Receive $25 consultancy fee
             self.change_player_balance(player, 25)
         elif card == 15:
-            # You are assessed for street repairs – $40 per house – $115 per hotel
+            # You are assessed for street repairs - $40 per house - $115 per hotel
             to_pay = 0
             for property in player.properties:
                 if property.num_building == 5:
@@ -326,7 +326,7 @@ class Monopoly(object):
                     to_pay -= property.num_building * 40
             self.change_player_balance(player, to_pay)
         elif card == 16:
-            # You have won second prize in a beauty contest – Collect $10
+            # You have won second prize in a beauty contest - Collect $10
             self.change_player_balance(player, 10)
         elif card == 17:
             # You inherit $100

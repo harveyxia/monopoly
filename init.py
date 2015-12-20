@@ -1,16 +1,20 @@
 # this file provides us with the bare probabilities of landing on squares
 # as well as the average number of turns per year
 
-# run this using python square_npy.py "npv.csv" 100000
+# run this using python init.py "npv.csv" 100000
 # the game basically just runs a game of monopoly where the players don't do
 # anything.
-
-import csv
 
 from monopoly.board import Board
 from monopoly.monopoly import Monopoly
 from players.basic_player import BasicPlayer
+import output
 
+############################
+#                          #
+#       INITIAL STUFF      #
+#                          #
+############################
 
 def simulate_square_counts(turns):
     players = [BasicPlayer(name="BasicPlayer" + str(i)) for i in xrange(4)]
@@ -52,23 +56,10 @@ def run(turns, discount):
             calculate_npv(square_probs, discount, 5)]
     return npvs
 
-def npv_distribute(npvs):
-    print npvs
-    return npvs
-
-
-def output_npv_file(filename, npvs):
-    with open('csv/'+filename, 'w') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=['name', 'value'])
-        writer.writeheader()
-        for npv in npvs:
-            for r in npv:
-                writer.writerow({'name': r[0], 'value': r[2]})
-
 def simulate(filename, turns, discount = .05):
     npvs = run(turns, discount)
-    npvs = npv_distribute(npvs)
-    output_npv_file(filename, npvs)
+    npvs = output.npv_distribute(npvs)
+    output.output_npv_file(filename, npvs)
 
 #!/usr/bin/python
 
