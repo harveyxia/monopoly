@@ -21,7 +21,7 @@ class Monopoly(object):
     Monopoly class, represents entirety of game
     """
 
-    def __init__(self, players, max_money=None):
+    def __init__(self, players):
         """
 
         :type players: Player() subclass
@@ -38,8 +38,6 @@ class Monopoly(object):
         self.num_active_players = self.num_players
         self.active_players = self.players
         self.player_turn = 0  # which Player has next move, default first player
-
-        self.max_money = max_money  # artificial cap on maximum money given out from passing GO
 
         self.is_over = False  # true if game is over
         self.winner = None
@@ -96,7 +94,7 @@ class Monopoly(object):
     ############################
 
     @staticmethod
-    def roll_dice(self):
+    def roll_dice():
         return randint(1, 6), randint(1, 6)
 
     def use_get_out_of_jail_free_card(self, player):
@@ -202,13 +200,10 @@ class Monopoly(object):
             pass
 
     def change_player_balance(self, player, amount):
-        if amount == 0:
-            return
-        if self.max_money is None:
+        if amount >= 0:
             player.balance += amount
-        elif self.max_money and self.max_money >= amount:
-            player.balance += amount
-            self.max_money -= amount
+        else:
+            player.do_strat_raise_money(-1*amount)
 
     def shuffle_chance_cards(self):
         self.chance_cards = range(1, 16)
