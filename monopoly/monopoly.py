@@ -9,12 +9,13 @@
 
 import json
 import random
-from random import randint
+from random import randint, shuffle
 
 from board import Board
 from player import Player
 
 flag = False
+
 
 class Monopoly(object):
     """
@@ -29,15 +30,18 @@ class Monopoly(object):
         if len(players) < 2:
             raise Exception("num_players must be greater than 1")
 
+        shuffle(players)  # shuffle order of players for moves
+
         self.board = Board()
         self.num_players = len(players)
         self.players = players
         for player in players:
             player.board = self.board
-        # num_active_players and active_players don't include bankrupt players
-        self.num_active_players = self.num_players
+        # active_players don't include bankrupt players
         self.active_players = players
-        self.player_turn = 0  # which Player has next move, default first player
+
+        # which Player has next move
+        self.player_turn = 0
 
         self.is_over = False  # true if game is over
         self.winner = None
@@ -53,7 +57,8 @@ class Monopoly(object):
     #                          #
     ############################
 
-    def debug(self, message):
+    @staticmethod
+    def debug(message):
         if flag:
             print message
 
@@ -70,15 +75,17 @@ class Monopoly(object):
     ############################
 
     def run(self, turns=-1):
-        while self.num_active_players > 1 and turns != 0:
+        while len(self.active_players) > 1 and turns != 0:
             turns -= 1
             self.make_move()
         self.is_over = True
-        self.winner = self.active_players[0]
         print "--------------------Game finished---------------------"
         if turns == 0:
             print "No one wins :("
         else:
+            if len(self.active_players) > 1:
+                raise Exception("This shouldn't happen")
+            self.winner = self.active_players[0]
             print "%s wins!" % self.winner.name
 
     ############################
@@ -93,11 +100,11 @@ class Monopoly(object):
 
     def use_get_out_of_jail_free_card(self, player):
         if player != self.chance_jail_owner or player != self.community_chest_jail_owner:
-            return False # doesn't own one
+            return False  # doesn't own one
         if player == self.chance_jail_owner:
             player.in_jail = False
             self.chance_jail_owner = None
-            self.chance_cards.insert(0, 7) # add the card to the back of the deck
+            self.chance_cards.insert(0, 7)  # add the card to the back of the deck
         elif player == self.community_chest_jail_owner:
             player.in_jail = False
             self.community_chest_jail_owner = None
@@ -106,7 +113,7 @@ class Monopoly(object):
 
     # game consists of N moves until all but one player is bankrupt
     def make_move(self):
-        self.player_turn = self.player_turn % self.num_active_players
+        self.player_turn = self.player_turn % len(self.active_players)
         player = self.active_players[self.player_turn]
         self.debug("******** {0}'s turn ********".format(player.name))
         self.player_turn = self.player_turn + 1
@@ -133,7 +140,8 @@ class Monopoly(object):
             prev_position = player.position
             player.move(dice[0] + dice[1])
             self.do_square_action(player, prev_position)
-            if dice[0] == dice[1] and not player.in_jail and not player.bankrupt:  # first doubles, roll again if not in jail
+            if dice[0] == dice[
+                1] and not player.in_jail and not player.bankrupt:  # first doubles, roll again if not in jail
                 self.roll_and_move(player, turn=turn + 1)
 
     # chance flag is true if we are performing an action after being moved there via a chance card
@@ -158,7 +166,7 @@ class Monopoly(object):
         elif square.owner and square.owner is not player:
             self.debug("Paying rent to {0}".format(square.owner.name))
             if self.on_utility(player):
-                dice = self.roll_dice() # reroll dice for the utility
+                dice = self.roll_dice()  # reroll dice for the utility
                 roll = dice[0] + dice[1]
                 if chance == True:
                     # chance card: utilities have to pay 10 * roll
@@ -176,7 +184,7 @@ class Monopoly(object):
                     player.pay_rent(square, multiple=(railroads_owned * 2))
                 else:
                     player.pay_rent(square, multiple=railroads_owned)
-            else: # normal rent
+            else:  # normal rent
                 player.pay_rent(square)
         # if land on unowned property, do strat
         elif square.owner is None:
@@ -191,8 +199,10 @@ class Monopoly(object):
         if player.bankrupt:
             self.debug("Bankrupt!")
             player.liquidate()
-            self.active_players = filter(lambda x : x.name != player.name, self.active_players)
-            self.num_active_players -= 1
+            n = len(self.active_players)
+            self.active_players = filter(lambda x: x.name != player.name, self.active_players)
+            if len(self.active_players) != n - 1:
+                raise Exception("Bankrupt player did not get removed.")
 
         while player.purchase_buildings(self.get_purchasable_buildings(player)):
             self.debug("Purchased a building")
@@ -202,14 +212,13 @@ class Monopoly(object):
         if amount >= 0:
             player.balance += amount
         else:
-            player.do_strat_raise_money(-1*amount)
+            player.do_strat_raise_money(-1 * amount)
 
     def shuffle_chance_cards(self):
         self.chance_cards = range(1, 16)
         if self.chance_jail_owner != None:
-            self.chance_cards.remove(7) # remove get out of jail card
+            self.chance_cards.remove(7)  # remove get out of jail card
         random.shuffle(self.chance_cards)
-
 
     def shuffle_community_chest_cards(self):
         self.community_chest_cards = range(1, 17)
@@ -387,7 +396,7 @@ class Monopoly(object):
         if self.board.avail_houses > 0 and player.balance > square.price_build:
             if square.color not in player.owned_colors:
                 return False
-            if square.num_buildings >= 4:        # can only upgrade to hotel
+            if square.num_buildings >= 4:  # can only upgrade to hotel
                 return False
             other_color_squares = list(self.board.get_color_group(square.color))
             other_color_squares = self.remove_square_by_name(square.name, other_color_squares)
@@ -402,7 +411,7 @@ class Monopoly(object):
         if self.board.avail_hotels > 0 and player.balance > square.price_build:
             if square.color not in player.owned_colors:
                 return False
-            if square.num_buildings != 4:        # must have 4 to purchase hotel
+            if square.num_buildings != 4:  # must have 4 to purchase hotel
                 return False
             other_color_squares = list(self.board.get_color_group(square.color))
             other_color_squares = self.remove_square_by_name(square.name, other_color_squares)
@@ -492,7 +501,7 @@ class Monopoly(object):
 
     def clean_caps(self):
         for square in self.board.squares:
-            for building_number in range(1, square.num_buildings+1):
+            for building_number in range(1, square.num_buildings + 1):
                 if square.purchase_years[building_number] is None:
                     square.caps[building_number] = 0
 
@@ -534,7 +543,6 @@ class Monopoly(object):
     # returns the dict
     def save_state(self, output_file=False, transcript="transcript.json"):
         data = {}
-        data["num_players"] = self.num_active_players
         data["player_turn"] = self.player_turn
         data["is_over"] = self.is_over
         data["winner"] = self.winner
