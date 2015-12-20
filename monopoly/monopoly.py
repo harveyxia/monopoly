@@ -145,13 +145,13 @@ class Monopoly(object):
                 roll = self.dice[0] + self.dice[1]
                 if chance == True:
                     # chance card: utilities have to pay 10 times your roll
-                    player.pay_player(square.owner, 10 * roll)
+                    player.pay_rent(square.owner, 10 * roll)
                 elif self.board.squares[12].owner == self.board.squares[28].owner:
                     # same owner owns both utilities, pay 10 * roll
-                    player.pay_player(square.owner, 10 * roll)
+                    player.pay_rent(square, 10 * roll)
                 else:
                     # different owners, pay 4 * roll
-                    player.pay_player(square.owner, 4 * roll)
+                    player.pay_rent(square, 4 * roll)
             elif self.on_railroad(player):
                 railroads_owned = self.railroads_owned(square.owner)
                 if chance == True:
@@ -336,10 +336,10 @@ class Monopoly(object):
             # You are assessed for street repairs - $40 per house - $115 per hotel
             to_pay = 0
             for property in player.properties:
-                if property.num_building == 5:
+                if property.num_buildings == 5:
                     to_pay -= 115
                 else:
-                    to_pay -= property.num_building * 40
+                    to_pay -= property.num_buildings * 40
             self.change_player_balance(player, to_pay)
         elif card == 16:
             # You have won second prize in a beauty contest - Collect $10
