@@ -132,6 +132,8 @@ class Player(object):
         if square.color is None and self.owns_color(square.color):
             self.owned_colors.append(square.color)
         square.set_owner(self)
+        if square.mortgaged:
+            square.unmortgage()
 
     def purchase_buildings(self, squares):
         building = self.do_strat_buy_buildings(squares)
