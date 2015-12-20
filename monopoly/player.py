@@ -81,20 +81,10 @@ class Player(object):
         else:  # luxury tax
             tax = 75
         # player must mortgage or sell something to raise balance
-        while self.balance < tax:
-            # if bankrupt, pay with whatever balance is available
-            if not self.do_strat_raise_money():
-                self.balance = 0
-                return
-        self.balance -= tax
+        self.do_strat_raise_money(tax)
 
     def pay_player(self, other_player, amount):
-        while self.balance < amount:
-            # if bankrupt, pay with whatever balance is available
-            if not self.do_strat_raise_money():
-                self.balance = 0
-                return
-        self.balance -= amount
+        self.do_strat_raise_money(amount)
         other_player.balance += amount
 
     ############################
@@ -118,7 +108,7 @@ class Player(object):
     # does NOT check permissions - will die if you try to buy something you can't
     def purchase_square(self, square):
         if not self.do_strat_unowned_square(square):
-            return
+            return False
         if square.owner and not square.mortgaged:
             raise Exception("%s cannot buy square because square owned by %s" % (self.name, square.owner.name))
         price_to_pay = square.price
@@ -136,6 +126,7 @@ class Player(object):
         print self.name, "is buying", square.name
         if square.mortgaged:
             square.unmortgage()
+        return True
 
     def purchase_buildings(self, squares):
         building = self.do_strat_buy_buildings(squares)
