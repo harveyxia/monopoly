@@ -60,19 +60,13 @@ class Player(object):
 
     # pays rent
     # calls do_strat_raise_money
-    def pay_rent(self, square):
+    def pay_rent(self, square, multiple=1):
         # print "%s is paying rent" % self.name
         if square.owner == self:
             raise Exception("I (%s) own %s" % (self.name, square.owner.name))
         # player must mortgage or sell something to raise balance
-        while self.balance < square.get_rent():
-            # if bankrupt, pay with whatever balance is available
-            if not self.do_strat_raise_money():
-                square.owner.balance += self.balance
-                self.balance = 0
-                return
-        self.balance -= square.get_rent()
-        square.owner.balance += square.get_rent()
+        money = self.do_strat_raise_money(square.get_rent() * multiple)
+        square.owner.balance += money
 
     def pay_tax(self, square):
         tax = 0
@@ -91,6 +85,15 @@ class Player(object):
                 self.balance = 0
                 return
         self.balance -= tax
+
+    def pay_player(self, other_player, amount):
+        while self.balance < amount:
+            # if bankrupt, pay with whatever balance is available
+            if not self.do_strat_raise_money():
+                self.balance = 0
+                return
+        self.balance -= amount
+        other_player.balance += amount
 
     ############################
     #                          #
@@ -125,8 +128,8 @@ class Player(object):
             self.owned_colors.append(square.color)
         square.set_owner(self)
 
-    def purchase_buildings(self):
-        return self.do_strat_buy_buildings()
+    def purchase_buildings(self, squares):
+        return self.do_strat_buy_buildings(squares)
 
     ############################
     #                          #
@@ -149,19 +152,33 @@ class Player(object):
     #                          #
     ############################
 
-    def do_strat_buy_buildings(self):
+    # input value: list of square
+    # return value: none
+    #
+    # strategy for buying buildings, called at the end of every turn
+    def do_strat_buy_buildings(self, squares):
         raise NotImplementedError
 
+    # input value: square
+    # return value: TRUE if you want to buy and FALSE otherwise
+    #
     # strategy for unowned properties
     def do_strat_unowned_square(self, square):
         raise NotImplementedError
 
-    # return False if bankrupt, else True
+    # input value: amount of money needed
+    # return value: amount of money raised
+    #
     # this will raise the amount of money or die trying
+    # returns the amount of money raised
+    # responsible for keeping player consistent, i.e. should bankrupt self
+    # also updates amount of money a player has
     def do_strat_raise_money(self, money):
         raise NotImplementedError
 
-    # it returns TRUE if you got out of jail and FALSE otherwise
+    # input value: dice
+    # output value: TRUE if you got out of jail and FALSE otherwise
+    #
     # all the game mechanism - such as paying 50 bucks if you fail to
     # get out of jail on your third turn - should be implemented HERE
     # you pass the dice roll in so that you can figure out if you

@@ -2,7 +2,7 @@ from monopoly.player import Player
 
 
 class BasicPlayer(Player):
-    def do_strat_buy_buildings(self):
+    def do_strat_buy_buildings(self, squares):
         pass
 
     def do_strat_raise_money(self, money):
@@ -12,8 +12,9 @@ class BasicPlayer(Player):
             self.balance += p.price
         if self.balance < money:
             self.bankrupt = True
-            return False
-        return True
+            return self.balance
+        self.balance -= money
+        return money
 
     def do_strat_unowned_square(self, square):
         if square.price < self.balance:
