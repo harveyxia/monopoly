@@ -59,4 +59,4 @@ class NpvPlayer(Player):
 
     @staticmethod
     def prob(npv, balance, price):
-        return npv * balance / price
+        return npv * balance / price / 1000000
