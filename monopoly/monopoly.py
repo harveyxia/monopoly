@@ -372,6 +372,15 @@ class Monopoly(object):
     #                          #
     ############################
 
+    # call remove by name, since list(self.board.get_color_group(square.color)) changes the reference to squares
+    @staticmethod
+    def remove_square_by_name(name, squares):
+        for s in squares:
+            if s.name == name:
+                squares.remove(s)
+                break
+        return squares
+
     # number houses on properties of any given color cannot differ by more than 1
     # should return the set of squares for which houses are possible
     def check_purchase_house(self, square, player):
@@ -381,7 +390,7 @@ class Monopoly(object):
             if square.num_buildings >= 4:        # can only upgrade to hotel
                 return False
             other_color_squares = list(self.board.get_color_group(square.color))
-            other_color_squares.remove(square)
+            other_color_squares = self.remove_square_by_name(square.name, other_color_squares)
             for s in other_color_squares:
                 if abs(square.num_buildings + 1 - s.num_buildings) > 1:
                     return False
@@ -396,7 +405,7 @@ class Monopoly(object):
             if square.num_buildings != 4:        # must have 4 to purchase hotel
                 return False
             other_color_squares = list(self.board.get_color_group(square.color))
-            other_color_squares.remove(square)
+            other_color_squares = self.remove_square_by_name(square.name, other_color_squares)
             for s in other_color_squares:
                 if abs(square.num_buildings + 1 - s.num_buildings) > 1:
                     return False
