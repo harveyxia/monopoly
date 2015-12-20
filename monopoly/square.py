@@ -56,16 +56,13 @@ class Square(object):
     def track_payment(self, payment):
         if self.should_update_npv():
             # print("payment of {0} on {1}".format(payment, self.name))
-            if self.type == "street":
-                building_number = 0
-                while payment > 0:
-                    # only count the extra payment for that building
-                    already_paid = self.rent[building_number-1] if building_number > 0 else 0
-                    to_pay = self.rent[building_number] - already_paid
-                    payoff = to_pay if to_pay <= payment else payment
-                    self.update_payoff(building_num, payoff)
-                    payment -= payoff
-                    building_number += 1
+            if self.type == "Street":
+                total_spent = self.price + self.price_build*self.num_buildings
+                base_payoff = payment * (self.price/total_spent)
+                building_payoff = payment * (self.price_build/total_spent)
+                self.update_payoff(0, base_payoff)
+                for building_number in range(1, self.num_buildings+1):
+                    self.update_payoff(building_number, building_payoff)
             else:
                 self.update_payoff(0, payment)
 
