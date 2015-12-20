@@ -17,7 +17,10 @@ class Player(object):
         self.properties = []
         self.bankrupt = False
         self.board = None
-        self.npvs = npvs
+        if npvs is None:
+            self.npvs = None
+        else:
+            self.npvs = dict(npvs)
         self.years = 0
 
     def __str__(self):

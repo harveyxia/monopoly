@@ -56,7 +56,6 @@ def calculate_npv(square_probs, discount):
                 square_rent = float(square.price) / (square.price + square.price_build * 5) * square.rent[5]
             npv[num_properties] = square_rent * square_prob / (1 - discount) * 3
         npvs.append((square.name, npv))
-        print npv
     return npvs
 
 

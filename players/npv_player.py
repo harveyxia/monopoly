@@ -7,12 +7,13 @@ from monopoly.player import Player
 class NpvPlayer(Player):
     def __init__(self, name):
         super(NpvPlayer, self).__init__(name)
-        self.square_buy_decisions = generate_square_buy_decisions("roi.csv")
+        if self.npvs is None:
+            raise Exception("cannot create NPV player %s without npv file." % self.name)
 
     def do_strat_unowned_square(self, square):
-        if square.price < self.balance:
-            if self.decide(self.square_buy_decisions[square.name]):
-                return True
+        # print npvs[square.name][0]
+        print npvs[square.name][0] * self.money / square.cost
+        return decide(npvs[square.name][0] * self.money / square.cost)
 
     def do_strat_raise_money(self, money):
         pass
