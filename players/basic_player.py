@@ -27,6 +27,7 @@ class BasicPlayer(Player):
         if self.jail_duration >= 3:
             self.jail_duration = 0
             self.in_jail = False
+            self.do_strat_raise_money(50)
             return True
         else:
             self.jail_duration += 1
