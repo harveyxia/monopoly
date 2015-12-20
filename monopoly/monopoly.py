@@ -162,13 +162,13 @@ class Monopoly(object):
                 roll = dice[0] + dice[1]
                 if chance == True:
                     # chance card: utilities have to pay 10 * roll
-                    player.pay_rent(square, 10 * roll)
+                    player.pay_player(square.owner, 10 * roll, track=True, square=square)
                 elif self.board.squares[12].owner and self.board.squares[28].owner:
                     # both utilities are owned (not necessarily by the same person), pay 10 * roll
-                    player.pay_rent(square, 10 * roll)
+                    player.pay_player(square.owner, 10 * roll, track=True, square=square)
                 else:
-                    # different owners, pay 4 * roll
-                    player.pay_rent(square, 4 * roll)
+                    # only one utility is owned, pay 4 * roll
+                    player.pay_player(square.owner, 4 * roll, track=True, square=square)
             elif self.on_railroad(player):
                 railroads_owned = self.railroads_owned(square.owner)
                 if chance == True:

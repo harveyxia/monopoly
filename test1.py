@@ -7,4 +7,4 @@ def run():
     players = [BasicPlayer("BasicPlayer1"),
                BasicPlayer("BasicPlayer2")]
     monopoly = Monopoly(players)
-    monopoly.run_debug()
+    monopoly.run(100000)

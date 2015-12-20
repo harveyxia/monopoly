@@ -22,6 +22,7 @@ def combine_npvs(prev, current, nGames):
     return prev
 
 def main():
+    npvs = []
     if len(sys.argv) > 3:
         npvs = simulate(int(sys.argv[1]), int(sys.argv[2]), float(sys.argv[3]))
     elif len(sys.argv) > 2:

@@ -83,9 +83,11 @@ class Player(object):
         # player must mortgage or sell something to raise balance
         self.do_strat_raise_money(tax)
 
-    def pay_player(self, other_player, amount):
-        self.do_strat_raise_money(amount)
-        other_player.balance += amount
+    def pay_player(self, other_player, amount, track=False, square=None):
+        payment = self.do_strat_raise_money(amount)
+        if track and square:
+            square.track_payment(payment)
+        other_player.balance += payment
 
     ############################
     #                          #
