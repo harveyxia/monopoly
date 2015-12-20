@@ -37,7 +37,6 @@ class Monopoly(object):
         self.num_active_players = self.num_players
         self.active_players = self.players
         self.player_turn = 0  # which Player has next move, default first player
-        self.dice = None
 
         self.max_money = max_money  # artificial cap on maximum money given out from passing GO
 
@@ -91,9 +90,9 @@ class Monopoly(object):
     #                          #
     ############################
 
+    @staticmethod
     def roll_dice(self):
-        self.dice = randint(1, 6), randint(1, 6)
-        return self.dice
+        return randint(1, 6), randint(1, 6)
 
     def use_get_out_of_jail_free_card(self, player):
         if player != self.chance_jail_owner or player != self.community_chest_jail_owner:
@@ -158,12 +157,13 @@ class Monopoly(object):
         # if land on owned property, pay rent
         elif square.owner and square.owner is not player:
             if self.on_utility(player):
-                roll = self.dice[0] + self.dice[1]
+                dice = self.roll_dice() # reroll dice for the utility
+                roll = dice[0] + dice[1]
                 if chance == True:
-                    # chance card: utilities have to pay 10 times your roll
+                    # chance card: utilities have to pay 10 * roll
                     player.pay_rent(square, 10 * roll)
-                elif self.board.squares[12].owner == self.board.squares[28].owner:
-                    # same owner owns both utilities, pay 10 * roll
+                elif self.board.squares[12].owner and self.board.squares[28].owner:
+                    # both utilities are owned (not necessarily by the same person), pay 10 * roll
                     player.pay_rent(square, 10 * roll)
                 else:
                     # different owners, pay 4 * roll
