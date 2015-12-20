@@ -70,4 +70,4 @@ class Square(object):
     def update_payoff(self, building_number, payoff):
         # print("payoff of {0} for {1} building number {2}".format(payoff, self.name, building_number))
         years_elapsed = self.original_owner.years - self.purchase_years[building_number]
-        self.payoffs[building_number] += payoff / (1+0.05)**(years_elapsed)
+        self.payoffs[building_number] += payoff * (1/(1+0.05))**(years_elapsed)
