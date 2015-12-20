@@ -37,8 +37,8 @@ class Player(object):
     def move(self, num_squares):
         if self.in_jail:
             raise Exception("%s cannot move because in jail." % self.name)
-        if (self.position + num_squares > 40):
-            self.years = self.years + 1
+        if self.position + num_squares > 40:
+            self.years += 1
         self.position = (self.position + num_squares) % 40
 
     def go_to_jail(self):
@@ -166,10 +166,10 @@ class Player(object):
         for prop in self.properties:
             prop.owner = None
             if prop.num_buildings == 5:
-                self.board.hotels += 1
+                self.board.avail_hotels += 1
             else:
-                self.board.houses += prop.num_buildings
-            pro.num_buildings = 0
+                self.board.avail_houses += prop.num_buildings
+            prop.num_buildings = 0
             prop.mortaged = False
 
 
