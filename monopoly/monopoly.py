@@ -14,7 +14,7 @@ from random import randint
 from board import Board
 from player import Player
 
-flag = True
+flag = False
 
 class Monopoly(object):
     """
@@ -86,7 +86,10 @@ class Monopoly(object):
         self.is_over = True
         self.winner = self.active_players[0]
         print "--------------------Game finished---------------------"
-        print "%s wins!" % self.winner.name
+        if turns == 0:
+            print "No one wins :("
+        else:
+            print "%s wins!" % self.winner.name
 
     ############################
     #                          #
@@ -195,6 +198,7 @@ class Monopoly(object):
             self.do_community_chest_card(player)
         # check if player is bankrupt, if so remove
         if player.bankrupt:
+            player.liquidate()
             self.active_players = filter(lambda x : x.name != player.name, self.active_players)
             # self.active_players.remove(player)
             self.num_active_players -= 1

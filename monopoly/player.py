@@ -160,6 +160,17 @@ class Player(object):
         square.mortgage()
         self.balance += 0.5 * square.price
 
+    def liquidate(self):
+        for prop in self.properties:
+            prop.owner = None
+            if prop.num_buildings == 5:
+                self.board.hotels += 1
+            else:
+                self.board.houses += prop.num_buildings
+            pro.num_buildings = 0
+            prop.mortaged = False
+
+
     ############################
     #                          #
     #       HELPFUL STUFF      #
