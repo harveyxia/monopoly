@@ -108,7 +108,7 @@ class Player(object):
     # does NOT check permissions - will die if you try to buy something you can't
     def purchase_square(self, square):
         if not self.do_strat_unowned_square(square):
-            return
+            return False
         if square.owner and not square.mortgaged:
             raise Exception("%s cannot buy square because square owned by %s" % (self.name, square.owner.name))
         price_to_pay = square.price
@@ -124,6 +124,7 @@ class Player(object):
         square.set_owner(self)
         if square.mortgaged:
             square.unmortgage()
+        return True
 
     def purchase_buildings(self, squares):
         building = self.do_strat_buy_buildings(squares)

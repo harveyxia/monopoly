@@ -14,7 +14,7 @@ from random import randint
 from board import Board
 from player import Player
 
-flag = False
+flag = True
 
 class Monopoly(object):
     """
@@ -70,7 +70,6 @@ class Monopoly(object):
     ############################
 
     def run(self, turns=-1):
-        flag = False
         while self.num_active_players > 1 and turns != 0:
             turns -= 1
             self.make_move()
@@ -80,12 +79,10 @@ class Monopoly(object):
         print "%s wins!" % self.winner.name
 
     def run_debug(self, turns=-1):
-        flag = True
         while self.num_active_players > 1  and turns != 0:
             turns -= 1
             player = self.make_move()
-            # print player
-            print "%s balance: %s" % (player.name, str(player.balance))
+            self.debug("%s balance: %s" % (player.name, str(player.balance)))
         self.is_over = True
         self.winner = self.active_players[0]
         print "--------------------Game finished---------------------"
@@ -164,6 +161,7 @@ class Monopoly(object):
             player.pay_tax(square)
         # if land on owned property, pay rent
         elif square.owner and square.owner is not player:
+            self.debug("Paying rent to {0}".format(square.owner.name))
             if self.on_utility(player):
                 dice = self.roll_dice() # reroll dice for the utility
                 roll = dice[0] + dice[1]
@@ -184,12 +182,11 @@ class Monopoly(object):
                 else:
                     player.pay_rent(square, multiple=railroads_owned)
             else: # normal rent
-                self.debug("paying rent")
                 player.pay_rent(square)
         # if land on unowned property, do strat
         elif square.owner is None:
-            # print "##########################################################"
-            player.purchase_square(square)
+            if player.purchase_square(square):
+                self.debug("Purchased")
         # if land on chance, pick card and do card
         elif self.on_chance(player):
             self.do_chance_card(player)
