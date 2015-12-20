@@ -4,9 +4,9 @@ from decision_function import generate_square_buy_decisions
 from monopoly.player import Player
 
 
-class NpvPlayer(Player):
+class CapRatePlayer(Player):
     def __init__(self, name, npvs):
-        super(NpvPlayer, self).__init__(name)
+        super(CapRatePlayer, self).__init__(name)
         self.npvs = dict(npvs)
 
     def do_strat_unowned_square(self, square):

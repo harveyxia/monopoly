@@ -1,14 +1,14 @@
 import output
 import init
 import sys
-from players.npv_player import NpvPlayer
+from players.cap_rate_player import CapRatePlayer
 from monopoly.monopoly import Monopoly
 
 def simulate(turns, games, discount=.05):
     npvs = init.simulate("init.csv", turns, discount)
     
     for i in range(games):
-        players = [NpvPlayer(name="NpvPlayer" + str(i), npvs=npvs) for i in xrange(4)]
+        players = [CapRatePlayer(name="NpvPlayer" + str(i), npvs=npvs) for i in xrange(4)]
         monopoly = Monopoly(players=players)
         monopoly.run(100000)
         npvs = combine_npvs(npvs, monopoly.get_npvs(), i+2)
