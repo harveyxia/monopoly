@@ -25,7 +25,7 @@ class CapRatePlayer(Player):
             if not self.properties:
                 break
             self.sort_properties()
-            prop = self.properties[len(self.properties)]
+            prop = self.properties[len(self.properties)-1]
             if prop.num_buildings == 0:
                 prop.owner = None
                 self.balance += prop.price
@@ -33,7 +33,7 @@ class CapRatePlayer(Player):
             elif prop.num_buildings == 5:
                 self.sell_hotel(prop)
             else:
-                self.sell_building(prop)
+                self.sell_house(prop)
         if self.balance < money:
             self.bankrupt = True
             return self.balance
