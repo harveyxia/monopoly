@@ -106,6 +106,29 @@ class Player(object):
         self.board.avail_hotels -= 1
         self.balance -= square.price_build
 
+    def check_square_status(self, square):
+        if square.color != "None":
+            color_squares = self.board.get_color_group(square.color)
+            owners = set()
+            sq_left = len(color_squares)
+            idx = 0
+            for s in color_squares:
+                if s.owner != None:
+                    sq_left -= 1
+                    owners.add(s.owner)
+            if sq_left == 1:
+                if len(owners) == 2:
+                    idx = 0 # no_monopoly
+                else:
+                    idx = 1 # one_from_monopoly
+            elif sq_left == 2:
+                idx = 3 # two_from_monopoly
+            else:
+                idx = 4 # three_from_monopoly
+        else:
+            idx = 0
+        return idx
+
     # buys a square for a player
     # does NOT check permissions - will die if you try to buy something you can't
     def purchase_square(self, square):
@@ -124,7 +147,9 @@ class Player(object):
         if square.color != "None" and self.owns_color(square.color):
             # print self.name, "got all of", square.color
             self.owned_colors.append(square.color)
-        square.set_owner(self)
+        
+        square.set_owner(self, self.check_square_status(square))
+
         # print self.name, "is buying", square.name
         if square.mortgaged:
             square.unmortgage()

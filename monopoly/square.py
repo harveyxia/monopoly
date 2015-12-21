@@ -25,7 +25,8 @@ class Square(object):
         # use original owner's years
         self.original_owner = None
         self.purchase_years = [None] * len(self.rent)
-        self.caps = [0] * len(self.rent)
+        self.caps = [0] * (len(self.rent) + 3)
+        self.status = None
 
     def add_building(self):
         if self.num_buildings == 5:
@@ -46,12 +47,12 @@ class Square(object):
         #     print self.rent[self.num_buildings]
         return self.rent[self.num_buildings]
 
-    def set_owner(self, player):
+    def set_owner(self, player, index):
         self.owner = player
         if self.original_owner == None:
             self.original_owner = player
             self.purchase_years[0] = self.original_owner.years
-            self.update_cap(0, -1*self.price)
+            self.status = index
 
     def mortgage(self):
         if not self.mortgaged:
@@ -84,25 +85,36 @@ class Square(object):
         if self.purchase_years[building_number] is None:
             return
         # print("payoff of {0} for {1} building number {2}".format(payoff, self.name, building_number))
+
+        if building_number == 0:
+            if self.status is None:
+                caps_number = 0
+            else:
+                caps_number = self.status
+        else:
+            caps_number = building_number + 3
         years_elapsed = self.original_owner.years - self.purchase_years[building_number]
-        self.caps[building_number] += payoff * (1/(1+0.01))**(years_elapsed)
-        save = self.caps[building_number]
+        self.caps[caps_number] += payoff * (1/(1+0.01))**(years_elapsed)
 
         if building_number == 0: 
             price = self.price 
         else: 
             price = self.price_build
 
-        if price < self.caps[building_number]:
+        if price < self.caps[caps_number]:
             if years_elapsed > 0:
-                self.caps[building_number] = 1 / (years_elapsed * price / self.caps[building_number])
+                self.caps[caps_number] = 1 / (years_elapsed * price / self.caps[caps_number])
 
-            if self.caps[building_number] > 1:
-                self.caps[building_number] = 1
+            if self.caps[caps_number] > 1:
+                self.caps[caps_number] = 1
             self.purchase_years[building_number] = None
 
     def clean_cap(self):
-        for building_number in range(0, 6):
+        for building_number in range(0, 5):
             if self.purchase_years[building_number] != None:
-                self.caps[building_number] = 0
+                if building_number == 0:
+                    self.caps[self.status] = 0
+                else:
+                    self.caps[building_number + 3] = 0
+        print self.caps
 

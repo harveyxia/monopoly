@@ -3,22 +3,22 @@
 # the property is three from a monopoly, 
 # i.e. it belongs to a color group of size three
 # and no one owns any of them yet
-three_from_monopoly = 0
+three_from_monopoly = 3
 
 # the property is two from a monopoly, 
 # i.e. it belongs to a color group of size three
 # and someone owns one of the properties already,
 # or it belongs to a color grou pof size two
 # and no one owns any of them yet
-two_from_monopoly = 1
+two_from_monopoly = 2
 
 # similar to above
-one_from_monopoly = 2
+one_from_monopoly = 1
 
 # not possible to get a monopoly,
 # i.e. it's a color group of size three
 # and two different people each own one
-no_monopoly = 3
+no_monopoly = 0
 
 # developing the nth building
 one_building = 4

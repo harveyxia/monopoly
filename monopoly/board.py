@@ -16,6 +16,7 @@ class Board(object):
         self.avail_houses = 32
         self.avail_hotels = 12
         self.color_index = self._build_color_index(self.squares)
+        self.status = None
 
     @staticmethod
     def _init_board_data(fname=directory + '/board.csv'):

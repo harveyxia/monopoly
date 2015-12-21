@@ -14,7 +14,7 @@ class CapRatePlayer(Player):
             return False
         if square.name in self.caps:
             # print self.caps[square.name][0] * self.balance / square.price
-            return self.decide(self.prob(self.caps[square.name][0], self.balance))
+            return self.decide(self.prob(self.caps[square.name][self.check_square_status(square)], self.balance))
         else:
             return False
 
