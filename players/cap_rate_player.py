@@ -20,13 +20,20 @@ class CapRatePlayer(Player):
 
     def do_strat_raise_money(self, money):
         # sort properties descending by buildings then cap rate
-        self.properties = sorted(self.properties, key=lambda prop: (
-        prop.num_buildings, self.caps[prop.name][self.check_square_status(prop)]), reverse=True)
         # print [self.caps[prop.name][self.check_square_status(prop)] for prop in self.properties]
-        while self.properties and self.balance < money:
-            p = self.properties.pop()
-            p.owner = None
-            self.balance += p.price
+        while self.balance < money:
+            if not self.properties:
+                break
+            self.sort_properties()
+            prop = self.properties[len(self.properties)]
+            if prop.num_buildings == 0:
+                prop.owner = None
+                self.balance += prop.price
+                self.properties.pop()
+            elif prop.num_buildings == 5:
+                self.sell_hotel(prop)
+            else:
+                self.sell_building(prop)
         if self.balance < money:
             self.bankrupt = True
             return self.balance
@@ -78,3 +85,6 @@ class CapRatePlayer(Player):
             return self.caps[square.name][0]
         else:
             return self.caps[square.name][self.check_square_status(square)]
+
+    def sort_properties(self):
+        self.properties = sorted(self.properties, key=lambda prop: (prop.num_buildings, self.get_square_cap(prop)), reverse=True)
