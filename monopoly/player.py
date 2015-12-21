@@ -1,7 +1,7 @@
 # the player does not do any checks to make sure the board is internally
 # consistent. it either does things, or implements logic that says yes or no
 
-flag = True
+flag = True # set to True to turn on player explanations
 
 class Player(object):
     """

@@ -4,14 +4,14 @@ from multiprocessing.pool import ThreadPool
 import io_cap
 from monopoly.monopoly import Monopoly
 from players.cap_rate_player import CapRatePlayer
-from players.dumb_player import DumbPlayer
-from players.smart_player import SmartPlayer
+from players.greedy_player import GreedyPlayer
+from players.benchmark_player import BenchmarkPlayer
 
 NUM_THREADS = 4
 
 player_type_to_class = {
-    "DumbPlayer": DumbPlayer,
-    "SmartPlayer": SmartPlayer,
+    "GreedyPlayer": GreedyPlayer,
+    "BenchmarkPlayer": BenchmarkPlayer,
     "CapRatePlayer": CapRatePlayer
 }
 
@@ -108,17 +108,17 @@ def init_player_names(teams):
 
 
 def run_all_benchmarks(output_filename='simulation_results.txt'):
-    a = run(500, 10000, [['DumbPlayer', 'DumbPlayer'], ['SmartPlayer', 'SmartPlayer']])
-    b = run(1500, 10000, [['DumbPlayer', 'DumbPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
-    c = run(500, 10000, [['SmartPlayer', 'SmartPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
+    a = run(500, 10000, [['GreedyPlayer', 'GreedyPlayer'], ['BenchmarkPlayer', 'BenchmarkPlayer']])
+    b = run(1500, 10000, [['GreedyPlayer', 'GreedyPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
+    c = run(500, 10000, [['BenchmarkPlayer', 'BenchmarkPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
     d = run(1500, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['CapRatePlayer', 'CapRatePlayer']])
     e = run(1500, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['InitCapRatePlayer', 'InitCapRatePlayer']])
     with open(output_filename, 'w') as f:
         f.write("Scenarios and Results")
         f.write("----------------------------\n")
-        f.write("DumbPlayer vs. SmartPlayer = %s:%s\n" % (a[0], a[1]))
-        f.write("DumbPlayer vs. CapRatePlayer = %s:%s\n" % (b[0], b[1]))
-        f.write("SmartPlayer vs. CapRatePlayer = %s:%s\n" % (c[0], c[1]))
+        f.write("GreedyPlayer vs. BenchmarkPlayer = %s:%s\n" % (a[0], a[1]))
+        f.write("GreedyPlayer vs. CapRatePlayer = %s:%s\n" % (b[0], b[1]))
+        f.write("BenchmarkPlayer vs. CapRatePlayer = %s:%s\n" % (c[0], c[1]))
         f.write("InitCapRatePlayer vs. CapRatePlayer = %s:%s\n" % (d[0], d[1]))
         f.write("InitCapRatePlayer vs. InitCapRatePlayer = %s:%s\n" % (e[0], e[1]))
 

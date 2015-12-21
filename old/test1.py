@@ -1,9 +1,9 @@
 from monopoly.monopoly import Monopoly
-from players.dumb_player import DumbPlayer
+from players.greedy_player import GreedyPlayer
 
 
 def run():
-    players = [DumbPlayer("DumbPlayer1"),
-               DumbPlayer("DumbPlayer2")]
+    players = [GreedyPlayer("GreedyPlayer1"),
+               GreedyPlayer("GreedyPlayer2")]
     monopoly = Monopoly(players)
     monopoly.run(100000)

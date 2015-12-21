@@ -8,7 +8,7 @@
 import io_cap
 from monopoly.board import Board
 from monopoly.monopoly import Monopoly
-from players.dumb_player import DumbPlayer
+from players.greedy_player import GreedyPlayer
 
 
 ############################
@@ -18,7 +18,7 @@ from players.dumb_player import DumbPlayer
 ############################
 
 def simulate_square_counts(turns):
-    players = [DumbPlayer(name="BasicPlayer" + str(i)) for i in xrange(4)]
+    players = [GreedyPlayer(name="BasicPlayer" + str(i)) for i in xrange(4)]
     monopoly = Monopoly(players=players)
     square_counts = [0 for i in xrange(40)]
     for i in xrange(4 * turns):

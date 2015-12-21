@@ -1,7 +1,7 @@
 from monopoly.player import Player
 
 
-class DumbPlayer(Player):
+class GreedyPlayer(Player):
     # buy all the houses/hotels as possible
     def do_strat_buy_from_bank(self, bldgs):
         if bldgs:
