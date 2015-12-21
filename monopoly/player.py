@@ -1,6 +1,8 @@
 # the player does not do any checks to make sure the board is internally
 # consistent. it either does things, or implements logic that says yes or no
 
+flag = True
+
 class Player(object):
     """
     Player object
@@ -28,6 +30,10 @@ class Player(object):
                "properties:%s\n  " \
                "in_jail:%s" % \
                (self.name, self.position, self.balance, self.properties, self.in_jail)
+
+    def explain(self, message):
+        if flag:
+            print self.name + ": " + message
 
     ############################
     #                          #
