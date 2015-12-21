@@ -16,8 +16,10 @@ class Player(object):
         self.owned_colors = []
         self.properties = []
         self.bankrupt = False
-        self.board = None
         self.years = 0
+        # these are set by monopoly
+        self.board = None
+        self.other_players = None
 
     def __str__(self):
         return "%s:\n  " \
@@ -221,6 +223,22 @@ class Player(object):
             if square not in self.properties:
                 return False
         return True
+
+    def others_have_monopoly(self):
+        if any([len(other.owned_colors) > 0 for other in self.other_players]):
+            # print "others have monopoly"
+            return True
+        else:
+            return False
+
+    def largest_rent(self):
+        rents = [square.get_rent()
+                 for square in self.board.squares
+                 if square.owner and square.owner != self]
+        if len(rents) > 0:
+            return max(rents)
+        else:
+            return 0
 
     ############################
     #                          #

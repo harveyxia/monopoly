@@ -10,7 +10,7 @@ class CapRatePlayer(Player):
 
     def do_strat_unowned_square(self, square):
         # print caps[square.name][0]
-        if self.balance < square.price:
+        if self.balance < square.price + self.largest_rent():
             return False
         if square.name in self.caps:
             # print self.caps[square.name][0] * self.balance / square.price
@@ -19,6 +19,9 @@ class CapRatePlayer(Player):
             return False
 
     def do_strat_raise_money(self, money):
+        # sort properties descending by cap rate
+        self.properties = sorted(self.properties, key=lambda prop: self.caps[prop.name][self.check_square_status(prop)], reverse=True)
+        # print [self.caps[prop.name][self.check_square_status(prop)] for prop in self.properties]
         while self.properties and self.balance < money:
             p = self.properties.pop()
             p.owner = None
@@ -50,9 +53,14 @@ class CapRatePlayer(Player):
             if d[1] != d[0]:
                 self.do_strat_raise_money(50)
             return True
-        else:
+        elif self.others_have_monopoly or self.balance < self.largest_rent():
+            # don't want to get out of jail if too risky
             self.jail_duration += 1
             return False
+        else:
+            # if no monopolies yet then gotta get in that property race
+            self.do_strat_raise_money(50)
+            return True
 
     @staticmethod
     def decide(p):
