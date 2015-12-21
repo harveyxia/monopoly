@@ -12,7 +12,7 @@ class SmartPlayer(Player):
         self.late_game_finished = False
 
     def do_strat_unowned_square(self, square):
-        if self.balance < square.price:
+        if self.balance < square.price + self.largest_rent():
             self.explain("Rejecting " + square.name + " because we don't have enough money")
             return False
         if square.type == 'Railroad':  # always buy railroads
@@ -141,7 +141,7 @@ class SmartPlayer(Player):
             if p.num_buildings == 0:
                 p.owner = None
                 self.balance += p.price
-                self.explain("Selling " + p.name + " because we need the money and we have no other choice")
+                self.explain("Selling " + p.name + " and breaking up our monopoly because we need the money and we have no other choice")
             elif p.num_buildings == 5:
                 self.sell_hotel(p)
                 self.explain("Selling a hotel on " + p.name + " because we need the money and we have no other choice")
