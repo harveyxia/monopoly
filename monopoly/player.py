@@ -201,7 +201,7 @@ class Player(object):
             self.balance += 0.5 * (5 * square.price_build)
         else:
             # Keep as many as we can
-            square.num_buildings = self.board_avail_houses
+            square.num_buildings = self.board.avail_houses
             self.board.avail_houses = 0
             self.balance += 0.5 * ((5 - self.board.avail_houses) * square.price_build)
 

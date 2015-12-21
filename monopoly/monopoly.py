@@ -80,14 +80,14 @@ class Monopoly(object):
             turns -= 1
             self.make_move()
         self.is_over = True
-        print "--------------------Game finished---------------------"
+        self.debug("--------------------Game finished---------------------")
         if turns == 0:
-            print "No one wins :("
+            print "\nNo one wins :("
         else:
             if len(self.active_players) > 1:
                 raise Exception("This shouldn't happen")
             self.winner = self.active_players[0]
-            print "%s wins!" % self.winner.name
+            self.debug("\n%s wins!" % self.winner.name)
 
     ############################
     #                          #
