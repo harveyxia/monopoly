@@ -16,7 +16,7 @@ player_type_to_class = {
 }
 
 
-def run(games, turns_per_game, teams, cap_rate_file="100cap.csv"):
+def run(games, turns_per_game, teams, cap_rate_file="500cap.csv"):
     caps = io_cap.input_cap_file(cap_rate_file)
 
     (names, player_to_team) = init_player_names(teams)
@@ -111,8 +111,8 @@ def run_all_benchmarks(output_filename='simulation_results.txt'):
     # a = run(100, 10000, [['DumbPlayer', 'DumbPlayer'], ['SmartPlayer', 'SmartPlayer']])
     # b = run(100, 10000, [['DumbPlayer', 'DumbPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
     # c = run(100, 10000, [['SmartPlayer', 'SmartPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
-    d = run(100, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['CapRatePlayer', 'CapRatePlayer']])
-    e = run(100, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['InitCapRatePlayer', 'InitCapRatePlayer']])
+    d = run(500, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['CapRatePlayer', 'CapRatePlayer']])
+    e = run(500, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['InitCapRatePlayer', 'InitCapRatePlayer']])
     with open(output_filename, 'w') as f:
         f.write("Scenarios and Results")
         f.write("----------------------------")
