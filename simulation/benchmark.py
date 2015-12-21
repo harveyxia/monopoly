@@ -115,7 +115,7 @@ def run_all_benchmarks(output_filename='simulation_results.txt'):
     e = run(2000, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['InitCapRatePlayer', 'InitCapRatePlayer']])
     with open(output_filename, 'w') as f:
         f.write("Scenarios and Results")
-        f.write("----------------------------\n")
+        f.write("\n----------------------------\n")
         f.write("GreedyPlayer vs. BenchmarkPlayer = %s:%s\n" % (a[0], a[1]))
         f.write("GreedyPlayer vs. CapRatePlayer = %s:%s\n" % (b[0], b[1]))
         f.write("BenchmarkPlayer vs. CapRatePlayer = %s:%s\n" % (c[0], c[1]))
