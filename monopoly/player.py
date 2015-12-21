@@ -170,7 +170,7 @@ class Player(object):
             else:
                 self.board.avail_houses += prop.num_buildings
             prop.num_buildings = 0
-            prop.mortaged = False
+            prop.mortgaged = False
 
     ############################
     #                          #
