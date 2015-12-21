@@ -106,7 +106,7 @@ class SmartPlayer(Player):
         self.balance -= money
         return money
 
-    def do_strat_buy_buildings(self, squares):
+    def do_strat_buy_from_bank(self, bldgs):
         pass
 
     def do_strat_get_out_of_jail(self, d):

@@ -4,9 +4,9 @@ from monopoly.player import Player
 class DumbPlayer(Player):
 
     # buy all the houses/hotels as possible
-    def do_strat_buy_buildings(self, squares):
-        if squares:
-            return squares[0]
+    def do_strat_buy_from_bank(self, bldgs):
+        if bldgs:
+            return bldgs[0]
         else:
             return None
 
