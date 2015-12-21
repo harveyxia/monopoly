@@ -189,9 +189,21 @@ class Player(object):
         self.balance += 0.5 * square.price_build
 
     def sell_hotel(self, square):
-        square.remove_building()
         self.board.avail_hotels += 1
-        self.balance += 0.5 * (5 * square.price_build)  # sell all 5
+        if self.board.avail_houses >= 4:
+            # If there are enough houses, only sell the hotel
+            square.num_buildings = 4
+            self.board.avail_houses -= 4
+            self.balance += 0.5 * (1 * square.price_build)
+        elif self.board.avail_houses == 0:
+            # No more houses left, we have to sell everything
+            square.num_buildings = 0
+            self.balance += 0.5 * (5 * square.price_build)
+        else:
+            # Keep as many as we can
+            square.num_buildings = self.board_avail_houses
+            self.board.avail_houses = 0
+            self.balance += 0.5 * ((5 - self.board.avail_houses) * square.price_build)
 
     def mortgage_square(self, square):
         square.mortgage()
