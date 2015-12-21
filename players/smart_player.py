@@ -137,7 +137,7 @@ class SmartPlayer(Player):
             if d[1] != d[0]:
                 self.do_strat_raise_money(50)
             return True
-        elif self.focus == "Orange":
+        elif self.focus == "Orange" and self.trying_to_complete_orange():
             # stay in Jail and try to get out by rolling doubles to buy St. James or Tennessee Ave
             self.jail_duration += 1
             return False
@@ -161,3 +161,13 @@ class SmartPlayer(Player):
             return False
         else:
             return True
+
+    def trying_to_complete_orange(self):
+        if self.board.squares[16].owner == self and self.board.squares[19].owner == self:
+            # need Tennessee Avenue to complete monopoly
+            return True
+        elif self.board.squares[18].owner == self and self.board.squares[19].owner == self:
+            # need St. James Place to complete monopoly
+            return True
+        else:
+            return False
