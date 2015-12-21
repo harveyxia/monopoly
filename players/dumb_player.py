@@ -25,7 +25,7 @@ class DumbPlayer(Player):
     # always buy unowned properties if landed
     def do_strat_unowned_square(self, square):
         if square.price < self.balance:
-           return True
+            return True
 
 
     # needs better logic
