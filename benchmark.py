@@ -109,10 +109,10 @@ def init_player_names(teams):
 
 def run_all_benchmarks(output_filename='simulation_results.txt'):
     a = run(500, 10000, [['DumbPlayer', 'DumbPlayer'], ['SmartPlayer', 'SmartPlayer']])
-    b = run(1500, 10000, [['DumbPlayer', 'DumbPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
+    b = run(2000, 10000, [['DumbPlayer', 'DumbPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
     c = run(500, 10000, [['SmartPlayer', 'SmartPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
-    d = run(1500, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['CapRatePlayer', 'CapRatePlayer']])
-    e = run(1500, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['InitCapRatePlayer', 'InitCapRatePlayer']])
+    d = run(2000, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['CapRatePlayer', 'CapRatePlayer']])
+    e = run(2000, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['InitCapRatePlayer', 'InitCapRatePlayer']])
     with open(output_filename, 'w') as f:
         f.write("Scenarios and Results")
         f.write("----------------------------\n")
