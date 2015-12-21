@@ -82,7 +82,7 @@ class Monopoly(object):
         self.is_over = True
         self.debug("--------------------Game finished---------------------")
         if turns == 0:
-            print "\nNo one wins :("
+            self.debug("\nNo one wins :(")
         else:
             if len(self.active_players) > 1:
                 raise Exception("This shouldn't happen")

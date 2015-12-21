@@ -116,9 +116,9 @@ def run_all_benchmarks(output_filename='simulation_results.txt'):
     with open(output_filename, 'w') as f:
         f.write("Scenarios and Results")
         f.write("----------------------------\n")
-        f.write("DumbPlayer vs. SmartPlayer = %s:%s\n" % (d[0], d[1]))
-        f.write("DumbPlayer vs. CapRatePlayer = %s:%s\n" % (d[0], d[1]))
-        f.write("SmartPlayer vs. CapRatePlayer = %s:%s\n" % (d[0], d[1]))
+        f.write("DumbPlayer vs. SmartPlayer = %s:%s\n" % (a[0], a[1]))
+        f.write("DumbPlayer vs. CapRatePlayer = %s:%s\n" % (b[0], b[1]))
+        f.write("SmartPlayer vs. CapRatePlayer = %s:%s\n" % (c[0], c[1]))
         f.write("InitCapRatePlayer vs. CapRatePlayer = %s:%s\n" % (d[0], d[1]))
         f.write("InitCapRatePlayer vs. InitCapRatePlayer = %s:%s\n" % (e[0], e[1]))
 
