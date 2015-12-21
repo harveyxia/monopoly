@@ -47,6 +47,8 @@ class SmartPlayer(Player):
                         else:
                             # we got our sides 2 and 3 monopoly now as well
                             self.late_game_finished = True
+                    # else:
+                    #     print "Blocking an opponent from finishing a monopoly"
                     return True
 
                 # If this is the color group we're currently focusing on
@@ -108,12 +110,12 @@ class SmartPlayer(Player):
         # filter properties
         to_sell = self.properties
         monopoly_properties = []
-
-        # sell non-monopolies
         for prop in to_sell:
             if prop.color in self.owned_colors:
                 to_sell.remove(prop)
                 monopoly_properties.append(prop)
+
+        # sell non-monopolies
         while to_sell and self.balance < money:
             p = to_sell.pop()
             p.owner = None
@@ -122,8 +124,13 @@ class SmartPlayer(Player):
         # sell monopolies if we still need money
         while monopoly_properties and self.balance < money:
             p = monopoly_properties.pop()
-            p.owner = None
-            self.balance += p.price
+            if p.num_buildings == 0:
+                p.owner = None
+                self.balance += prop.price
+            elif prop.num_buildings == 5:
+                self.sell_hotel(prop)
+            else:
+                self.sell_building(prop)
 
         # process
         if self.balance < money:
