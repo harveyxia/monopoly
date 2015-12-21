@@ -147,7 +147,7 @@ class Player(object):
             price_to_pay = square.price * 1.1 # 10% interest    
         if self.balance < price_to_pay:
             raise Exception("%s cannot buy square because insufficient balance" % self.name)
-        self.balance -= price_to_pay
+        self.do_strat_raise_money(price_to_pay)
         # increase net_value, by how much?
         self.properties.append(square)
         if square.color != "None" and self.owns_color(square.color):
@@ -162,14 +162,16 @@ class Player(object):
         return True
 
     def purchase_from_banks(self, potential_buildings):
-        building = self.do_strat_buy_from_bank(potential_buildings)
-        if building is None:
+        square = self.do_strat_buy_from_bank(potential_buildings)
+        if square is None:
             return False
-        elif building.num_buildings < 4:
-            self.purchase_house(building)
+        elif square.mortgaged:
+            self.purchase_square(square)
+        elif square.num_buildings < 4:
+            self.purchase_house(square)
             # print self.name, "is buying a house on", building.name
         else:
-            self.purchase_hotel(building)
+            self.purchase_hotel(square)
             # print self.name, "is buying a hotel on", building.name
         return True
 
@@ -226,10 +228,16 @@ class Player(object):
     #                          #
     ############################
 
-    # input value: list of square
-    # return value: none
+    # input value: list of squares
+    # return value: the square you want to change
     #
-    # strategy for buying buildings, called at the end of every turn
+    # strategy for buying from the bank, called at the end of every turn
+    # you are given a list of squares on which you could build buildings
+    # and you need to decide whether you want to unmortage a square
+    # or you want to build a building on a square that was passed in
+    # the return value should be the square you want to change
+    # so the calling function takes care of the logic of whether to unmortage
+    # or to add a building
     def do_strat_buy_from_bank(self, potential_buildings):
         raise NotImplementedError
 
