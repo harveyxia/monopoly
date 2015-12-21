@@ -214,6 +214,9 @@ class Player(object):
                 return False
         return True
 
+    def others_have_monopoly(self):
+        pass
+
     ############################
     #                          #
     #          STRATS          #

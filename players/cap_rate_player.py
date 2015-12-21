@@ -19,6 +19,8 @@ class CapRatePlayer(Player):
             return False
 
     def do_strat_raise_money(self, money):
+        # sort properties descending by cap rate
+        self.properties = sorted(self.properties, key=lambda prop: self.caps[prop.name][self.check_square_status(prop)], reverse=True)
         while self.properties and self.balance < money:
             p = self.properties.pop()
             p.owner = None
@@ -51,7 +53,7 @@ class CapRatePlayer(Player):
                 self.do_strat_raise_money(50)
             return True
         else:
-            self.jail_duration += 1
+            self.do_strat_raise_money(50)
             return False
 
     @staticmethod
