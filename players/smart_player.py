@@ -9,6 +9,7 @@ class SmartPlayer(Player):
         self.focus = None
         self.first_monopoly = False
         self.late_game = False
+        self.late_game_finished = False
 
     def do_strat_unowned_square(self, square):
         if self.balance < square.price:
@@ -38,9 +39,14 @@ class SmartPlayer(Player):
                 if owned == total - 1 and len(owners) == 1:
                     # obtain monopoly or block it
                     if self.focus == square.color:
-                        # obtained our focused monopoly
+                        # obtained our current focused monopoly
                         self.focus = None
-                        self.late_game = True
+                        if not self.late_game:
+                            # start looking at sides 2 and 3
+                            self.late_game = True
+                        else:
+                            # we got our sides 2 and 3 monopoly now as well
+                            self.late_game_finished = True
                     return True
                 
                 # If this is the color group we're currently focusing on
@@ -76,6 +82,14 @@ class SmartPlayer(Player):
                         if others_owned == 0 and self.focus == None:
                             self.focus = square.color
                             return True
+                    should_brown = self.should_focus_color("Brown")
+
+                    # all of our prioritized colors are gone, enter late game strategy
+                    if not should_orange and not should_lightblue and not should_pink and not should_brown:
+                        self.late_game = True
+                        if others_owned == 0 and self.focus == None:
+                            self.focus = square.color
+                            return True
 
                     # fell through, don't buy
                     return False
@@ -89,8 +103,6 @@ class SmartPlayer(Player):
                             return True
                     else:
                         return False
-
-
 
     def do_strat_raise_money(self, money):
         # filter properties
@@ -126,6 +138,11 @@ class SmartPlayer(Player):
             for bldg in bldgs:
                 if bldg.num_buildings < 3:
                     return bldg
+
+            # all already have 3 AND we have a late game monopoly, so now
+            # we can just buy more and more
+            if self.late_game_finished:
+                return bldg
         else:
             return None
 
@@ -149,6 +166,12 @@ class SmartPlayer(Player):
             # get out, it's too early to be in jail
             self.do_strat_raise_money(50)
             return True
+
+    ############################
+    #                          #
+    #         HELPERS          #
+    #                          #
+    ############################
 
     # look at board and check if we should focus on a specific color
     def should_focus_color(self, color):
