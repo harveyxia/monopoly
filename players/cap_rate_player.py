@@ -1,6 +1,5 @@
 from random import random
 
-from decision_function import generate_square_buy_decisions
 from monopoly.player import Player
 
 

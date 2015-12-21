@@ -200,13 +200,9 @@ class Monopoly(object):
             self.debug("Bankrupt!")
             player.liquidate()
             self.active_players = filter(lambda x : x.name != player.name, self.active_players)
-            self.num_active_players -= 1
-            # if len(self.active_players) != self.num_active_players:
-            #     for p in self.active_players:
-            #         print p.name
-            #     print "tried to remove", player.name
-        while player.purchase_buildings(self.get_purchasable_buildings(player)):
-            self.debug("Purchased a building")
+        else:
+            while player.purchase_buildings(self.get_purchasable_buildings(player)):
+                self.debug("Purchased a building")
         self.debug("Balance: {0}".format(player.balance))
 
     def change_player_balance(self, player, amount):
