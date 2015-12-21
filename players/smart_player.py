@@ -130,7 +130,7 @@ class SmartPlayer(Player):
             elif prop.num_buildings == 5:
                 self.sell_hotel(prop)
             else:
-                self.sell_building(prop)
+                self.sell_house(prop)
 
         # process
         if self.balance < money:
