@@ -1,4 +1,5 @@
 import csv
+import cases
 
 def output_cap_file(filename, caps):
     with open('csv/'+filename, 'w') as csvfile:
@@ -6,12 +7,15 @@ def output_cap_file(filename, caps):
             csvfile,
             fieldnames=[
                 'name',
-                'value0',
-                'value1',
-                'value2',
-                'value3',
-                'value4',
-                'value5'
+                'three_from_monopoly',
+                'two_from_monopoly',
+                'one_from_monopoly',
+                'no_monopoly',
+                'one_building',
+                'two_building',
+                'three_building',
+                'four_building',
+                'five_building',
             ])
         writer.writeheader()
         for cap in caps:
@@ -19,10 +23,13 @@ def output_cap_file(filename, caps):
             values = cap[1]
             writer.writerow({
                 'name': name,
-                'value0': values[0],
-                'value1': values[1],
-                'value2': values[2],
-                'value3': values[3],
-                'value4': values[4],
-                'value5': values[5]
+                'three_from_monopoly': values[0],
+                'two_from_monopoly': values[1],
+                'one_from_monopoly': values[2],
+                'no_monopoly': values[3],
+                'one_building': values[4],
+                'two_building': values[5],
+                'three_building': values[6],
+                'four_building': values[7],
+                'five_building': values[8]
             })

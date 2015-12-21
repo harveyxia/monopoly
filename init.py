@@ -42,18 +42,27 @@ def calculate_cap(square_probs):
             continue
         square = squares[i]
         square_prob = square_probs[i]
-        cap = [0,0,0,0,0,0]
-        for num_properties in xrange(6):
+        cap = [0,0,0,0,0,0,0,0,0]
+        for num_properties in xrange(9):
             # return attributes on the squares for sorting and analysis
             price = square.price + num_properties * square.price_build
+            if (num_properties < 3):
+                num_properties = 0
+            else:
+                num_properties -= 3
             if square.rent[num_properties] == 0: # for utilities, railroads
                 square_rent = 0
             elif num_properties > 0 and square.price_build > 0:
                 square_rent = float(square.price_build) / price * square.rent[num_properties]
             else:
                 square_rent = float(square.price) / price * square.rent[num_properties]
-            cap[num_properties] = (square_rent * square_prob * 3) / price
+
+            if (num_properties == 0):
+                cap[0] = cap[1] = cap[2] = cap[3] = (square_rent * square_prob * 3) / price
+            else:
+                cap[num_properties+3] = (square_rent * square_prob * 3) / price
         caps.append((square.name, cap))
+
     return caps
 
 
