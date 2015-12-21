@@ -101,7 +101,7 @@ def init_player_names(teams):
     for i in xrange(len(teams)):
         names.append([])
         for j in xrange(len(teams[i])):
-            player_name = "Team{0} Player{1}".format(i, j)
+            player_name = "Team{0} {1}{2}".format(i, teams[i][j], j)
             names[i].append(player_name)
             player_to_team[player_name] = i
     return (names, player_to_team)
