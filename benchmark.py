@@ -108,14 +108,17 @@ def init_player_names(teams):
 
 
 def run_all_benchmarks(output_filename='simulation_results.txt'):
-    # a = run(100, 10000, [['DumbPlayer', 'DumbPlayer'], ['SmartPlayer', 'SmartPlayer']])
-    # b = run(100, 10000, [['DumbPlayer', 'DumbPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
-    # c = run(100, 10000, [['SmartPlayer', 'SmartPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
+    a = run(100, 10000, [['DumbPlayer', 'DumbPlayer'], ['SmartPlayer', 'SmartPlayer']])
+    b = run(100, 10000, [['DumbPlayer', 'DumbPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
+    c = run(100, 10000, [['SmartPlayer', 'SmartPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
     d = run(500, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['CapRatePlayer', 'CapRatePlayer']])
     e = run(500, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['InitCapRatePlayer', 'InitCapRatePlayer']])
     with open(output_filename, 'w') as f:
         f.write("Scenarios and Results")
-        f.write("----------------------------")
+        f.write("----------------------------\n")
+        f.write("DumbPlayer vs. SmartPlayer = %s:%s\n" % (d[0], d[1]))
+        f.write("DumbPlayer vs. CapRatePlayer = %s:%s\n" % (d[0], d[1]))
+        f.write("SmartPlayer vs. CapRatePlayer = %s:%s\n" % (d[0], d[1]))
         f.write("InitCapRatePlayer vs. CapRatePlayer = %s:%s\n" % (d[0], d[1]))
         f.write("InitCapRatePlayer vs. InitCapRatePlayer = %s:%s\n" % (e[0], e[1]))
 
