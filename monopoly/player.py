@@ -171,10 +171,10 @@ class Player(object):
             self.purchase_square(square)
         elif square.num_buildings < 4:
             self.purchase_house(square)
-            # print self.name, "is buying a house on", building.name
+            # print self.name, "is buying a house on", square.name
         else:
             self.purchase_hotel(square)
-            # print self.name, "is buying a hotel on", building.name
+            # print self.name, "is buying a hotel on", square.name
         return True
 
     ############################
