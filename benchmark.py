@@ -1,7 +1,7 @@
 import re
-import io_cap
 from multiprocessing.pool import ThreadPool
 
+import io_cap
 from monopoly.monopoly import Monopoly
 from players.cap_rate_player import CapRatePlayer
 from players.dumb_player import DumbPlayer
@@ -17,7 +17,6 @@ player_type_to_class = {
 
 
 def main(games, turns_per_game, player_types, cap_rate_file="cap.csv"):
-
     caps = io_cap.input_cap_file(cap_rate_file)
 
     def run_n_games(num_games):

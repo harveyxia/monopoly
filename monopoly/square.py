@@ -69,9 +69,9 @@ class Square(object):
         if self.should_update_cap():
             # print("payment of {0} on {1}".format(payment, self.name))
             if self.type == "Street":
-                total_spent = self.price + self.price_build*self.num_buildings
-                base_payoff = payment * (float(self.price)/total_spent)
-                building_payoff = payment * (float(self.price_build)/total_spent)
+                total_spent = self.price + self.price_build * self.num_buildings
+                base_payoff = payment * (float(self.price) / total_spent)
+                building_payoff = payment * (float(self.price_build) / total_spent)
                 self.update_cap(0, base_payoff)
                 for building_number in range(0, self.num_buildings):
                     self.update_cap(building_number, building_payoff)
@@ -93,11 +93,11 @@ class Square(object):
         else:
             caps_number = building_number + 5
         years_elapsed = self.original_owner.years - self.purchase_years[building_number]
-        self.caps[caps_number] += payoff * (1/(1+0.01))**(years_elapsed)
+        self.caps[caps_number] += payoff * (1 / (1 + 0.01)) ** (years_elapsed)
 
-        if building_number == 0: 
-            price = self.price 
-        else: 
+        if building_number == 0:
+            price = self.price
+        else:
             price = self.price_build
 
         if price < self.caps[caps_number]:
@@ -115,4 +115,3 @@ class Square(object):
                     self.caps[self.status] = 0
                 else:
                     self.caps[building_number + 5] = 0
-

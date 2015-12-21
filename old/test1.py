@@ -1,4 +1,3 @@
-from monopoly.board import Board
 from monopoly.monopoly import Monopoly
 from players.dumb_player import DumbPlayer
 

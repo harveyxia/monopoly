@@ -5,7 +5,6 @@ from monopoly.player import Player
 
 
 class EmptyPlayer(Player):
-
     def do_strat_unowned_square(self, square):
         pass
 

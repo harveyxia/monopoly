@@ -14,9 +14,9 @@ class SmartPlayer(Player):
     def do_strat_unowned_square(self, square):
         if self.balance < square.price:
             return False
-        if square.type == 'Railroad': # always buy railroads
+        if square.type == 'Railroad':  # always buy railroads
             return True
-        elif square.type == 'utility': # never buy utilities
+        elif square.type == 'utility':  # never buy utilities
             return False
         else:
             if square.color:
@@ -48,7 +48,7 @@ class SmartPlayer(Player):
                             # we got our sides 2 and 3 monopoly now as well
                             self.late_game_finished = True
                     return True
-                
+
                 # If this is the color group we're currently focusing on
                 if self.focus == square.color:
                     if others_owned == 0:
@@ -93,7 +93,7 @@ class SmartPlayer(Player):
 
                     # fell through, don't buy
                     return False
-                        
+
                 # Waterfall step 3: focus on color group sides 2 and 3
                 else:
                     sides_2_and_3 = ["Pink", "Orange", "Red", "Yellow", "Green", "Blue"]

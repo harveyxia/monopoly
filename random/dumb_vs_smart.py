@@ -1,8 +1,6 @@
-from monopoly.board import Board
 from monopoly.monopoly import Monopoly
-from players.smart_player import SmartPlayer
 from players.dumb_player import DumbPlayer
-
+from players.smart_player import SmartPlayer
 
 players = [SmartPlayer("SmartPlayer"), DumbPlayer("DumbPlayer")]
 monopoly = Monopoly(players)

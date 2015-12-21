@@ -16,6 +16,7 @@ from player import Player
 
 flag = False
 
+
 class Monopoly(object):
     """
     Monopoly class, represents entirety of game
@@ -199,7 +200,7 @@ class Monopoly(object):
         if player.bankrupt:
             self.debug("Bankrupt!")
             player.liquidate()
-            self.active_players = filter(lambda x : x.name != player.name, self.active_players)
+            self.active_players = filter(lambda x: x.name != player.name, self.active_players)
         else:
             while player.purchase_from_banks(self.get_purchasable_buildings(player)):
                 self.debug("Purchased from banks")

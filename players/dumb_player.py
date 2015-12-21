@@ -2,7 +2,6 @@ from monopoly.player import Player
 
 
 class DumbPlayer(Player):
-
     # buy all the houses/hotels as possible
     def do_strat_buy_from_bank(self, bldgs):
         if bldgs:
@@ -27,11 +26,10 @@ class DumbPlayer(Player):
         if square.price < self.balance:
             return True
 
-
     # needs better logic
     def do_strat_get_out_of_jail(self, d):
         # TODO: use get out of jail cards
-        if d[0] == d[1]:                        # roll doubles
+        if d[0] == d[1]:  # roll doubles
             return True
         if self.jail_duration >= 3:
             self.jail_duration = 0

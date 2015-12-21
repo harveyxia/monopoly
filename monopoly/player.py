@@ -103,7 +103,7 @@ class Player(object):
         self.balance -= square.price_build
 
     def purchase_hotel(self, square):
-        square.add_building() # now at 5
+        square.add_building()  # now at 5
         self.board.avail_houses += 4
         self.board.avail_hotels -= 1
         self.balance -= square.price_build
@@ -111,7 +111,7 @@ class Player(object):
     def check_square_status(self, square):
         if square.color != "None":
             color_squares = self.board.get_color_group(square.color)
-            color_squares = filter(lambda x : x.name != square.name, color_squares)
+            color_squares = filter(lambda x: x.name != square.name, color_squares)
             owners = set()
             sq_left = len(color_squares)
             idx = 0
@@ -121,18 +121,18 @@ class Player(object):
                     owners.add(s.owner.name)
             if sq_left == 1:
                 if len(owners) == 2:
-                    idx = 0 # no_monopoly
+                    idx = 0  # no_monopoly
                 elif self.name in owners:
-                    idx = 5 # one_from_monopoly_me
+                    idx = 5  # one_from_monopoly_me
                 else:
-                    idx = 1 # one_from_monopoly
+                    idx = 1  # one_from_monopoly
             elif sq_left == 2:
                 if self.name in owners:
-                    idx = 4 # two_from_monopoly_me
+                    idx = 4  # two_from_monopoly_me
                 else:
-                    idx = 2 # two_from_monopoly
+                    idx = 2  # two_from_monopoly
             else:
-                idx = 3 # three_from_monopoly
+                idx = 3  # three_from_monopoly
         else:
             idx = 0
         return idx
@@ -146,7 +146,7 @@ class Player(object):
             raise Exception("%s cannot buy square because square owned by %s" % (self.name, square.owner.name))
         price_to_pay = square.price
         if square.mortgaged:
-            price_to_pay = square.price * 1.1 # 10% interest    
+            price_to_pay = square.price * 1.1  # 10% interest
         if self.balance < price_to_pay:
             raise Exception("%s cannot buy square because insufficient balance" % self.name)
         self.do_strat_raise_money(price_to_pay)
@@ -155,7 +155,7 @@ class Player(object):
         if square.color != "None" and self.owns_color(square.color):
             # print self.name, "got all of", square.color
             self.owned_colors.append(square.color)
-        
+
         square.set_owner(self, self.check_square_status(square))
 
         # print self.name, "is buying", square.name
@@ -191,7 +191,7 @@ class Player(object):
     def sell_hotel(self, square):
         square.remove_building()
         self.board.avail_hotels += 1
-        self.balance += 0.5 * (5 * square.price_build) # sell all 5
+        self.balance += 0.5 * (5 * square.price_build)  # sell all 5
 
     def mortgage_square(self, square):
         square.mortgage()
@@ -286,4 +286,3 @@ class Player(object):
     # should take place in monopoly
     def do_strat_get_out_of_jail(self, d):
         raise NotImplementedError
-

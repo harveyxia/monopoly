@@ -5,10 +5,11 @@
 # the game basically just runs a game of monopoly where the players don't do
 # anything.
 
+import io_cap
 from monopoly.board import Board
 from monopoly.monopoly import Monopoly
 from players.dumb_player import DumbPlayer
-import io_cap
+
 
 ############################
 #                          #
@@ -31,14 +32,15 @@ def calculate_square_probs(square_counts, years):
     average_length = sum(years) / len(years)
     return map(lambda x: float(x) / average_length, square_counts)
 
-# calculate the cap rate. 
+
+# calculate the cap rate.
 # assumes you buy a square with all hotels immediately
 # also assumes no discount rate
 def calculate_cap(square_probs):
     squares = Board().squares
     caps = []
     for i in xrange(len(squares)):
-        if i in (0, 2, 4, 7, 10, 17, 20, 22, 30, 33, 36, 38):   # skip the irrelevant squares
+        if i in (0, 2, 4, 7, 10, 17, 20, 22, 30, 33, 36, 38):  # skip the irrelevant squares
             continue
         square = squares[i]
         square_prob = square_probs[i]
@@ -50,7 +52,7 @@ def calculate_cap(square_probs):
                 num_properties = 0
             else:
                 num_properties -= 5
-            if square.rent[num_properties] == 0: # for utilities, railroads
+            if square.rent[num_properties] == 0:  # for utilities, railroads
                 square_rent = 0
             elif num_properties > 0 and square.price_build > 0:
                 square_rent = float(square.price_build) / price * square.rent[num_properties]
@@ -61,7 +63,7 @@ def calculate_cap(square_probs):
                 cap[0] = (square_rent * square_prob * 3) / price
                 cap[1] = cap[2] = cap[3] = cap[4] = cap[5] = 0
             else:
-                cap[num_properties+5] = (square_rent * square_prob * 3) / price
+                cap[num_properties + 5] = (square_rent * square_prob * 3) / price
         caps.append((square.name, cap))
 
     return caps
@@ -72,17 +74,21 @@ def run(turns):
     square_probs = calculate_square_probs(square_counts, years)
     return calculate_cap(square_probs)
 
+
 def simulate(filename, turns):
     caps = run(turns)
     io_cap.output_cap_file(filename, caps)
     return caps
 
-#!/usr/bin/python
+
+# !/usr/bin/python
 
 import sys
+
 
 def main():
     if len(sys.argv) > 2:
         simulate(sys.argv[1], int(float(sys.argv[2])))
+
 
 if __name__ == "__main__": main()
