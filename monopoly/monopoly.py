@@ -22,7 +22,7 @@ class Monopoly(object):
     Monopoly class, represents entirety of game
     """
 
-    def __init__(self, players):
+    def __init__(self, players, debug_flag=flag):
         """
 
         :type players: Player() subclass
@@ -52,15 +52,16 @@ class Monopoly(object):
         self.community_chest_jail_owner = None
         self.shuffle_community_chest_cards()
 
+        self.debug_flag = debug_flag
+
     ############################
     #                          #
     #      OTHER HELPERS       #
     #                          #
     ############################
 
-    @staticmethod
-    def debug(message):
-        if flag:
+    def debug(self, message):
+        if self.debug_flag:
             print message
 
     def return_years(self):
