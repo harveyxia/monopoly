@@ -52,9 +52,14 @@ class CapRatePlayer(Player):
             if d[1] != d[0]:
                 self.do_strat_raise_money(50)
             return True
-        else:
-            self.do_strat_raise_money(50)
+        elif self.others_have_monopoly or self.balance < 200:
+            # don't want to get out of jail if too risky
+            self.jail_duration += 1
             return False
+        else:
+            # if no monopolies yet then gotta get in that property race
+            self.do_strat_raise_money(50)
+            return True
 
     @staticmethod
     def decide(p):
