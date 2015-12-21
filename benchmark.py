@@ -71,7 +71,10 @@ def init_new_players(player_types, player_names, caps):
     for i in xrange(len(player_types)):
         player_type = player_types[i]
         player_name = player_names[i]
-        if player_type == "CapRatePlayer":
+        if player_type == "InitCapRatePlayer":
+            init = io_cap.input_cap_file("init.csv")
+            players.append(CapRatePlayer(player_name, caps=init))
+        elif player_type == "CapRatePlayer":
             players.append(player_type_to_class[player_type](player_name, caps=caps))
         else:
             players.append(player_type_to_class[player_type](player_name))
@@ -89,3 +92,15 @@ def init_player_names(player_types):
             player_type_counts[player_type] += 1
         player_names.append(player_type + str(player_type_counts[player_type]))
     return player_names
+
+
+def run_all_benchmarks(output_filename='simulation_results.txt'):
+    a = main(100, 10000, ['DumbPlayer', 'SmartPlayer'])
+    b = main(100, 10000, ['DumbPlayer', 'CapRatePlayer'])
+    c = main(100, 10000, ['CapRatePlayer', 'SmartPlayer'])
+    with open(output_filename, 'w') as f:
+        f.write("Scenarios and Results")
+        f.write("----------------------------")
+        f.write("DumbPlayer vs. SmartPlayer = %s:%s\n" % (a['DumbPlayer'], a['SmartPlayer']))
+        f.write("DumbPlayer vs. CapRatePlayer = %s:%s\n" % (b['DumbPlayer'], b['CapRatePlayer']))
+        f.write("CapRatePlayer vs. SmartPlayer = %s:%s\n" % (c['CapRatePlayer'], c['SmartPlayer']))
