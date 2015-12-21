@@ -3,9 +3,9 @@ from multiprocessing.pool import ThreadPool
 
 import io_cap
 from monopoly.monopoly import Monopoly
+from players.benchmark_player import BenchmarkPlayer
 from players.cap_rate_player import CapRatePlayer
 from players.greedy_player import GreedyPlayer
-from players.benchmark_player import BenchmarkPlayer
 
 NUM_THREADS = 4
 

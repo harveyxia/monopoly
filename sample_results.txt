@@ -1,6 +1,0 @@
-Scenarios and Results----------------------------
-GreedyPlayer vs. BenchmarkPlayer = 168:27
-GreedyPlayer vs. CapRatePlayer = 65:89
-BenchmarkPlayer vs. CapRatePlayer = 30:218
-InitCapRatePlayer vs. CapRatePlayer = 238:264
-InitCapRatePlayer vs. InitCapRatePlayer = 244:249
