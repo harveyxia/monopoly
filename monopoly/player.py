@@ -223,6 +223,15 @@ class Player(object):
         else:
             return False
 
+    def largest_rent(self):
+        rents = [square.get_rent()
+                 for square in self.board.squares
+                 if square.owner and square.owner != self]
+        if len(rents) > 0:
+            return max(rents)
+        else:
+            return 0
+
     ############################
     #                          #
     #          STRATS          #

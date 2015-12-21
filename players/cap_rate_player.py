@@ -10,7 +10,7 @@ class CapRatePlayer(Player):
 
     def do_strat_unowned_square(self, square):
         # print caps[square.name][0]
-        if self.balance < square.price:
+        if self.balance < square.price + self.largest_rent():
             return False
         if square.name in self.caps:
             # print self.caps[square.name][0] * self.balance / square.price
@@ -53,7 +53,7 @@ class CapRatePlayer(Player):
             if d[1] != d[0]:
                 self.do_strat_raise_money(50)
             return True
-        elif self.others_have_monopoly or self.balance < 200:
+        elif self.others_have_monopoly or self.balance < self.largest_rent():
             # don't want to get out of jail if too risky
             self.jail_duration += 1
             return False
