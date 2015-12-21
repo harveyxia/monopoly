@@ -44,16 +44,16 @@ class SmartPlayer(Player):
                         self.late_game = True
                     return True
                 
+                # If this is the color group we're currently focusing on
+                if self.focus == square.color:
+                    if others_owned == 0:
+                        return True
+                    else:
+                        # need to change focus now
+                        self.focus = None
+
                 # Waterfall step 2: focus on color group in sides 1 and 2
                 if not self.late_game:
-                    # if this is the color group we're focusing on
-                    if self.focus == square.color:
-                        if others_owned == 0:
-                            return True
-                        else:
-                            # need to change focus now
-                            self.focus = None
-
                     # waterfall through color priorities if we don't have a focus
                     if square.color == "Orange":
                         if others_owned == 0 and self.focus == None:
@@ -83,7 +83,14 @@ class SmartPlayer(Player):
                         
                 # Waterfall step 3: focus on color group sides 2 and 3
                 else:
-                    return False
+                    sides_2_and_3 = ["Pink", "Orange", "Red", "Yellow", "Green", "Blue"]
+                    if square.color in sides_2_and_3:
+                        if others_owned == 0 and self.focus == None:
+                            self.focus = square.color
+                            return True
+                    else:
+                        return False
+
 
 
     # sell properties to raise money, in no particular order
