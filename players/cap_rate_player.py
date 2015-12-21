@@ -14,7 +14,7 @@ class CapRatePlayer(Player):
             return False
         if square.name in self.caps:
             # print self.caps[square.name][0] * self.balance / square.price
-            return self.decide(self.prob(self.caps[square.name][self.check_square_status(square)], self.balance))
+            return self.decide(self.prob(self.get_square_cap(square), self.balance))
         else:
             return False
 
@@ -32,16 +32,16 @@ class CapRatePlayer(Player):
         self.balance -= money
         return money
 
-    def do_strat_buy_buildings(self, squares):
-        squares = filter(lambda x: x.num_buildings < 5 and x.price <= self.balance, squares)
-        if len(squares) == 0:
+    def do_strat_buy_from_bank(self, bldgs):
+        bldgs = filter(lambda x: x.num_buildings < 5 and x.price <= self.balance, bldgs)
+        if len(bldgs) == 0:
             return None
-        caps = map(lambda x: self.caps[x.name][x.num_buildings + 1], squares)
-        prices = map(lambda x: x.price, squares)
+        caps = map(lambda x: self.caps[x.name][x.num_buildings + 1], bldgs)
+        prices = map(lambda x: x.price, bldgs)
         probs = map(lambda x: self.prob(x, self.balance), caps)
         p = max(probs)
         if self.decide(p):
-            return squares[probs.index(p)]
+            return bldgs[probs.index(p)]
         else:
             return None
 
@@ -71,3 +71,9 @@ class CapRatePlayer(Player):
         if balance < 100:
             return 0
         return cap * 5
+
+    def get_square_cap(self,square):
+        if self.caps[square.name][self.check_square_status(square)] == 0:
+            return self.caps[square.name][0]
+        else:
+            return self.caps[square.name][self.check_square_status(square)]

@@ -25,7 +25,7 @@ class Square(object):
         # use original owner's years
         self.original_owner = None
         self.purchase_years = [None] * len(self.rent)
-        self.caps = [0] * (len(self.rent) + 3)
+        self.caps = [0] * (len(self.rent) + 5)
         self.status = None
 
     def add_building(self):
@@ -91,7 +91,7 @@ class Square(object):
             else:
                 caps_number = self.status
         else:
-            caps_number = building_number + 3
+            caps_number = building_number + 5
         years_elapsed = self.original_owner.years - self.purchase_years[building_number]
         self.caps[caps_number] += payoff * (1/(1+0.01))**(years_elapsed)
 
@@ -114,5 +114,5 @@ class Square(object):
                 if building_number == 0:
                     self.caps[self.status] = 0
                 else:
-                    self.caps[building_number + 3] = 0
+                    self.caps[building_number + 5] = 0
 
