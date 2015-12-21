@@ -126,11 +126,11 @@ class SmartPlayer(Player):
             p = monopoly_properties.pop()
             if p.num_buildings == 0:
                 p.owner = None
-                self.balance += prop.price
-            elif prop.num_buildings == 5:
-                self.sell_hotel(prop)
+                self.balance += p.price
+            elif p.num_buildings == 5:
+                self.sell_hotel(p)
             else:
-                self.sell_house(prop)
+                self.sell_house(p)
 
         # process
         if self.balance < money:
