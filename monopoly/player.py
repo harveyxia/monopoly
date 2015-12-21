@@ -16,8 +16,10 @@ class Player(object):
         self.owned_colors = []
         self.properties = []
         self.bankrupt = False
-        self.board = None
         self.years = 0
+        # these are set by monopoly
+        self.board = None
+        self.other_players = None
 
     def __str__(self):
         return "%s:\n  " \
@@ -215,7 +217,7 @@ class Player(object):
         return True
 
     def others_have_monopoly(self):
-        pass
+        any([len(other.owned_colors) > 0 for other in self.other_players])
 
     ############################
     #                          #

@@ -14,8 +14,7 @@ from random import randint, shuffle
 from board import Board
 from player import Player
 
-flag = False
-
+flag = True
 
 class Monopoly(object):
     """
@@ -37,6 +36,7 @@ class Monopoly(object):
         self.players = players
         for player in players:
             player.board = self.board
+            player.other_players = [p for p in players if p != player]
         # active_players don't include bankrupt players
         self.active_players = players
 
