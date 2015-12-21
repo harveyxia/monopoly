@@ -14,7 +14,7 @@ class CapRatePlayer(Player):
             return False
         if square.name in self.caps:
             # print self.caps[square.name][0] * self.balance / square.price
-            return self.decide(self.prob(self.caps[square.name][self.check_square_status(square)], self.balance))
+            return self.decide(self.prob(self.get_square_cap(square), self.balance))
         else:
             return False
 
@@ -63,3 +63,9 @@ class CapRatePlayer(Player):
         if balance < 100:
             return 0
         return cap * 5
+
+    def get_square_cap(self,square):
+        if self.caps[square.name][self.check_square_status(square)] == 0:
+            return self.caps[square.name][0]
+        else:
+            return self.caps[square.name][self.check_square_status(square)]

@@ -58,7 +58,8 @@ def calculate_cap(square_probs):
                 square_rent = float(square.price) / price * square.rent[num_properties]
 
             if (num_properties == 0):
-                cap[0] = cap[1] = cap[2] = cap[3] = cap[4] = cap[5] = (square_rent * square_prob * 3) / price
+                cap[0] = (square_rent * square_prob * 3) / price
+                cap[1] = cap[2] = cap[3] = cap[4] = cap[5] = 0
             else:
                 cap[num_properties+5] = (square_rent * square_prob * 3) / price
         caps.append((square.name, cap))

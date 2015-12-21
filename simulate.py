@@ -17,11 +17,14 @@ def simulate(turns, games, discount=.05):
 def combine_caps(prev, current):
     num_obs = []
     for i in range(len(prev)):
-        num_obs.append([1] * 11)
+        num_obs.append([0] * 11)
         for j in range(11):
             save = prev[i][1][j]
             if current[i][1][j] != 0:
-                prev[i][1][j] = (prev[i][1][j]*(num_obs[i][j]) + current[i][1][j])/(num_obs[i][j] + 1)
+                if prev[i][1][j] == 0:
+                    prev[i][1][j] = current[i][1][j]
+                else:
+                    prev[i][1][j] = (prev[i][1][j]*(num_obs[i][j]) + current[i][1][j])/(num_obs[i][j] + 1)
                 num_obs[i][j] += 1
     return prev
 
