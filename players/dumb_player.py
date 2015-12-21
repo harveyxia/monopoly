@@ -13,8 +13,13 @@ class DumbPlayer(Player):
     def do_strat_raise_money(self, money):
         while self.properties and self.balance < money:
             p = self.properties.pop()
-            p.owner = None
-            self.balance += p.price
+            if p.num_buildings == 0:
+                p.owner = None
+                self.balance += p.price
+            elif p.num_buildings == 5:
+                self.sell_hotel(p)
+            else:
+                self.sell_house(p)
         if self.balance < money:
             self.bankrupt = True
             return self.balance
