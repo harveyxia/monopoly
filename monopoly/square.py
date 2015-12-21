@@ -34,7 +34,6 @@ class Square(object):
         self.num_buildings += 1
         if self.should_update_cap():
             self.purchase_years[self.num_buildings] = self.original_owner.years
-            self.update_cap(self.num_buildings, -1*self.price_build)
 
     def remove_building(self):
         if self.num_buildings == 0:
@@ -110,11 +109,10 @@ class Square(object):
             self.purchase_years[building_number] = None
 
     def clean_cap(self):
-        for building_number in range(0, 5):
+        for building_number in range(0, 6):
             if self.purchase_years[building_number] != None:
                 if building_number == 0:
                     self.caps[self.status] = 0
                 else:
                     self.caps[building_number + 3] = 0
-        print self.caps
 
