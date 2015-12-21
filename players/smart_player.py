@@ -19,7 +19,6 @@ class SmartPlayer(Player):
             return False
         else:
             if square.color:
-                print self.focus
                 # Waterfall step 1: try to obtain or block a monopoly
                 rest_of_monopoly = self.board.get_color_group(square.color)
                 owned = 0
@@ -93,13 +92,28 @@ class SmartPlayer(Player):
 
 
 
-    # sell properties to raise money, in no particular order
-    # todo: change this! this is currently here so that payment isn't None
     def do_strat_raise_money(self, money):
-        while self.properties and self.balance < money:
-            p = self.properties.pop()
+        # filter properties
+        to_sell = self.properties
+        monopoly_properties = []
+
+        # sell non-monopolies
+        for prop in to_sell:
+            if prop.color in self.owned_colors:
+                to_sell.remove(prop)
+                monopoly_properties.append(prop)
+        while to_sell and self.balance < money:
+            p = to_sell.pop()
             p.owner = None
             self.balance += p.price
+
+        # sell monopolies if we still need money
+        while monopoly_properties and self.balance < money:
+            p = monopoly_properties.pop()
+            p.owner = None
+            self.balance += p.price
+
+        # process
         if self.balance < money:
             self.bankrupt = True
             return self.balance
@@ -107,12 +121,36 @@ class SmartPlayer(Player):
         return money
 
     def do_strat_buy_from_bank(self, bldgs):
-        pass
+        if bldgs:
+            # buy max 3
+            for bldg in bldgs:
+                if bldg.num_buildings < 3:
+                    return bldg
+        else:
+            return None
 
     def do_strat_get_out_of_jail(self, d):
-        pass
+        # TODO: use get out of jail cards
+        if self.jail_duration >= 3:
+            self.jail_duration = 0
+            self.in_jail = False
+            if d[1] != d[0]:
+                self.do_strat_raise_money(50)
+            return True
+        elif self.focus == "Orange":
+            # stay in Jail and try to get out by rolling doubles to buy St. James or Tennessee Ave
+            self.jail_duration += 1
+            return False
+        elif self.others_have_monopoly():
+            # moving around board will likely lose money
+            self.jail_duration += 1
+            return False
+        else:
+            # get out, it's too early to be in jail
+            self.do_strat_raise_money(50)
+            return True
 
-    # look at board
+    # look at board and check if we should focus on a specific color
     def should_focus_color(self, color):
         rest_of_monopoly = self.board.get_color_group(color)
         others_owned = 0
