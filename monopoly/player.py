@@ -109,22 +109,28 @@ class Player(object):
     def check_square_status(self, square):
         if square.color != "None":
             color_squares = self.board.get_color_group(square.color)
+            color_squares = filter(lambda x : x.name != square.name, color_squares)
             owners = set()
             sq_left = len(color_squares)
             idx = 0
             for s in color_squares:
                 if s.owner != None:
                     sq_left -= 1
-                    owners.add(s.owner)
+                    owners.add(s.owner.name)
             if sq_left == 1:
                 if len(owners) == 2:
                     idx = 0 # no_monopoly
+                elif self.name in owners:
+                    idx = 5 # one_from_monopoly_me
                 else:
                     idx = 1 # one_from_monopoly
             elif sq_left == 2:
-                idx = 3 # two_from_monopoly
+                if self.name in owners:
+                    idx = 4 # two_from_monopoly_me
+                else:
+                    idx = 2 # two_from_monopoly
             else:
-                idx = 4 # three_from_monopoly
+                idx = 3 # three_from_monopoly
         else:
             idx = 0
         return idx
