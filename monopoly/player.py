@@ -217,7 +217,11 @@ class Player(object):
         return True
 
     def others_have_monopoly(self):
-        any([len(other.owned_colors) > 0 for other in self.other_players])
+        if any([len(other.owned_colors) > 0 for other in self.other_players]):
+            # print "others have monopoly"
+            return True
+        else:
+            return False
 
     ############################
     #                          #

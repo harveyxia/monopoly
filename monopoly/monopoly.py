@@ -14,7 +14,7 @@ from random import randint, shuffle
 from board import Board
 from player import Player
 
-flag = True
+flag = False
 
 class Monopoly(object):
     """

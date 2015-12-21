@@ -21,6 +21,7 @@ class CapRatePlayer(Player):
     def do_strat_raise_money(self, money):
         # sort properties descending by cap rate
         self.properties = sorted(self.properties, key=lambda prop: self.caps[prop.name][self.check_square_status(prop)], reverse=True)
+        # print [self.caps[prop.name][self.check_square_status(prop)] for prop in self.properties]
         while self.properties and self.balance < money:
             p = self.properties.pop()
             p.owner = None
