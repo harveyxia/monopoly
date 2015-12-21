@@ -14,7 +14,7 @@ from random import randint, shuffle
 from board import Board
 from player import Player
 
-flag = False
+flag = False # set to True to turn on debug messages
 
 
 class Monopoly(object):

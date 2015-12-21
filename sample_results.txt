@@ -1,6 +1,6 @@
 Scenarios and Results----------------------------
-DumbPlayer vs. SmartPlayer = 168:27
-DumbPlayer vs. CapRatePlayer = 65:89
-SmartPlayer vs. CapRatePlayer = 30:218
+GreedyPlayer vs. BenchmarkPlayer = 168:27
+GreedyPlayer vs. CapRatePlayer = 65:89
+BenchmarkPlayer vs. CapRatePlayer = 30:218
 InitCapRatePlayer vs. CapRatePlayer = 238:264
 InitCapRatePlayer vs. InitCapRatePlayer = 244:249

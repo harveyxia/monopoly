@@ -3,9 +3,9 @@
 from monopoly.player import Player
 
 
-class SmartPlayer(Player):
+class BenchmarkPlayer(Player):
     def __init__(self, name):
-        super(SmartPlayer, self).__init__(name)
+        super(BenchmarkPlayer, self).__init__(name)
         self.focus = None
         self.first_monopoly = False
         self.late_game = False
