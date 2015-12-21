@@ -16,14 +16,15 @@ player_type_to_class = {
 }
 
 
-def main(games, turns_per_game, player_types, cap_rate_file="cap.csv"):
+def run(games, turns_per_game, teams, cap_rate_file="500cap.csv"):
     caps = io_cap.input_cap_file(cap_rate_file)
 
+    (names, player_to_team) = init_player_names(teams)
+    flat_names = [player for team in names for player in team]
     def run_n_games(num_games):
-        player_names = init_player_names(player_types)
-        stats = {player: 0 for player in player_names}
+        stats = {player: 0 for player in flat_names}
         for i in xrange(num_games):
-            players = init_new_players(player_types, player_names, caps)
+            players = init_new_players(teams, names, caps)
             m = Monopoly(players=players)
             m.run(turns_per_game)
             if m.winner:
@@ -37,7 +38,7 @@ def main(games, turns_per_game, player_types, cap_rate_file="cap.csv"):
     d = thread_pool.apply_async(run_n_games, (games / 4,))
 
     results = [a.get(), b.get(), c.get(), d.get()]
-    return reduce_results_by_player_type(results)
+    return reduce_results_by_team(results, len(teams), player_to_team)
 
 
 # returns number of wins per player
@@ -65,42 +66,60 @@ def reduce_results_by_player_type(results):
     return stats
 
 
+# returns number of wins per player type
+def reduce_results_by_team(results, n_teams, player_to_team):
+    stats = [0] * n_teams
+    for i in range(len(results)):
+        r = results[i]
+        for k, v in r.iteritems():
+            team = player_to_team[k]
+            stats[team] += v
+    return stats
+
+
 # instantiate a new set of players
-def init_new_players(player_types, player_names, caps):
+def init_new_players(teams, names, caps):
     players = []
-    for i in xrange(len(player_types)):
-        player_type = player_types[i]
-        player_name = player_names[i]
-        if player_type == "InitCapRatePlayer":
-            init = io_cap.input_cap_file("init.csv")
-            players.append(CapRatePlayer(player_name, caps=init))
-        elif player_type == "CapRatePlayer":
-            players.append(player_type_to_class[player_type](player_name, caps=caps))
-        else:
-            players.append(player_type_to_class[player_type](player_name))
+    for i in xrange(len(teams)):
+        for j in xrange(len(teams[i])):
+            player_type = teams[i][j]
+            player_name = names[i][j]
+            if player_type == "InitCapRatePlayer":
+                init = io_cap.input_cap_file("init.csv")
+                players.append(CapRatePlayer(player_name, caps=init))
+            elif player_type == "CapRatePlayer":
+                players.append(player_type_to_class[player_type](player_name, caps=caps))
+            else:
+                players.append(player_type_to_class[player_type](player_name))
     return players
 
 
 # create list of ordered player names according to list of player types
-def init_player_names(player_types):
-    player_type_counts = {}
-    player_names = []
-    for player_type in player_types:
-        if player_type not in player_type_counts:
-            player_type_counts[player_type] = 1
-        else:
-            player_type_counts[player_type] += 1
-        player_names.append(player_type + str(player_type_counts[player_type]))
-    return player_names
+def init_player_names(teams):
+    names = []
+    player_to_team = {}
+    for i in xrange(len(teams)):
+        names.append([])
+        for j in xrange(len(teams[i])):
+            player_name = "Team{0} Player{1}".format(i, j)
+            names[i].append(player_name)
+            player_to_team[player_name] = i
+    return (names, player_to_team)
 
 
 def run_all_benchmarks(output_filename='simulation_results.txt'):
-    a = main(100, 10000, ['DumbPlayer', 'SmartPlayer'])
-    b = main(100, 10000, ['DumbPlayer', 'CapRatePlayer'])
-    c = main(100, 10000, ['CapRatePlayer', 'SmartPlayer'])
+    # a = run(100, 10000, [['DumbPlayer', 'DumbPlayer'], ['SmartPlayer', 'SmartPlayer']])
+    # b = run(100, 10000, [['DumbPlayer', 'DumbPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
+    # c = run(100, 10000, [['SmartPlayer', 'SmartPlayer'], ['CapRatePlayer', 'CapRatePlayer']])
+    d = run(500, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['CapRatePlayer', 'CapRatePlayer']])
+    e = run(500, 10000, [['InitCapRatePlayer', 'InitCapRatePlayer'], ['InitCapRatePlayer', 'InitCapRatePlayer']])
     with open(output_filename, 'w') as f:
         f.write("Scenarios and Results")
         f.write("----------------------------")
-        f.write("DumbPlayer vs. SmartPlayer = %s:%s\n" % (a['DumbPlayer'], a['SmartPlayer']))
-        f.write("DumbPlayer vs. CapRatePlayer = %s:%s\n" % (b['DumbPlayer'], b['CapRatePlayer']))
-        f.write("CapRatePlayer vs. SmartPlayer = %s:%s\n" % (c['CapRatePlayer'], c['SmartPlayer']))
+        f.write("InitCapRatePlayer vs. CapRatePlayer = %s:%s\n" % (d[0], d[1]))
+        f.write("InitCapRatePlayer vs. InitCapRatePlayer = %s:%s\n" % (e[0], e[1]))
+
+def main():
+    run_all_benchmarks()
+
+if __name__ == "__main__": main()

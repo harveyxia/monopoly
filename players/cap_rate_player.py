@@ -78,7 +78,7 @@ class CapRatePlayer(Player):
     def prob(cap, balance):
         if balance < 100:
             return 0
-        return cap * 5
+        return cap * 20
 
     def get_square_cap(self, square):
         if self.caps[square.name][self.check_square_status(square)] == 0:
