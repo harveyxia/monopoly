@@ -1,3 +1,4 @@
+import re
 from multiprocessing.pool import ThreadPool
 
 from monopoly.monopoly import Monopoly
@@ -31,15 +32,31 @@ def main(games, turns_per_game, player_types):
     d = thread_pool.apply_async(run_n_games, (games / 4,))
 
     results = [a.get(), b.get(), c.get(), d.get()]
-    return reduce_results(results)
+    return reduce_results_by_player_type(results)
 
 
-def reduce_results(results):
+# returns number of wins per player
+def reduce_results_by_player(results):
     stats = results[0]
     for i in range(1, len(results)):
         r = results[i]
         for k, v in r.iteritems():
             stats[k] += v
+    return stats
+
+
+# returns number of wins per player type
+def reduce_results_by_player_type(results):
+    regex = "^([A-z]+)"
+    stats = {}
+    for i in range(len(results)):
+        r = results[i]
+        for k, v in r.iteritems():
+            player_type = re.match(regex, k).group(0)
+            if player_type not in stats:
+                stats[player_type] = v
+            else:
+                stats[player_type] += v
     return stats
 
 
