@@ -29,16 +29,16 @@ class CapRatePlayer(Player):
         self.balance -= money
         return money
 
-    def do_strat_buy_buildings(self, squares):
-        squares = filter(lambda x: x.num_buildings < 5 and x.price <= self.balance, squares)
-        if len(squares) == 0:
+    def do_strat_buy_from_bank(self, bldgs):
+        bldgs = filter(lambda x: x.num_buildings < 5 and x.price <= self.balance, bldgs)
+        if len(bldgs) == 0:
             return None
-        caps = map(lambda x: self.caps[x.name][x.num_buildings + 1], squares)
-        prices = map(lambda x: x.price, squares)
+        caps = map(lambda x: self.caps[x.name][x.num_buildings + 1], bldgs)
+        prices = map(lambda x: x.price, bldgs)
         probs = map(lambda x: self.prob(x, self.balance), caps)
         p = max(probs)
         if self.decide(p):
-            return squares[probs.index(p)]
+            return bldgs[probs.index(p)]
         else:
             return None
 

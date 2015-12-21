@@ -161,8 +161,8 @@ class Player(object):
             square.unmortgage()
         return True
 
-    def purchase_buildings(self, squares):
-        building = self.do_strat_buy_buildings(squares)
+    def purchase_from_banks(self, potential_buildings):
+        building = self.do_strat_buy_from_bank(potential_buildings)
         if building is None:
             return False
         elif building.num_buildings < 4:
@@ -230,7 +230,7 @@ class Player(object):
     # return value: none
     #
     # strategy for buying buildings, called at the end of every turn
-    def do_strat_buy_buildings(self, squares):
+    def do_strat_buy_from_bank(self, potential_buildings):
         raise NotImplementedError
 
     # input value: square
