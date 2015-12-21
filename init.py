@@ -8,7 +8,7 @@
 from monopoly.board import Board
 from monopoly.monopoly import Monopoly
 from players.dumb_player import DumbPlayer
-import output
+import io_cap
 
 ############################
 #                          #
@@ -74,7 +74,7 @@ def run(turns):
 
 def simulate(filename, turns):
     caps = run(turns)
-    output.output_cap_file(filename, caps)
+    io_cap.output_cap_file(filename, caps)
     return caps
 
 #!/usr/bin/python

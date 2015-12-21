@@ -1,4 +1,4 @@
-import output
+import io_cap
 import init
 import sys
 from players.cap_rate_player import CapRatePlayer
@@ -36,6 +36,6 @@ def main():
         caps = simulate(int(sys.argv[1]), int(sys.argv[2]))
     else:
         print "simulate <turns in initial cap calculation> <number of game iterations> [<discount rate>]"
-    output.output_cap_file("cap.csv", caps)
+    io_cap.output_cap_file("cap.csv", caps)
 
 if __name__ == "__main__": main()

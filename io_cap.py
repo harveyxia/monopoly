@@ -1,23 +1,64 @@
 import csv
 
+
+# return a caprate data structure from a csv file
+def input_cap_file(filename):
+    caps = []
+    with open('csv/' + filename, 'r') as csvfile:
+        reader = csv.DictReader(
+                csvfile,
+                fieldnames=[
+                    'name',
+                    'no_monopoly',
+                    'one_from_monopoly',
+                    'two_from_monopoly',
+                    'three_from_monopoly',
+                    'two_from_monopoly_me',
+                    'one_from_monopoly_me',
+                    'one_building',
+                    'two_building',
+                    'three_building',
+                    'four_building',
+                    'five_building',
+                ])
+        for row in reader:
+            cap_rates = [
+                row['no_monopoly'],
+                row['one_from_monopoly'],
+                row['two_from_monopoly'],
+                row['three_from_monopoly'],
+                row['two_from_monopoly_me'],
+                row['one_from_monopoly_me'],
+                row['one_building'],
+                row['two_building'],
+                row['three_building'],
+                row['four_building'],
+                row['five_building'],
+            ]
+            t = (row['name'], cap_rates)
+            caps.append(t)
+    return caps
+
+
+# output a csv file given a caprate data structure
 def output_cap_file(filename, caps):
-    with open('csv/'+filename, 'w') as csvfile:
+    with open('csv/' + filename, 'w') as csvfile:
         writer = csv.DictWriter(
-            csvfile,
-            fieldnames=[
-                'name',                
-                'no_monopoly',
-                'one_from_monopoly',
-                'two_from_monopoly',
-                'three_from_monopoly',
-                'two_from_monopoly_me',
-                'one_from_monopoly_me',
-                'one_building',
-                'two_building',
-                'three_building',
-                'four_building',
-                'five_building',
-            ])
+                csvfile,
+                fieldnames=[
+                    'name',
+                    'no_monopoly',
+                    'one_from_monopoly',
+                    'two_from_monopoly',
+                    'three_from_monopoly',
+                    'two_from_monopoly_me',
+                    'one_from_monopoly_me',
+                    'one_building',
+                    'two_building',
+                    'three_building',
+                    'four_building',
+                    'five_building',
+                ])
         writer.writeheader()
         for cap in caps:
             name = cap[0]

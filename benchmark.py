@@ -1,24 +1,30 @@
 import re
+import io_cap
 from multiprocessing.pool import ThreadPool
 
 from monopoly.monopoly import Monopoly
 from players.cap_rate_player import CapRatePlayer
 from players.dumb_player import DumbPlayer
+from players.smart_player import SmartPlayer
 
 NUM_THREADS = 4
 
 player_type_to_class = {
     "DumbPlayer": DumbPlayer,
+    "SmartPlayer": SmartPlayer,
     "CapRatePlayer": CapRatePlayer
 }
 
 
-def main(games, turns_per_game, player_types):
+def main(games, turns_per_game, player_types, cap_rate_file="cap.csv"):
+
+    caps = io_cap.input_cap_file(cap_rate_file)
+
     def run_n_games(num_games):
         player_names = init_player_names(player_types)
         stats = {player: 0 for player in player_names}
         for i in xrange(num_games):
-            players = init_new_players(player_types, player_names)
+            players = init_new_players(player_types, player_names, caps)
             m = Monopoly(players=players)
             m.run(turns_per_game)
             if m.winner:
@@ -61,12 +67,15 @@ def reduce_results_by_player_type(results):
 
 
 # instantiate a new set of players
-def init_new_players(player_types, player_names):
+def init_new_players(player_types, player_names, caps):
     players = []
     for i in xrange(len(player_types)):
         player_type = player_types[i]
         player_name = player_names[i]
-        players.append(player_type_to_class[player_type](player_name))
+        if player_type == "CapRatePlayer":
+            players.append(player_type_to_class[player_type](player_name, caps=caps))
+        else:
+            players.append(player_type_to_class[player_type](player_name))
     return players
 
 
