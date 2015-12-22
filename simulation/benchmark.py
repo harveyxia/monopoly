@@ -16,7 +16,7 @@ player_type_to_class = {
 }
 
 
-def run(games, turns_per_game, teams, cap_rate_file="100cap.csv"):
+def run(games, turns_per_game, teams, cap_rate_file="5000cap.csv"):
     caps = io_cap.input_cap_file(cap_rate_file)
 
     (names, player_to_team) = init_player_names(teams)
@@ -85,7 +85,7 @@ def init_new_players(teams, names, caps):
             player_type = teams[i][j]
             player_name = names[i][j]
             if player_type == "InitCapRatePlayer":
-                init = io_cap.input_cap_file("init.csv")
+                init = io_cap.input_cap_file("10000init.csv")
                 players.append(CapRatePlayer(player_name, caps=init))
             elif player_type == "CapRatePlayer":
                 players.append(player_type_to_class[player_type](player_name, caps=caps))
