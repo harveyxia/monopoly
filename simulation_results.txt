@@ -1,0 +1,5 @@
+Scenarios and Results
+----------------------------
+GreedyPlayer vs. BenchmarkPlayer = 754:100
+GreedyPlayer vs. CapRatePlayer = 246:337
+BenchmarkPlayer vs. CapRatePlayer = 104:855
