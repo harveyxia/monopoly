@@ -59,7 +59,7 @@ As you will later see, our results are pretty successful.
 *                           *
 *****************************
 
-Charles Jin:
+Charles Jin / ccj23 / charles.jin@yale.edu
 1. Devised strategy for using cap rates
 2. Wrote the code that generated initial cap rates
 3. Implemented framework for tracking and using cap rates
@@ -68,19 +68,19 @@ Charles Jin:
 5. Added strategy frameworks to general Player class for when decisions were
    needed
 
-Marvin Qian:
+Marvin Qian / mbq3 / marvin.qian@yale.edu
 1. Implemented iterative cap rate improvement simulation
 2. Implemented various strategies for CapRatePlayer
 3. Implemented cap rate tracking
 4. Implemented various aspects of Monopoly game logic
 
-Frank Wu:
+Frank Wu / fjw22 / frank.j.wu@yale.edu
 1. Implemented Monopoly game rules and logic
 2. Implemented BenchmarkPlayer and its decision-making strategies
 3. Added explanations for Player decisions
 4. Implemented Monopoly game state tracking and loading
 
-Harvey Xia:
+Harvey Xia / hx52 / harvey.xia@yale.edu
 1. Designed and implemented object oriented representation of Monopoly
 2. Tested Monopoly implementation
 3. Implemented abstract Player class as a way of injecting player strategies
